@@ -18,7 +18,7 @@ console.log(
   );
 
 program
-  .name('Process Management')
+  .name('process')
   .description('CLI to to manage process flow')
   .version('0.0.1');
 
@@ -30,6 +30,14 @@ program.command('split')
   .action((str, options) => {
     const limit = options.first ? 1 : undefined;
     console.log(str.split(options.separator, limit));
+  });
+
+  program.command('join')
+  .description('Join the command-arguments into a single string')
+  .argument('<strings...>', 'one or more strings')
+  .option('-s, --separator <char>', 'separator character', ',')
+  .action((strings, options) => {
+    console.log(strings.join(options.separator));
   });
 
 program.parse();
