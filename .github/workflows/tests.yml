@@ -47,6 +47,7 @@ jobs:
           GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint
         run: npm run lint
+  # The dependancy check will be used, but at the moment dependancies like DSCP-Node are not being used, causing this to fail.
   # dependency-check:
   #   name: Run dependency check
   #   runs-on: ubuntu-latest
