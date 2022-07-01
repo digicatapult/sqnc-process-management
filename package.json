@@ -7,8 +7,9 @@
   "scripts": {
     "start": "ts-node --esm src/index.ts",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node --esm src/index.ts",
-    "lint": "tslint -p . --fix",
-    "build": "tsc --build"
+    "lint": "eslint . --ext .ts",
+    "build": "tsc --build",
+    "depcheck": "depcheck"
   },
   "repository": {
     "type": "git",
@@ -23,15 +24,17 @@
   "devDependencies": {
     "@types/clear": "^0.1.2",
     "@types/figlet": "^1.5.4",
+    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.0",
+    "depcheck": "^1.4.3",
+    "eslint": "^8.18.0",
     "jest": "^28.1.2"
   },
   "dependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
     "@digicatapult/dscp-node": "^3.6.0",
     "chalk": "^5.0.1",
     "clear": "^0.1.0",
     "commander": "^9.3.0",
-    "eslint": "^8.18.0",
     "figlet": "^1.5.2",
     "node-fetch": "^2.6.7",
     "path": "^0.12.7",
