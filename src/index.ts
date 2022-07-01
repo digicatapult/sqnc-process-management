@@ -41,21 +41,3 @@ program.command('split')
   });
 
 program.parse();
-
-
-
-
-
-//console.log(command);
-
-// async function question(): Promise<any> {
-//     chalk.red(
-//         figlet.textSync('Process CLI', { horizontalLayout: 'full' })
-//       );
-    
-  
-//     command.option('-a, --anOption', 'Option 1').parse(process.argv);
-//     const options = command.opts();
-// }
-
-//  question();
