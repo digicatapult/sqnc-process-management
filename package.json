@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
-  "bin": {
-    "process": "./lib/index.js"
-  },
   "type": "module",
   "scripts": {
     "start": "ts-node --esm src/index.ts",

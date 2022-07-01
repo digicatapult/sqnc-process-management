@@ -4,3 +4,4 @@
 // declare const figlet: any;
 // declare const path: any;
 // declare const program: any;
+declare module '@digicatapult/dscp-node';

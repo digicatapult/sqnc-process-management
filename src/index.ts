@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-//import  buildApi  from '@digicatapult/dscp-node';
+//import { buildApi }  from '@digicatapult/dscp-node';
 
 import chalk from 'chalk';
 import figlet from 'figlet';
@@ -19,7 +19,7 @@ console.log(
 
 program
   .name('Process Management')
-  .description('CLI to to manag process flow')
+  .description('CLI to to manage process flow')
   .version('0.0.1');
 
 program.command('split')
