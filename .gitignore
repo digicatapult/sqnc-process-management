@@ -9,5 +9,6 @@ coverage.json
 test.env
 test/test.env
 
+lib/index.js
 github_token
 helm/**/*.tgz
