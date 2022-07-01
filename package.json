@@ -4,7 +4,7 @@
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
-    "process": "bin/process"
+    "process": "./lib/index.js"
   },
   "type": "module",
   "scripts": {
