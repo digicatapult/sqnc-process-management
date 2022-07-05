@@ -16,7 +16,7 @@
     "url": "git+https://github.com/digicatapult/dscp-process-management.git"
   },
   "author": "Digital Catapult",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/digicatapult/dscp-process-management/issues"
   },
