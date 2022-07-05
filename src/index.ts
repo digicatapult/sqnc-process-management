@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-//import { buildApi }  from '@digicatapult/dscp-node';
+//import { buildApi } from '@digicatapult/dscp-node';
+
 
 import chalk from 'chalk';
 import figlet from 'figlet';
