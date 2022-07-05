@@ -1,0 +1,14 @@
+node_modules
+coverage
+.DS_Store
+.nyc_output
+coverage.json
+.idea
+.env
+.vscode
+test.env
+test/test.env
+
+lib/index.js
+github_token
+helm/**/*.tgz
