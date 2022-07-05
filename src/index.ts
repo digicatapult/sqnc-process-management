@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { buildApi } from '@digicatapult/dscp-node';
-//get last id check
 
 import chalk from 'chalk';
 import figlet from 'figlet';
