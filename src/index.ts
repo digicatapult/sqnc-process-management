@@ -17,13 +17,11 @@ console.log(
     ),
   );
 
-
-//console.log(api.default);
   async function getLastTokenId() {
     await api.default.isReady
     const lastTokenId = await api.default.query.simpleNftModule.lastToken()
   
-    //return lastTokenId ? parseInt(lastTokenId.toJSON(), 10) : 0
+    //return lastTokenId ? lastTokenId.toJSON() : 0
     return console.log('Last Token ID:', lastTokenId.toJSON());
   }
 
