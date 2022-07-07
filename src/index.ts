@@ -20,9 +20,7 @@ console.log(
   async function getLastTokenId() {
     await api.default.isReady
     const lastTokenId = await api.default.query.simpleNftModule.lastToken()
-  
-    //return lastTokenId ? lastTokenId.toJSON() : 0
-    return console.log('Last Token ID:', lastTokenId.toJSON());
+      return console.log('Last Token ID:', lastTokenId.toJSON());
   }
 
 
