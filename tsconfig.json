@@ -1,12 +1,12 @@
 {
-  "files": ["./lib/index.d.ts"],
+  "files": ["src/lib/index.d.ts"],
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "src/lib",
     "rootDir": "src",
     "lib": ["ES6", "ES2015", "ESNext"],
     "types": ["node"],
     "resolveJsonModule": true,
-    "target": "es2016",
+    "target": "es2017",
     "module": "es6",
     "moduleResolution": "node",                       
     "esModuleInterop": true,                             
@@ -14,6 +14,7 @@
     "strict": true,                                      
     "skipLibCheck": true,
     "allowJs": true,
-
+    "checkJs": false,
+    "declaration": false
   }
 }

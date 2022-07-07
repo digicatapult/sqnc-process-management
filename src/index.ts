@@ -1,14 +1,14 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --es-module-specifier-resolution=node
 
-import { buildApi } from '@digicatapult/dscp-node';
 
 import chalk from 'chalk';
 import figlet from 'figlet';
 import clear from 'clear';
 import { Command } from 'commander';
-
+import * as api from './lib/api.js'
 
 const program = new Command();
+
 
 clear();
 console.log(
@@ -16,6 +16,17 @@ console.log(
       figlet.textSync('Process CLI', { horizontalLayout: 'full' })
     ),
   );
+
+
+//console.log(api.default);
+  async function getLastTokenId() {
+    await api.default.isReady
+    const lastTokenId = await api.default.query.simpleNftModule.lastToken()
+  
+    //return lastTokenId ? parseInt(lastTokenId.toJSON(), 10) : 0
+    return console.log('Last Token ID:', lastTokenId.toJSON());
+  }
+
 
   // Demo Program
 program
@@ -39,6 +50,10 @@ program.command('split')
   .option('-s, --separator <char>', 'separator character', ',')
   .action((strings, options) => {
     console.log(strings.join(options.separator));
+  });
+
+  program.action(() => {
+    getLastTokenId();
   });
 
 program.parse();
