@@ -1,5 +1,6 @@
 #!/usr/bin/env node --es-module-specifier-resolution=node
 
+
 import chalk from 'chalk';
 import figlet from 'figlet';
 import clear from 'clear';
@@ -16,7 +17,7 @@ console.log(
     ),
   );
 
-  async function getLastTokenId() {
+async function getLastTokenId() {
     await api.default.isReady
     const lastTokenId = await api.default.query.simpleNftModule.lastToken()
       return console.log('Last Token ID:', lastTokenId.toJSON());
