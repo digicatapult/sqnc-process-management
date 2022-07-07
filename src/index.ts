@@ -1,6 +1,5 @@
 #!/usr/bin/env node --es-module-specifier-resolution=node
 
-
 import chalk from 'chalk';
 import figlet from 'figlet';
 import clear from 'clear';
