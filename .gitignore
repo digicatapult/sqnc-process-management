@@ -8,7 +8,6 @@ coverage.json
 .vscode
 test.env
 test/test.env
-lib/env.js
 
 lib/index.js
 github_token
