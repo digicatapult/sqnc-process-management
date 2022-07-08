@@ -1,5 +1,4 @@
 import { buildApi } from '@digicatapult/dscp-node'
-import * as vars from './options.js'
 import option from './options.ts'
 
 const { api } = buildApi({
