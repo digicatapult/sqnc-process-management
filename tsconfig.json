@@ -1,7 +1,7 @@
 {
   "files": ["src/lib/index.d.ts"],
   "compilerOptions": {
-    "outDir": "src/lib",
+    "outDir": "build/",
     "rootDir": "src",
     "lib": ["ES6", "ES2015", "ESNext"],
     "types": ["node"],
