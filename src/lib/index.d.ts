@@ -9,8 +9,6 @@ declare module '*';
 declare module '@digicatapult/dscp-node';
 declare module './api';
 declare module './api.js';
-declare module './env.js';
-declare module './env';
 
 export * from './api'
-export * from './env'
+

@@ -1,25 +1,26 @@
 import { buildApi } from '@digicatapult/dscp-node'
-import * as vars from '../lib/env.js'
+import * as vars from './options.js'
+import option from './options.ts'
 
 const { api } = buildApi({
   options: {
-    apiHost: vars.API_HOST,
-    apiPort: vars.API_PORT,
-    metadataKeyLength: vars.METADATA_KEY_LENGTH,
-    metadataValueLiteralLength: vars.METADATA_VALUE_LITERAL_LENGTH,
-    processorIdentifierLength: vars.PROCESS_IDENTIFIER_LENGTH,
+    apiHost: option.API_HOST,
+    apiPort: option.API_PORT,
+    metadataKeyLength: option.METADATA_KEY_LENGTH,
+    metadataValueLiteralLength: option.METADATA_VALUE_LITERAL_LENGTH,
+    processorIdentifierLength: option.PROCESS_IDENTIFIER_LENGTH,
   },
 })
 
 api.on('disconnected', () => {
   console.log(
-    `Disconnected from substrate node at ${vars.default.API_HOST}:${vars.default.API_PORT}`
+    `Disconnected from substrate node at ${option.API_HOST}:${option.API_PORT}`
   )
 })
 
 api.on('connected', () => {
   console.log(
-    `Connected to substrate node at ${vars.default.API_HOST}:${vars.default.API_PORT}`
+    `Connected to substrate node at ${option.API_HOST}:${option.API_PORT}`
   )
 })
 
