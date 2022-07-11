@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .ts",
     "build": "tsc --build",
     "depcheck": "depcheck",
-    "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts"
+    "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit"
   },
   "repository": {
     "type": "git",
