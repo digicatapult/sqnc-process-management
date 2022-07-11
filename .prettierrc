@@ -2,7 +2,5 @@
   "singleQuote": true,
   "semi": false,
   "trailingComma": "es5",
-  "printWidth": 120,
-  "extends": ["eslint:recommended", "prettier"],
-  "plugins": ["prettier"]
+  "printWidth": 120
 }
