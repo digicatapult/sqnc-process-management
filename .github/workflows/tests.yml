@@ -74,7 +74,6 @@ jobs:
   tests:
     strategy:
       matrix:
-        auth: [NONE, JWT]
     name: Run tests
     runs-on: ubuntu-latest
     steps:
@@ -100,8 +99,6 @@ jobs:
         uses: kibertoad/wait-action@1.0.1
         with:
           time: '30s'
-      - name: Initialise DB
-        run: npx knex migrate:latest --env test
       - name: Run unit tests
         run: npm run test:unit
       - name: Run integration tests
