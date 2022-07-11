@@ -1,4 +1,4 @@
-import api from '../src/lib/api.js'
+import api from '../../src/lib/api.js'
 import { expect } from 'chai';
 
 describe('Tests node connection', () => {
