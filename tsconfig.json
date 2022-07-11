@@ -2,9 +2,9 @@
   "files": ["src/lib/index.d.ts"],
   "compilerOptions": {
     "outDir": "build/",
-    "rootDir": "src",
+    "rootDir": ".",
     "lib": ["ES6", "ES2015", "ESNext"],
-    "types": ["node"],
+    "types": ["node", "mocha"],
     "resolveJsonModule": true,
     "target": "es2017",
     "module": "es6",
@@ -16,5 +16,7 @@
     "allowJs": true,
     "checkJs": false,
     "declaration": false
-  }
+  },
+  "include": ["src/**/*", "src/tests/*", "tests/**/*"],
+  "exclude": ["node_modules"]
 }
