@@ -12,23 +12,15 @@ const { api } = buildApi({
 })
 
 api.on('disconnected', () => {
-  console.log(
-    `Disconnected from substrate node at ${option.API_HOST}:${option.API_PORT}`
-  )
+  console.log(`Disconnected from substrate node at ${option.API_HOST}:${option.API_PORT}`)
 })
 
 api.on('connected', () => {
-  console.log(
-    `Connected to substrate node at ${option.API_HOST}:${option.API_PORT}`
-  )
+  console.log(`Connected to substrate node at ${option.API_HOST}:${option.API_PORT}`)
 })
 
 api.on('error', (err) => {
-  console.log(
-    `Error from substrate node connection. Error was ${
-      err.message || JSON.stringify(err)
-    }`
-  )
+  console.log(`Error from substrate node connection. Error was ${err.message || JSON.stringify(err)}`)
 })
 
 export default api

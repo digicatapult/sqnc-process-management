@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .ts",
     "build": "tsc --build",
     "depcheck": "depcheck",
-    "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit"
+    "test": "ts-mocha -n loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit",
+    "prettier": "npx prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "eslint": "^8.18.0",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.18",
+    "prettier": "^2.7.1",
     "ts-mocha": "^10.0.0"
   },
   "dependencies": {

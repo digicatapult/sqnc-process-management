@@ -2,8 +2,7 @@ version: '3'
 services:
   dscp-node:
     image: ghcr.io/digicatapult/dscp-node:latest
-    command:
-      --base-path /data/
+    command: --base-path /data/
       --dev
       --unsafe-ws-external
       --unsafe-rpc-external
