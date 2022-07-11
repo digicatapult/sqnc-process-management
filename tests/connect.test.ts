@@ -1,18 +1,16 @@
-//import api from '../src/lib/api'
-import { expect } from 'chai'
+import api from '../src/lib/api.js'
+import { expect } from 'chai';
 
 describe('Tests node connection', () => {
 
-  it('should return 1', () => {
-    // async function getLastTokenId() {
-    //   await api.default.isReady
-    //   const lastTokenId = await api.default.query.simpleNftModule.lastToken()
-    //   return lastTokenId.toJSON()
-    // }
-    const num = 1;
-    expect(num).to.equal(1);
-  })
- 
+before(async function (){
+  await api.isReady
+});
 
-  
+  it('get last token should return 0', async () => {
+
+      const lastTokenRaw = await api.query.simpleNftModule.lastToken();
+      const lastTokenId = lastTokenRaw.toJSON();
+      expect(lastTokenId).to.equal(0);
+  })
 })
