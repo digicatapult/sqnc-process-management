@@ -97,9 +97,7 @@ jobs:
         uses: kibertoad/wait-action@1.0.1
         with:
           time: '30s'
-      - name: Run unit tests
-        run: npm run test:unit
-      - name: Run integration tests
+      - name: Run tests
         run: npm run test
         env:
           AUTH_TYPE: ${{ matrix.auth }}
