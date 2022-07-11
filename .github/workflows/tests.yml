@@ -72,8 +72,6 @@ jobs:
       - name: Dependency Check
         run: npm run depcheck
   tests:
-    strategy:
-      matrix:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
