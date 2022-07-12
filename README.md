@@ -1,5 +1,7 @@
 # dscp-process-management
 
+For the basic application to work and for locally run tests to work `docker-compose up` must be run.
+
 To start the basic application
 
 ```shell
