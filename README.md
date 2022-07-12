@@ -2,6 +2,12 @@
 
 For the basic application to work and for locally run tests to work `docker-compose up` must be run.
 
+The build command should be run first to create the converted ts files.
+
+```shell
+npm run build
+```
+
 To start the basic application
 
 ```shell
