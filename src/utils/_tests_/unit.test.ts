@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import option from '../../src/lib/options.js'
+import option from './../../../src/lib/options.js'
 
 describe('Option values', () => {
 
