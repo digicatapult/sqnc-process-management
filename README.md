@@ -18,7 +18,7 @@ To run the tests
 
 ```shell
 npm run test
-npm run test:unit
+npm run teest:unit
 ```
 
 To run the application in dev mode with a nodemon watcher
