@@ -2,7 +2,7 @@ name: Lint and Test
 
 on:
   push:
-    branches-ignore: ['chore/publish-npm']
+    branches-ignore: ['main']
 
 jobs:
   repo_ids:
