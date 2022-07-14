@@ -154,4 +154,4 @@ jobs:
       - name: Publish to github packages
         run: npm publish --access public
         env:
-          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
