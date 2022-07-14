@@ -74,11 +74,6 @@ jobs:
   check-version:
     name: 'Check version'
     runs-on: ubuntu-latest
-    outputs:
-      is_new_version: ${{ steps.get_version.outputs.IS_NEW_VERSION }}
-      version: ${{ steps.get_version.outputs.VERSION }}
-      build_date: ${{ steps.get_version.outputs.BUILD_DATE }}
-      is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
 
     steps:
       - uses: actions/checkout@v2
@@ -89,11 +84,10 @@ jobs:
         id: get_version
         run: ./scripts/check-version.sh
         shell: bash
-      - name: Skipping release as version has not increased
-        if: steps.get_version.outputs.IS_NEW_VERSION != 'true'
+      - name: Error if version is not increased
         shell: bash
         run: |
-          echo "Skipping release as current version has already been published"
+          exit $([[ "${{steps.get_version.outputs.IS_NEW_VERSION}}" = "true" ]] && echo 0 || echo 1)
   tests:
     name: Run tests
     runs-on: ubuntu-latest
