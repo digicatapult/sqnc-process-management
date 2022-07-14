@@ -48,6 +48,8 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
+        env:
+          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint
         run: npm run lint
 
@@ -71,6 +73,8 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
+        env:
+          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Dependency Check
         run: npm run depcheck
   tests:
@@ -91,6 +95,8 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
+        env:
+          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup dependencies
         run: docker-compose up -d
       - name: Sleep
@@ -116,7 +122,7 @@ jobs:
         run: pip3 install yq==2.13.0
       - name: Check Build Version
         id: get_version
-        run: ./scripts/check-package-version.sh
+        run: ./scripts/check-version.sh
         shell: bash
       - name: Skipping release as version has not increased
         if: steps.get_version.outputs.IS_NEW_VERSION != 'true'
@@ -143,6 +149,8 @@ jobs:
           scope: '@digicatapult'
       - name: Install packages
         run: npm ci
+        env:
+          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to github packages
         run: npm publish --access public
         env:
