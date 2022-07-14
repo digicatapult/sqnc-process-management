@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: ['chore/publish-npm']
+    branches: ['main']
 
 jobs:
   preconditions:
