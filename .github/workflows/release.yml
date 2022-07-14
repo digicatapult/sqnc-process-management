@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: '@digicatapult/dscp-process-management'
+    branches: ['main']
 
 jobs:
   preconditions:

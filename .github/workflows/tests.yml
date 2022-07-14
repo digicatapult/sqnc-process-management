@@ -2,7 +2,7 @@ name: Lint and Test
 
 on:
   push:
-    branches-ignore: ['main']
+    branches-ignore: ['@digicatapult/dscp-process-management']
 
 jobs:
   repo_ids:
