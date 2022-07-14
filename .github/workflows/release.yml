@@ -1,11 +1,11 @@
-name: Lint and Test
+name: Release
 
 on:
   push:
-    branches-ignore: ['main']
+    branches: ['main']
 
 jobs:
-  repo_ids:
+  preconditions:
     runs-on: ubuntu-latest
     outputs:
       repo_name: ${{ steps.repo_ids.outputs.REPO_NAME }}
@@ -15,6 +15,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Check token
+        run: |
+          if [ -z "${{ secrets.GITHUB_TOKEN }}"]; then
+            echo "Must provide a GITHUB_TOKEN secret in order to run release workflow"
+            exit 1
+          fi
       - name: Get repository identifiers
         id: repo_ids
         run: |
@@ -22,7 +28,6 @@ jobs:
           ORG_NAME=$(echo "${{ github.event.repository.owner.name }}" | tr '[:upper:]' '[:lower:]')
           echo "::set-output name=REPO_NAME::$REPO_NAME"
           echo "::set-output name=ORG_NAME::$ORG_NAME"
-
   lint:
     name: Run lint
     runs-on: ubuntu-latest
@@ -43,10 +48,9 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
-        env:
-          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint
         run: npm run lint
+
   dependency-check:
     name: Run dependency check
     runs-on: ubuntu-latest
@@ -67,27 +71,8 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
-        env:
-          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Dependency Check
         run: npm run depcheck
-  check-version:
-    name: 'Check version'
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - run: git fetch --depth=1 --tags origin
-      - name: Install yq
-        run: sudo snap install yq
-      - name: Check Build Version
-        id: get_version
-        run: ./scripts/check-version.sh
-        shell: bash
-      - name: Error if version is not increased
-        shell: bash
-        run: |
-          exit $([[ "${{steps.get_version.outputs.IS_NEW_VERSION}}" = "true" ]] && echo 0 || echo 1)
   tests:
     name: Run tests
     runs-on: ubuntu-latest
@@ -116,3 +101,49 @@ jobs:
         run: npm run test:unit
       - name: Run integration tests
         run: npm run test
+  check-version:
+    name: 'Check version'
+    runs-on: ubuntu-latest
+    outputs:
+      is_new_version: ${{ steps.get_version.outputs.IS_NEW_VERSION }}
+      version: ${{ steps.get_version.outputs.VERSION }}
+      build_date: ${{ steps.get_version.outputs.BUILD_DATE }}
+      is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: git fetch --depth=1 --tags origin
+      - name: Install yq
+        run: pip3 install yq==2.13.0
+      - name: Check Build Version
+        id: get_version
+        run: ./scripts/check-package-version.sh
+        shell: bash
+      - name: Skipping release as version has not increased
+        if: steps.get_version.outputs.IS_NEW_VERSION != 'true'
+        shell: bash
+        run: |
+          echo "Skipping release as current version has already been published"
+  publish:
+    name: 'Publish package'
+    needs:
+      - preconditions
+      - lint
+      - dependency-check
+      - tests
+      - check-version
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@digicatapult'
+      - name: Install packages
+        run: npm ci
+      - name: Publish to github packages
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
