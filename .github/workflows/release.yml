@@ -47,10 +47,8 @@ jobs:
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
       - name: Install Packages
-        working-directory: api
         run: npm ci
       - name: Lint
-        working-directory: api
         run: npm run lint
 
   dependency-check:
@@ -72,10 +70,8 @@ jobs:
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
       - name: Install Packages
-        working-directory: api
         run: npm ci
       - name: Dependency Check
-        working-directory: api
         run: npm run depcheck
   tests:
     name: Run tests
@@ -146,10 +142,8 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@digicatapult'
       - name: Install packages
-        working-directory: api
         run: npm ci
       - name: Publish to github packages
-        working-directory: api
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
