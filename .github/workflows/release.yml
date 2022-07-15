@@ -172,10 +172,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           scope: '@digicatapult'
       - name: Install packages
-        working-directory: api
         run: npm ci
       - name: Publish to npmjs packages
-        working-directory: api
         run: npm publish --access public 
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
