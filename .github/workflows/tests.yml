@@ -43,8 +43,6 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
-        env:
-          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint
         run: npm run lint
   dependency-check:
@@ -67,8 +65,6 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
-        env:
-          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Dependency Check
         run: npm run depcheck
   check-version:
@@ -106,8 +102,6 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
-        env:
-          GITHUB_PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup dependencies
         run: docker-compose up -d
       - name: Sleep

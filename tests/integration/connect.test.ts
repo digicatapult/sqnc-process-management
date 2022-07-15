@@ -7,7 +7,7 @@ describe('Tests node connection', () => {
   })
 
   it('get last token should return 0', async () => {
-    const lastTokenRaw = await api.query.simpleNftModule.lastToken()
+    const lastTokenRaw = await api.query.simpleNFT.lastToken()
     const lastTokenId = lastTokenRaw.toJSON()
     expect(lastTokenId).to.equal(0)
   })
