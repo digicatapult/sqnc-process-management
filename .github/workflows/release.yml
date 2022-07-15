@@ -160,6 +160,7 @@ jobs:
       - preconditions
       - lint
       - dependency-check
+      - tests
       - check-version
     runs-on: ubuntu-latest
     if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
