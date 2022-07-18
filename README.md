@@ -42,7 +42,9 @@ const { api } = buildApi({
 ```
 
 The following `options` can be configured:
-| variable | required | default | description |
-| :------------------------- | :------: | :---------------------------------------------------: | :-------------------------------------------------------------------- |
-| apiHost | N | `localhost` | The hostname of the `dscp-node` the API should connect to |
-| apiPort | N | `9944` | The port of the `dscp-node` the API should connect to |
+
+| variable | required |   default   | description                                                                                  |
+| :------- | :------: | :---------: | :------------------------------------------------------------------------------------------- |
+| API_HOST |    N     | `localhost` | The hostname of the `dscp-node` the API should connect to                                    |
+| API_PORT |    N     |   `9944`    | The port of the `dscp-node` the API should connect to                                        |
+| USER_URI |    N     |  `//Alice`  | The Substrate `URI` representing the private key to use when making `dscp-node` transactions |

@@ -1,7 +1,7 @@
 import { buildApi } from '@digicatapult/dscp-node'
 import option from './options.ts'
 
-const { api } = buildApi({
+export const { api, keyring } = buildApi({
   options: {
     apiHost: option.API_HOST,
     apiPort: option.API_PORT,
@@ -19,5 +19,3 @@ api.on('connected', () => {
 api.on('error', (err) => {
   console.log(`Error from substrate node connection. Error was ${err.message || JSON.stringify(err)}`)
 })
-
-export default api
