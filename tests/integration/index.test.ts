@@ -16,6 +16,19 @@ describe('Process creation and deletion', () => {
     expect(disabledProcess).to.deep.equal({ id: '0x30', version: bumpedVersion })
   })
 
+  it('does not create process if dry run', async () => {
+    const currentVersion = await getVersionUtf('0')
+    const bumpedVersion = currentVersion + 1
+    const newProcess = await createProcess('0', bumpedVersion, validRestrictions, true)
+    expect(newProcess).to.equal(null)
+  })
+
+  it('does not disable process if dry run', async () => {
+    const currentVersion = await getVersionUtf('0')
+    const disabledProcess = await disableProcess('0', currentVersion, true)
+    expect(disabledProcess).to.equal(null)
+  })
+
   it('fails for same version', async () => {
     const currentVersion = await getVersionUtf('0')
     return assert.isRejected(createProcess('0', currentVersion, ''))
@@ -30,5 +43,9 @@ describe('Process creation and deletion', () => {
   it('fails with too long process id', async () => {
     const processId = 'a'.repeat(PROCESS_ID_LENGTH + 1)
     return assert.isRejected(createProcess(processId, 1, ''))
+  })
+
+  it('fails for process that does not exist', async () => {
+    return assert.isRejected(disableProcess('incorrectProcessName', 1))
   })
 })

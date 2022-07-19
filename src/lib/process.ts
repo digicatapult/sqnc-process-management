@@ -24,19 +24,21 @@ const mapRestrictions = (restrictionsObj: object) => {
 
 export async function createProcess(name: string, version: number, rawRestrictions: string, dryRun?: boolean) {
   const restrictions = mapRestrictions(JSON.parse(rawRestrictions))
-  console.log(restrictions)
   const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
-  console.log(processId)
-
   const currentVersion = await getVersion(processId)
 
   if (version <= currentVersion) {
-    throw new Error(`version: ${version} must be higher than current version: ${currentVersion}`)
+    throw new Error(`Version: ${version} must be higher than current version: ${currentVersion}`)
   }
 
   if (dryRun) {
-    console.log('bla')
-    return
+    console.log(`
+    This will create the following process:
+
+    name: ${name} 
+    version: ${currentVersion + 1}
+    restrictions: ${JSON.stringify(restrictions, null, 2)}`)
+    return null
   }
 
   const process = await createProcessTransaction(processId, version, restrictions)
@@ -46,11 +48,19 @@ export async function createProcess(name: string, version: number, rawRestrictio
 
 export async function disableProcess(name: string, processVersion: number, dryRun?: boolean) {
   const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
-  console.log(processId)
+  const currentVersion = await getVersion(processId)
+
+  if (!currentVersion) {
+    throw new Error(`Version: ${processVersion} does not exist for name: ${name}`)
+  }
 
   if (dryRun) {
-    console.log('bla')
-    return
+    console.log(`
+    This will disable the following process:
+
+    name: ${name} 
+    version: ${processVersion}`)
+    return null
   }
 
   const process = await disableProcessTransaction(processId, processVersion)
