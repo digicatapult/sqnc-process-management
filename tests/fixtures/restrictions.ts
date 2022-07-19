@@ -1,73 +1,80 @@
-export const validAll = [
-  {
-    None: {},
-  },
-  {
-    SenderOwnsAllInputs: {},
-  },
-  {
-    SenderHasInputRole: {
+export const validRestrictions = JSON.stringify({
+  None: [],
+  SenderOwnsAllInputs: [],
+  SenderHasInputRole: [
+    {
       index: 0,
       role_key: 'Supplier',
     },
-  },
-  {
-    SenderHasOutputRole: {
+  ],
+  SenderHasOutputRole: [
+    {
       index: 0,
       role_key: 'Supplier',
     },
-  },
-  {
-    OutputHasRole: {
+  ],
+  OutputHasRole: [
+    {
       index: 0,
       role_key: 'Supplier',
     },
-  },
-  {
-    MatchInputOutputRole: {
+  ],
+  MatchInputOutputRole: [
+    {
       input_index: 0,
       input_role_key: 'Supplier',
       output_index: 0,
       output_role_key: 'Supplier',
     },
-  },
-  {
-    MatchInputOutputMetadataValue: {
+  ],
+  MatchInputOutputMetadataValue: [
+    {
       input_index: 0,
       input_metadata_key: 'SomeMetadataKey',
       output_index: 0,
       output_metadata_key: 'SomeMetadataKey',
     },
-  },
-  {
-    FixedNumberOfInputs: {
+  ],
+  FixedNumberOfInputs: [
+    {
       num_inputs: 0,
     },
-  },
-  {
-    FixedNumberOfOutputs: {
+  ],
+  FixedNumberOfOutputs: [
+    {
       num_outputs: 0,
     },
-  },
-  {
-    FixedInputMetadataValue: {
+  ],
+  FixedInputMetadataValue: [
+    {
       index: 0,
       metadata_key: 'SomeMetadataKey',
-      metadata_value: '0x',
+      metadata_value: {
+        Literal: 'a',
+      },
     },
-  },
-  {
-    FixedOutputMetadataValue: {
+    {
+      index: 0,
+      metadata_key: 'SomeOtherMetadataKey',
+      metadata_value: {
+        Literal: 'b',
+      },
+    },
+  ],
+  FixedOutputMetadataValue: [
+    {
       index: 0,
       metadata_key: 'SomeMetadataKey',
-      metadata_value: '0x',
+      metadata_value: {
+        Literal: 'a',
+      },
     },
-  },
-  {
-    FixedOutputMetadataValueType: {
+  ],
+  FixedOutputMetadataValueType: [
+    {
       index: 0,
       metadata_key: 'SomeMetadataKey',
       metadata_value_type: 'Literal',
     },
-  },
-]
+  ],
+})

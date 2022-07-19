@@ -3,8 +3,28 @@ import { Restrictions, PROCESS_ID_LENGTH } from './restrictions.js'
 import options from './options.js'
 import { utf8ToHex } from './helpers/hex.js'
 
-export async function createProcess(name: string, version: number, restrictionsJSON: string, dryRun?: boolean) {
-  const restrictions: Restrictions = JSON.parse(restrictionsJSON)
+// Changes more human-readable format of grouped restrictions to array of single restrictions for submitting to node
+// { RestrictionName: [RestrictionValue] } -> [ { RestrictionName: RestrictionValue } ]
+const mapRestrictions = (restrictionsObj: object) => {
+  return Object.entries(restrictionsObj).map(([restrictionName, restrictionValues]) => {
+    if (restrictionValues.length === 0) {
+      return { [restrictionName]: {} }
+    }
+
+    let newObject = {}
+    for (const restrictionValue of restrictionValues) {
+      newObject = {
+        ...newObject,
+        [restrictionName]: restrictionValue,
+      }
+    }
+    return newObject
+  }) as Restrictions
+}
+
+export async function createProcess(name: string, version: number, rawRestrictions: string, dryRun?: boolean) {
+  const restrictions = mapRestrictions(JSON.parse(rawRestrictions))
+  console.log(restrictions)
   const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
   console.log(processId)
 
