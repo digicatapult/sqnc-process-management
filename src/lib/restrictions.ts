@@ -1,4 +1,4 @@
-export type Restrictions = Restriction[]
+export const PROCESS_ID_LENGTH: number = 32
 
 type TokenMetadataKey = string
 type TokenId = number
@@ -9,19 +9,20 @@ enum MetadataValueType {
   File,
   Literal,
   TokenId,
-  None
+  None,
 }
 
 enum Role {
-    Owner,
-    Customer,
-    AdditiveManufacturer,
-    Laboratory,
-    Buyer,
-    Supplier,
-    Reviewer
+  Owner,
+  Customer,
+  AdditiveManufacturer,
+  Laboratory,
+  Buyer,
+  Supplier,
+  Reviewer,
 }
 
+export type Restrictions = Restriction[]
 interface Restriction {
   None?: None
   SenderOwnsAllInputs?: SenderOwnsAllInputs

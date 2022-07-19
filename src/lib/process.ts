@@ -1,10 +1,11 @@
 import { api, keyring } from './api.js'
-import { Restrictions } from './restrictions.js'
+import { Restrictions, PROCESS_ID_LENGTH } from './restrictions.js'
 import options from './options.js'
+import { utf8ToHex } from './helpers/hex.js'
 
 export async function createProcess(name: string, version: number, restrictionsJSON: string, dryRun?: boolean) {
   const restrictions: Restrictions = JSON.parse(restrictionsJSON)
-  const processId = utf8ToHex(name, 32)
+  const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
   console.log(processId)
 
   const currentVersion = await getVersion(processId)
@@ -24,7 +25,7 @@ export async function createProcess(name: string, version: number, restrictionsJ
 }
 
 export async function disableProcess(name: string, processVersion: number, dryRun?: boolean) {
-  const processId = utf8ToHex(name, 32)
+  const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
   console.log(processId)
 
   if (dryRun) {
@@ -102,8 +103,6 @@ const disableProcessTransaction = async (processId: string, processVersion: numb
             .filter(({ event: { method } }: { event: { method: string } }) => method === 'ExtrinsicFailed')
             .map(({ event: { data } }: { event: { data: any } }) => data[0])
 
-          console.log(errors)
-
           if (errors.length > 0) {
             reject('ExtrinsicFailed error in processValidation.disableProcess')
           }
@@ -121,15 +120,6 @@ const disableProcessTransaction = async (processId: string, processVersion: numb
   })
 }
 
-const utf8ToHex = (str: string, len: number) => {
-  const buffer = Buffer.from(str, 'utf8')
-  const bufferHex = buffer.toString('hex')
-  // if (bufferHex.length > 2 * len) {
-  //   throw new Error(`${str} is too long. Max length: ${len} bytes`)
-  // }
-  return `0x${bufferHex}`
-}
-
 async function getVersion(processId: string) {
   await api.isReady
   const id = await api.query.processValidation.versionModel(processId)
@@ -137,5 +127,5 @@ async function getVersion(processId: string) {
 }
 
 export async function getVersionUtf(name: string) {
-  return await getVersion(utf8ToHex(name, 32))
+  return await getVersion(utf8ToHex(name, PROCESS_ID_LENGTH))
 }
