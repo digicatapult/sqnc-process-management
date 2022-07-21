@@ -44,55 +44,55 @@ export interface SenderOwnsAllInputs {}
 
 export interface SenderHasInputRole {
   index: number
-  role_key: Role
+  roleKey: Role
 }
 
 export interface SenderHasOutputRole {
   index: number
-  role_key: Role
+  roleKey: Role
 }
 
 export interface OutputHasRole {
   index: number
-  role_key: Role
+  roleKey: Role
 }
 
 export interface MatchInputOutputRole {
-  input_index: number
-  input_role_key: Role
-  output_index: number
-  output_role_key: Role
+  inputIndex: number
+  inputRoleKey: Role
+  outputIndex: number
+  outputRoleKey: Role
 }
 
 export interface MatchInputOutputMetadataValue {
-  input_index: number
-  input_metadata_key: TokenMetadataKey
-  output_index: number
-  output_metadata_key: TokenMetadataKey
+  inputIndex: number
+  inputMetadataKey: TokenMetadataKey
+  outputIndex: number
+  outputMetadataKey: TokenMetadataKey
 }
 
 export interface FixedNumberOfInputs {
-  num_inputs: number
+  numInputs: number
 }
 
 export interface FixedNumberOfOutputs {
-  num_outputs: number
+  numOutputs: number
 }
 
 export interface FixedInputMetadataValue {
   index: number
-  metadata_key: TokenMetadataKey
-  metadata_value: MetadataValue
+  metadataKey: TokenMetadataKey
+  metadataValue: MetadataValue
 }
 
 export interface FixedOutputMetadataValue {
   index: number
-  metadata_key: TokenMetadataKey
-  metadata_value: MetadataValue
+  metadataKey: TokenMetadataKey
+  metadataValue: MetadataValue
 }
 
 export interface FixedOutputMetadataValueType {
   index: number
-  metadata_key: TokenMetadataKey
-  metadata_value_type: MetadataValueType
+  metadataKey: TokenMetadataKey
+  metadataValueType: MetadataValueType
 }

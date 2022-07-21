@@ -1,71 +1,64 @@
-export const validRestrictions = JSON.stringify({
+export const validAllRestrictions = JSON.stringify({
   None: [],
   SenderOwnsAllInputs: [],
   SenderHasInputRole: [
     {
       index: 0,
-      role_key: 'Supplier',
+      roleKey: 'Supplier',
     },
   ],
   SenderHasOutputRole: [
     {
       index: 0,
-      role_key: 'Supplier',
+      roleKey: 'Supplier',
     },
   ],
   OutputHasRole: [
     {
       index: 0,
-      role_key: 'Supplier',
+      roleKey: 'Supplier',
     },
   ],
   MatchInputOutputRole: [
     {
-      input_index: 0,
-      input_role_key: 'Supplier',
-      output_index: 0,
-      output_role_key: 'Supplier',
+      inputIndex: 0,
+      inputRoleKey: 'Supplier',
+      outputIndex: 0,
+      outputRoleKey: 'Supplier',
     },
   ],
   MatchInputOutputMetadataValue: [
     {
-      input_index: 0,
-      input_metadata_key: 'SomeMetadataKey',
-      output_index: 0,
-      output_metadata_key: 'SomeMetadataKey',
+      inputIndex: 0,
+      inputMetadataKey: 'SomeMetadataKey',
+      outputIndex: 0,
+      outputMetadataKey: 'SomeMetadataKey',
     },
   ],
   FixedNumberOfInputs: [
     {
-      num_inputs: 0,
+      numInputs: 0,
     },
   ],
   FixedNumberOfOutputs: [
     {
-      num_outputs: 0,
+      numOutputs: 0,
     },
   ],
   FixedInputMetadataValue: [
     {
       index: 0,
-      metadata_key: 'SomeMetadataKey',
-      metadata_value: {
+      metadataKey: 'SomeMetadataKey',
+      metadataValue: {
         Literal: 'a',
-      },
-    },
-    {
-      index: 0,
-      metadata_key: 'SomeOtherMetadataKey',
-      metadata_value: {
-        Literal: 'b',
       },
     },
   ],
   FixedOutputMetadataValue: [
     {
       index: 0,
-      metadata_key: 'SomeMetadataKey',
-      metadata_value: {
+      metadataKey: 'SomeMetadataKey',
+      metadataValue: {
         Literal: 'a',
       },
     },
@@ -73,8 +66,53 @@ export const validRestrictions = JSON.stringify({
   FixedOutputMetadataValueType: [
     {
       index: 0,
-      metadata_key: 'SomeMetadataKey',
-      metadata_value_type: 'Literal',
+      metadataKey: 'SomeMetadataKey',
+      metadataValueType: 'Literal',
+    },
+  ],
+})
+
+export const validMultipleOfSameRestrictions = JSON.stringify({
+  FixedInputMetadataValue: [
+    {
+      index: 0,
+      metadataKey: 'key0',
+      metadataValue: {
+        Literal: 'a',
+      },
+    },
+    {
+      index: 0,
+      metadataKey: 'key1',
+      metadataValue: {
+        File: '0x',
+      },
+    },
+    {
+      index: 0,
+      metadataKey: 'key2',
+      metadataValue: {
+        TokenId: 0,
+      },
+    },
+    {
+      index: 0,
+      metadataKey: 'key3',
+      metadataValue: {
+        None: null,
+      },
+    },
+  ],
+})
+
+export const invalidRestrictionName = JSON.stringify({
+  NotARestriction: [],
+})
+
+export const invalidRestrictionValue = JSON.stringify({
+  FixedInputMetadataValue: [
+    {
+      invalid: 0,
     },
   ],
 })
