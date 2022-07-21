@@ -32,8 +32,8 @@ export async function createProcess(
   const polkadot: Polkadot = await createNodeApi(options)
   const currentVersion = await getVersion(polkadot, processId)
 
-  if (version <= currentVersion) {
-    throw new Error(`Version: ${version} must be higher than current version: ${currentVersion}`)
+  if (version !== currentVersion + 1) {
+    throw new Error(`Version: ${version} must be one higher than current version: ${currentVersion}`)
   }
 
   if (dryRun) {

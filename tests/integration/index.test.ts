@@ -86,6 +86,10 @@ describe('Process creation and deletion', () => {
       return assert.isRejected(createProcess('0', currentVersion - 1, validAllRestrictions))
     })
 
+    it('fails to create for too high version', async () => {
+      return assert.isRejected(createProcess('0', currentVersion + 2, validAllRestrictions))
+    })
+
     it('fails to create with too long process id', async () => {
       const processId = 'a'.repeat(PROCESS_ID_LENGTH + 1)
       return assert.isRejected(createProcess(processId, 1, validAllRestrictions))
