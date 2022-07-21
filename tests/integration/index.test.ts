@@ -28,7 +28,7 @@ describe('Process creation and deletion', () => {
       })
 
       const processOnChain = await getProcessHelper('0x30', bumpedVersion)
-      expect(processOnChain.restrictions.length).to.equal(mappedRestrictions.length) // restrictions are returned with some hex values making equality check difficult
+      expect(processOnChain?.restrictions?.length).to.equal(mappedRestrictions.length) // restrictions are returned with some hex values making equality check difficult
 
       const disabledProcess = await disableProcess('0', bumpedVersion)
       expect(disabledProcess.process).to.deep.equal({ id: '0x30', version: bumpedVersion, status: 'Disabled' })

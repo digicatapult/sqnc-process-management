@@ -1,4 +1,6 @@
+import { ApiPromise, Keyring } from '@polkadot/api'
+
 export type Polkadot = {
-  api: any
-  keyring: any
+  api: ApiPromise
+  keyring: Keyring
 }
