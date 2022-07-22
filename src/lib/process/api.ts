@@ -80,12 +80,18 @@ export const disableProcessTransaction = async (
   })
 }
 
-export const getVersion = async (polkadot: Polkadot, processId: string) => {
+export const getVersion = async (polkadot: Polkadot, processId: string): Promise<number> => {
   const id = await polkadot.api.query.processValidation.versionModel(processId)
   return Number(id.toString())
 }
 
-export const getProcess = async (polkadot: Polkadot, processId: string, version: number) => {
-  const process = await polkadot.api.query.processValidation.processModel(processId, version)
-  return process.toJSON()
+export const getProcess = async (polkadot: Polkadot, processId: string, version: number): Promise<Process> => {
+  const result = await polkadot.api.query.processValidation.processModel(processId, version)
+  const data = Object(result.toJSON())
+  return {
+    id: processId,
+    version: version,
+    status: data.status,
+    restrictions: data.restrictions,
+  }
 }
