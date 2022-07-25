@@ -62,7 +62,7 @@ Restrictions are provided as JSON in the format `{ RestrictionName: [Restriction
     }
   ],
   "FixedOutputMetadataValueType": [
-    // the same restriction can be added multiple times with different values
+    // the same restriction type can be added multiple times with different values
     {
       "index": 0,
       "metadataKey": "SomeMetadataKey",
@@ -87,7 +87,7 @@ createProcess (
   version: number, // version number of the process. Must be `1` for a new process or one higher than the version of an existing process
   rawRestrictions: string, // JSON of the process restrictions
   dryRun: boolean, // Optional - defaults to false. Shows the expected result of creating the process, without actually running the transaction
-  options: Options // Optional - Polkadot API options
+  options: Polkadot.Options // Optional - Polkadot API options
 )
 ```
 
@@ -98,6 +98,6 @@ disableProcess (
   name: string, // the name (processId) of the process to disable. Max length 32 bytes
   version: number, // version number of the process to disable.
   dryRun: boolean, // Optional - defaults to false. Shows the expected result of disabling the process, without actually running the transaction
-  options: Options // Optional - Polkadot API options
+  options: Polkadot.Options // Optional - Polkadot API options
 )
 ```

@@ -10,25 +10,13 @@ export const defaultOptions: Polkadot.Options = {
   USER_URI: '//Alice',
 }
 
-export type Process = {
-  id: string
-  version: number
-  status: 'Enabled' | 'Disabled'
-  restrictions?: Restrictions.Restrictions
-} | null
-
-type ProcessResult = {
-  process: Process
-  message: string
-}
-
 export const createProcess = async (
   name: string,
   version: number,
   rawRestrictions: string,
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
-): Promise<ProcessResult> => {
+): Promise<Process.Result> => {
   const restrictions: Restrictions.Restrictions = mapRestrictions(rawRestrictions)
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
 
@@ -68,7 +56,7 @@ export const disableProcess = async (
   processVersion: number,
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
-): Promise<ProcessResult> => {
+): Promise<Process.Result> => {
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
 
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)

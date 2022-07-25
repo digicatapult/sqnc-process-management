@@ -1,6 +1,6 @@
 import { createNodeApi } from '../../src/lib/utils/polkadot.js'
 import { getVersion, getProcess } from '../../src/lib/process/api.js'
-import { Process, defaultOptions } from '../../src/lib/process/index.js'
+import { defaultOptions } from '../../src/lib/process/index.js'
 
 export const getVersionHelper = async (processId: string): Promise<number> => {
   const polkadot = await createNodeApi(defaultOptions)
@@ -9,7 +9,7 @@ export const getVersionHelper = async (processId: string): Promise<number> => {
   return version
 }
 
-export const getProcessHelper = async (processId: string, version: number): Promise<Process> => {
+export const getProcessHelper = async (processId: string, version: number): Promise<Process.Process> => {
   const polkadot = await createNodeApi(defaultOptions)
   const process = await getProcess(polkadot, processId, version)
   await polkadot.api.disconnect()
