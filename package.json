@@ -29,7 +29,6 @@
   },
   "homepage": "https://github.com/digicatapult/dscp-process-management#readme",
   "devDependencies": {
-    "@polkadot/api": "^8.13.1",
     "@types/chai": "^4.3.1",
     "@types/chai-as-promised": "^7.1.5",
     "@types/clear": "^0.1.2",
