@@ -4,7 +4,6 @@
     "rootDir": ".",
     "lib": ["ES6", "ES2015", "ESNext"],
     "types": ["node", "mocha"],
-    "typeRoots": ["./src/lib/types"],
     "resolveJsonModule": true,
     "target": "es6",
     "module": "es6",

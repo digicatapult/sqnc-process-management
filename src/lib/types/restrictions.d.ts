@@ -3,23 +3,8 @@ declare namespace Restrictions {
   type TokenId = number
   type File = string
   type MetadataValue = File | string | TokenId | null
-
-  enum MetadataValueType {
-    File,
-    Literal,
-    TokenId,
-    None,
-  }
-
-  enum Role {
-    Owner,
-    Customer,
-    AdditiveManufacturer,
-    Laboratory,
-    Buyer,
-    Supplier,
-    Reviewer,
-  }
+  type MetadataValueType = 'File' | 'Literal' | 'TokenId' | 'None'
+  type Role = 'Owner' | 'Customer' | 'AdditiveManufacturer' | 'Laboratory' | 'Buyer' | 'Supplier' | 'Reviewer'
 
   export type Restrictions = Restriction[]
   interface Restriction {

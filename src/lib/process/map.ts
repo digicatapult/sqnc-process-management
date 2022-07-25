@@ -1,4 +1,4 @@
-// Changes more human-readable format of grouped restrictions to array of single restrictions for submitting to node
+// Changes more human-readable format of grouping the same type of restriction -> an array of single restrictions for submitting to node
 // { RestrictionName: [RestrictionValue] } -> [ { RestrictionName: RestrictionValue } ]
 export const mapRestrictions = (rawRestrictions: string): Restrictions.Restrictions => {
   const restrictionsObj: Object = JSON.parse(rawRestrictions)
