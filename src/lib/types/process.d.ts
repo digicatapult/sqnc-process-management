@@ -1,5 +1,5 @@
 declare namespace Process {
-  export type Process = {
+  export type Payload = {
     id: string
     version: number
     status: 'Enabled' | 'Disabled'

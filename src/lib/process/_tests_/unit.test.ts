@@ -1,10 +1,24 @@
 import { expect } from 'chai'
-import { defaultOptions } from '../../process/index.js'
+import { utf8ToHex } from '../hex.js'
+import { mapRestrictions } from '../map.js'
+import { restrictionsAfterMap, restrictionsBeforeMap } from './fixtures.js'
 
-describe('Options values', () => {
-  it('should return 9944', () => {
-    expect(defaultOptions.API_PORT).to.equal(9944)
+describe('utf8ToHex', () => {
+  it('converts a utf8 string to hexadecimal', () => {
+    expect(utf8ToHex('test123', 10)).to.equal('0x74657374313233')
+  })
+
+  it('throws for string over given max length', () => {
+    expect(() => utf8ToHex('test123', 1)).to.throw()
   })
 })
 
-//TODO unit test `process` helper functions
+describe('mapRestrictions', () => {
+  it('maps{ RestrictionName: [RestrictionValue] } -> [ { RestrictionName: RestrictionValue } ]', () => {
+    expect(mapRestrictions(restrictionsBeforeMap)).to.deep.equal(restrictionsAfterMap)
+  })
+
+  it('throws for invalid JSON', () => {
+    expect(() => mapRestrictions('not JSON')).to.throw()
+  })
+})
