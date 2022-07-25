@@ -19,13 +19,13 @@ export type Process = {
   restrictions?: Restrictions
 } | null
 
-export async function createProcess(
+export const createProcess = async (
   name: string,
   version: number,
   rawRestrictions: string,
   dryRun: boolean = false,
   options: Options = defaultOptions
-): Promise<ProcessResult> {
+): Promise<ProcessResult>  => {
   const restrictions: Restrictions = mapRestrictions(rawRestrictions)
   const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
 
@@ -60,12 +60,12 @@ export async function createProcess(
   }
 }
 
-export async function disableProcess(
+export const disableProcess = async (
   name: string,
   processVersion: number,
   dryRun: boolean = false,
   options: Options = defaultOptions
-): Promise<ProcessResult> {
+): Promise<ProcessResult> => {
   const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
 
   const polkadot: Polkadot = await createNodeApi(options)
