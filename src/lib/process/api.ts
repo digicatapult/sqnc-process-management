@@ -1,13 +1,10 @@
-import { Restrictions } from '../types/restrictions.js'
-import { Options } from '../types/options.js'
-import { Polkadot } from '../types/substrate.js'
-import { Process } from './index.js'
+import type { Process } from './index.js'
 
 export const createProcessTransaction = async (
-  polkadot: Polkadot,
+  polkadot: Polkadot.Polkadot,
   processId: string,
-  restrictions: Restrictions,
-  options: Options
+  restrictions: Restrictions.Restrictions,
+  options: Polkadot.Options
 ): Promise<Process> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
 
@@ -43,10 +40,10 @@ export const createProcessTransaction = async (
 }
 
 export const disableProcessTransaction = async (
-  polkadot: Polkadot,
+  polkadot: Polkadot.Polkadot,
   processId: string,
   version: number,
-  options: Options
+  options: Polkadot.Options
 ): Promise<Process> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
 
@@ -80,12 +77,12 @@ export const disableProcessTransaction = async (
   })
 }
 
-export const getVersion = async (polkadot: Polkadot, processId: string): Promise<number> => {
+export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string): Promise<number> => {
   const id = await polkadot.api.query.processValidation.versionModel(processId)
   return Number(id.toString())
 }
 
-export const getProcess = async (polkadot: Polkadot, processId: string, version: number): Promise<Process> => {
+export const getProcess = async (polkadot: Polkadot.Polkadot, processId: string, version: number): Promise<Process> => {
   const result = await polkadot.api.query.processValidation.processModel(processId, version)
   const data = Object(result.toJSON())
   return {

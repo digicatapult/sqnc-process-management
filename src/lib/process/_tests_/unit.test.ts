@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { defaultOptions } from '../../types/options.js'
+import { defaultOptions } from '../../process/index.js'
 
 describe('Options values', () => {
   it('should return 9944', () => {

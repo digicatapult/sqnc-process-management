@@ -43,7 +43,7 @@ The library functions of `dscp-process-management` take an optional `Options` ob
 
 Restrictions are provided as JSON in the format `{ RestrictionName: [RestrictionValue] } `. For example:
 
-```json
+```
 {
   "SenderOwnsAllInputs": [], // some restrictions do not require a value
   "SenderHasInputRole": [

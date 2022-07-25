@@ -1,35 +1,38 @@
 import { createNodeApi } from '../utils/polkadot.js'
-import { PROCESS_ID_LENGTH } from '../types/restrictions.js'
-import { defaultOptions, Options } from '../types/options.js'
+import { Constants } from './constants.js'
 import { createProcessTransaction, disableProcessTransaction, getVersion } from './api.js'
 import { utf8ToHex } from './hex.js'
-import { Polkadot } from '../types/substrate.js'
 import { mapRestrictions } from './map.js'
-import { Restrictions } from '../types/restrictions.js'
 
-export type ProcessResult = {
-  process: Process
-  message: string
+export const defaultOptions: Polkadot.Options = {
+  API_HOST: 'localhost',
+  API_PORT: 9944,
+  USER_URI: '//Alice',
 }
 
 export type Process = {
   id: string
   version: number
   status: 'Enabled' | 'Disabled'
-  restrictions?: Restrictions
+  restrictions?: Restrictions.Restrictions
 } | null
+
+type ProcessResult = {
+  process: Process
+  message: string
+}
 
 export const createProcess = async (
   name: string,
   version: number,
   rawRestrictions: string,
   dryRun: boolean = false,
-  options: Options = defaultOptions
-): Promise<ProcessResult>  => {
-  const restrictions: Restrictions = mapRestrictions(rawRestrictions)
-  const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
+  options: Polkadot.Options = defaultOptions
+): Promise<ProcessResult> => {
+  const restrictions: Restrictions.Restrictions = mapRestrictions(rawRestrictions)
+  const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
 
-  const polkadot: Polkadot = await createNodeApi(options)
+  const polkadot: Polkadot.Polkadot = await createNodeApi(options)
   const currentVersion = await getVersion(polkadot, processId)
 
   if (version !== currentVersion + 1) {
@@ -64,11 +67,11 @@ export const disableProcess = async (
   name: string,
   processVersion: number,
   dryRun: boolean = false,
-  options: Options = defaultOptions
+  options: Polkadot.Options = defaultOptions
 ): Promise<ProcessResult> => {
-  const processId = utf8ToHex(name, PROCESS_ID_LENGTH)
+  const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
 
-  const polkadot: Polkadot = await createNodeApi(options)
+  const polkadot: Polkadot.Polkadot = await createNodeApi(options)
   const currentVersion = await getVersion(polkadot, processId)
 
   if (!currentVersion) {

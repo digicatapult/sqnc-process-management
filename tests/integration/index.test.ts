@@ -9,7 +9,7 @@ import {
   invalidRestrictionName,
   invalidRestrictionValue,
 } from '../fixtures/restrictions.js'
-import { PROCESS_ID_LENGTH } from '../../src/lib/types/restrictions.js'
+import { Constants } from '../../src/lib/process/constants.js'
 import { getProcessHelper, getVersionHelper } from '../helpers/substrateHelper.js'
 import { mapRestrictions } from '../../src/lib/process/map.js'
 
@@ -91,7 +91,7 @@ describe('Process creation and deletion', () => {
     })
 
     it('fails to create with too long process id', async () => {
-      const processId = 'a'.repeat(PROCESS_ID_LENGTH + 1)
+      const processId = 'a'.repeat(Constants.PROCESS_ID_LENGTH + 1)
       return assert.isRejected(createProcess(processId, 1, validAllRestrictions))
     })
 

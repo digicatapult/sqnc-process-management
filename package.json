@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .ts",
     "build": "tsc --build",
     "depcheck": "depcheck",
-    "test": "ts-mocha --config ./tests/mocharc.json -n  loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit",
+    "test": "ts-mocha --config ./tests/mocharc.json -n loader=ts-node/esm -p tsconfig.json tests/integration --exit",
     "test:unit": "ts-mocha --config ./tests/mocharc.json -n loader=ts-node/esm -p tsconfig.json src/**/*.test.ts --exit",
     "prettier": "npx prettier --write ."
   },

@@ -1,10 +1,10 @@
 {
-  "files": ["src/lib/index.d.ts"],
   "compilerOptions": {
     "outDir": "build/",
     "rootDir": ".",
     "lib": ["ES6", "ES2015", "ESNext"],
     "types": ["node", "mocha"],
+    "typeRoots": ["./src/lib/types"],
     "resolveJsonModule": true,
     "target": "es6",
     "module": "es6",
@@ -17,6 +17,7 @@
     "checkJs": false,
     "declaration": false
   },
+  "ts-node": { "files": true },
   "include": ["src/**/*", "src/tests/*", "tests/**/*"],
   "exclude": ["node_modules"]
 }
