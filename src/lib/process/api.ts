@@ -1,7 +1,9 @@
+import type { ChainRestrictions } from '../types/restrictions'
+
 export const createProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
   processId: string,
-  restrictions: Restrictions.Restrictions,
+  restrictions: ChainRestrictions,
   options: Polkadot.Options
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)

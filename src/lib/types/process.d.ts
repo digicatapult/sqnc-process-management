@@ -1,9 +1,11 @@
-declare namespace Process {
+namespace Process {
+  import type { ChainRestrictions } from './restrictions'
+
   export type Payload = {
     id: string
     version: number
     status: 'Enabled' | 'Disabled'
-    restrictions?: Restrictions.Restrictions
+    restrictions?: Restrictions
   } | null
 
   type Result = {

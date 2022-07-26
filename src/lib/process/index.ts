@@ -3,6 +3,8 @@ import { Constants } from './constants.js'
 import { createProcessTransaction, disableProcessTransaction, getVersion } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { mapRestrictions } from './map.js'
+import type { ChainRestrictions } from '../types/restrictions.js'
+import { VersionError } from '../types/error.js'
 
 export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
@@ -17,14 +19,14 @@ export const createProcess = async (
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
 ): Promise<Process.Result> => {
-  const restrictions: Restrictions.Restrictions = mapRestrictions(rawRestrictions)
+  const restrictions: ChainRestrictions = mapRestrictions(rawRestrictions)
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
 
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
   const currentVersion = await getVersion(polkadot, processId)
 
   if (version !== currentVersion + 1) {
-    throw new Error(`Version: ${version} must be one higher than current version: ${currentVersion}`)
+    throw new VersionError(`Version: ${version} must be one higher than current version: ${currentVersion}`)
   }
 
   if (dryRun) {
@@ -63,7 +65,7 @@ export const disableProcess = async (
   const currentVersion = await getVersion(polkadot, processId)
 
   if (!currentVersion) {
-    throw new Error(`Version: ${processVersion} does not exist for name: ${name}`)
+    throw new VersionError(`Version: ${processVersion} does not exist for name: ${name}`)
   }
 
   if (dryRun) {
