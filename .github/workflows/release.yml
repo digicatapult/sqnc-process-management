@@ -178,3 +178,41 @@ jobs:
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  
+  publish:
+    name: 'Publish release'
+    needs: [preconditions, lint, dependency-check, tests, check-version]
+    runs-on: ubuntu-latest
+    if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build release version
+        uses: softprops/action-gh-release@v1
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          tag_name: ${{ needs.check-version.outputs.version }}
+          prerelease: false
+          name: ${{ needs.check-version.outputs.version }}
+          generate_release_notes: true
+      - name: Delete release latest
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { owner, repo } = context.repo
+            try {
+              await github.rest.git.deleteRef({ owner, repo, ref: 'tags/latest' })
+            }
+            catch (err) {
+              if (err.status !== 422) throw err
+            }
+      - name: Build release latest
+        uses: softprops/action-gh-release@v1
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          tag_name: latest
+          prerelease: false
+          name: Latest ${{ needs.check-version.outputs.version }}
+          generate_release_notes: true
