@@ -63,7 +63,7 @@ describe('Process creation and deletion', () => {
   })
 
   describe('Sad path', () => {
-    const validProcessName  = '0'
+    const validProcessName = '0'
     let validVersionNumber: number
     before(async () => {
       const currentVersion = await getVersionHelper('0x30')
@@ -71,7 +71,10 @@ describe('Process creation and deletion', () => {
     })
 
     it('fails for invalid restriction name', async () => {
-      return assert.isRejected(createProcess(validProcessName, validVersionNumber, noValidRestrictions), NoValidRestrictionsError)
+      return assert.isRejected(
+        createProcess(validProcessName, validVersionNumber, noValidRestrictions),
+        NoValidRestrictionsError
+      )
     })
 
     it('fails for invalid restriction value', async () => {
@@ -79,19 +82,28 @@ describe('Process creation and deletion', () => {
     })
 
     it('fails for invalid json', async () => {
-      return assert.isRejected(createProcess(validProcessName,  validVersionNumber, 'invalidJson'), SyntaxError)
+      return assert.isRejected(createProcess(validProcessName, validVersionNumber, 'invalidJson'), SyntaxError)
     })
 
     it('fails to create for same version', async () => {
-      return assert.isRejected(createProcess(validProcessName, validVersionNumber - 1, validAllRestrictions), VersionError)
+      return assert.isRejected(
+        createProcess(validProcessName, validVersionNumber - 1, validAllRestrictions),
+        VersionError
+      )
     })
 
     it('fails to create for too low version', async () => {
-      return assert.isRejected(createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions), VersionError)
+      return assert.isRejected(
+        createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions),
+        VersionError
+      )
     })
 
     it('fails to create for too high version', async () => {
-      return assert.isRejected(createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions), VersionError)
+      return assert.isRejected(
+        createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions),
+        VersionError
+      )
     })
 
     it('fails to create with too long process id', async () => {

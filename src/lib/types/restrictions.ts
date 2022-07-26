@@ -77,7 +77,7 @@ const fixedOutputMetadataValueType = z.object({
   metadataValueType: metadataValueType,
 })
 
-export const userRestrictions = z.object({
+export const userRestrictionValidation = z.object({
   None: z.array(none).optional(),
   SenderOwnsAllInputs: z.array(senderOwnsAllInputs).optional(),
   SenderHasInputRole: z.array(senderHasInputRole).optional(),
@@ -92,7 +92,7 @@ export const userRestrictions = z.object({
   FixedOutputMetadataValueType: z.array(fixedOutputMetadataValueType).optional(),
 })
 
-export const chainRestrictions = z.array(
+const chainRestrictionValidation = z.array(
   z.object({
     None: none.optional(),
     SenderOwnsAllInputs: senderOwnsAllInputs.optional(),
@@ -109,5 +109,4 @@ export const chainRestrictions = z.array(
   })
 )
 
-export type UserRestrictions = z.infer<typeof userRestrictions>
-export type ChainRestrictions = z.infer<typeof chainRestrictions>
+export type ChainRestrictions = z.infer<typeof chainRestrictionValidation>

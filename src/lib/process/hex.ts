@@ -1,4 +1,4 @@
-import { HexError } from "../types/error.js"
+import { HexError } from '../types/error.js'
 
 export const utf8ToHex = (str: string, len: number) => {
   const buffer = Buffer.from(str, 'utf8')
