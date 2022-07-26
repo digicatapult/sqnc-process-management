@@ -1,5 +1,4 @@
 {
-  "files": ["src/lib/index.d.ts"],
   "compilerOptions": {
     "outDir": "build/",
     "rootDir": ".",
@@ -17,6 +16,7 @@
     "checkJs": false,
     "declaration": false
   },
+  "ts-node": { "files": true },
   "include": ["src/**/*", "src/tests/*", "tests/**/*"],
   "exclude": ["node_modules"]
 }
