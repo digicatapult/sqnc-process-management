@@ -1,17 +1,26 @@
+import { NoValidRestrictionsError } from '../types/error.js'
+import { userRestrictionValidation } from '../types/restrictions.js'
+import type { ChainRestrictions } from '../types/restrictions.js'
+
 // Changes more human-readable format of grouping the same type of restriction -> an array of single restrictions for submitting to node
 // { RestrictionName: [RestrictionValue] } -> [ { RestrictionName: RestrictionValue } ]
-export const mapRestrictions = (rawRestrictions: string): Restrictions.Restrictions => {
-  const restrictionsObj: Object = JSON.parse(rawRestrictions)
+export const mapRestrictions = (rawRestrictions: string): ChainRestrictions => {
+  const restrictionsObj: Object = userRestrictionValidation.parse(JSON.parse(rawRestrictions))
 
-  const restrictions: Restrictions.Restrictions = []
-  Object.entries(restrictionsObj).map(([restrictionName, restrictionValues]) => {
+  const restrictionPairs = Object.entries(restrictionsObj)
+  if (restrictionPairs.length === 0) {
+    throw new NoValidRestrictionsError('No valid restrictions in request')
+  }
+
+  const chainRestrictions: ChainRestrictions = []
+  restrictionPairs.map(([restrictionName, restrictionValues]) => {
     if (restrictionValues.length === 0) {
-      restrictions.push({ [restrictionName]: {} })
+      chainRestrictions.push({ [restrictionName]: {} })
     }
 
     for (const restrictionValue of restrictionValues) {
-      restrictions.push({ [restrictionName]: restrictionValue })
+      chainRestrictions.push({ [restrictionName]: restrictionValue })
     }
   })
-  return restrictions
+  return chainRestrictions
 }

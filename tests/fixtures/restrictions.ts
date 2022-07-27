@@ -105,7 +105,7 @@ export const validMultipleOfSameRestrictions = JSON.stringify({
   ],
 })
 
-export const invalidRestrictionName = JSON.stringify({
+export const noValidRestrictions = JSON.stringify({
   NotARestriction: [],
 })
 
