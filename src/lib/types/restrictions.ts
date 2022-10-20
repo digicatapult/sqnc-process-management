@@ -20,8 +20,16 @@ const role = z.union([
   z.literal('Reviewer'),
 ])
 
+const binaryOperator = z.union([
+  z.literal('and'),
+  z.literal('or'),
+  z.null(),
+])
+
 const none = z.object({})
+
 const senderOwnsAllInputs = z.object({})
+
 const senderHasInputRole = z.object({
   index: z.number(),
   roleKey: role,
@@ -77,7 +85,8 @@ const fixedOutputMetadataValueType = z.object({
   metadataValueType: metadataValueType,
 })
 
-export const userRestrictionValidation = z.object({
+export const userRestrictionValidation = z.array(z.object({
+  op: binaryOperator.optional(),
   None: z.array(none).optional(),
   SenderOwnsAllInputs: z.array(senderOwnsAllInputs).optional(),
   SenderHasInputRole: z.array(senderHasInputRole).optional(),
@@ -90,10 +99,11 @@ export const userRestrictionValidation = z.object({
   FixedInputMetadataValue: z.array(fixedInputMetadataValue).optional(),
   FixedOutputMetadataValue: z.array(fixedOutputMetadataValue).optional(),
   FixedOutputMetadataValueType: z.array(fixedOutputMetadataValueType).optional(),
-})
+}))
 
 const chainRestrictionValidation = z.array(
   z.object({
+    op: binaryOperator.optional(),
     None: none.optional(),
     SenderOwnsAllInputs: senderOwnsAllInputs.optional(),
     SenderHasInputRole: senderHasInputRole.optional(),

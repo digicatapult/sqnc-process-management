@@ -4,23 +4,28 @@ import type { ChainRestrictions } from '../types/restrictions.js'
 
 // Changes more human-readable format of grouping the same type of restriction -> an array of single restrictions for submitting to node
 // { RestrictionName: [RestrictionValue] } -> [ { RestrictionName: RestrictionValue } ]
-export const mapRestrictions = (rawRestrictions: string): ChainRestrictions => {
-  const restrictionsObj: Object = userRestrictionValidation.parse(JSON.parse(rawRestrictions))
+export const mapRestrictions = (rawRestrictions: string): any => {
+  const restrictions: any = userRestrictionValidation.parse(JSON.parse(rawRestrictions))
 
-  const restrictionPairs = Object.entries(restrictionsObj)
-  if (restrictionPairs.length === 0) {
+  if (restrictions.length === 0) {
     throw new NoValidRestrictionsError('No valid restrictions in request')
   }
 
-  const chainRestrictions: ChainRestrictions = []
-  restrictionPairs.map(([restrictionName, restrictionValues]) => {
-    if (restrictionValues.length === 0) {
-      chainRestrictions.push({ [restrictionName]: {} })
+  const chainRestrictions: any = []
+  restrictions.map((restriction: Object) => {
+    const [key, values] = Object.entries(restriction)[0]
+    if (values.length === 0) {
+      chainRestrictions.push({ restriction: { [key]: {} }})
     }
 
-    for (const restrictionValue of restrictionValues) {
-      chainRestrictions.push({ [restrictionName]: restrictionValue })
+    if (key === 'op') {
+      chainRestrictions.push({ [key]: values })
+    } else {
+      for (const value of values) {
+        chainRestrictions.push({ restriction: { [key]: value }})
+      }
     }
   })
+
   return chainRestrictions
 }

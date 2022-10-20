@@ -1,45 +1,61 @@
-export const restrictionsBeforeMap = JSON.stringify({
-  SenderOwnsAllInputs: [],
-  SenderHasInputRole: [
-    {
-      index: 0,
-      roleKey: 'Supplier',
-    },
-  ],
-  FixedOutputMetadataValueType: [
-    {
-      index: 0,
-      metadataKey: 'SomeMetadataKey',
-      metadataValueType: 'Literal',
-    },
-    {
-      index: 0,
-      metadataKey: 'SomeOtherMetadataKey',
-      metadataValueType: 'File',
-    },
-  ],
-})
+export const restrictionsBeforeMap = JSON.stringify([
+  { SenderOwnsAllInputs: [] },
+  {
+    SenderHasInputRole: [
+      {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    ]
+  },
+  { op: 'and' },
+  {
+    FixedOutputMetadataValueType: [
+      {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+        metadataValueType: 'Literal',
+      },
+      {
+        index: 0,
+        metadataKey: 'SomeOtherMetadataKey',
+        metadataValueType: 'File',
+      },
+    ]
+  },
+  { op: 'and' },
+  { op: 'and' },
+])
 
 export const restrictionsAfterMap = [
-  { SenderOwnsAllInputs: {} },
+  { restriction: { SenderOwnsAllInputs: {} } },
   {
-    SenderHasInputRole: {
-      index: 0,
-      roleKey: 'Supplier',
-    },
+    restriction: {
+      SenderHasInputRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    }
+  },
+  { op: 'and' },
+  {
+    restriction: {
+      FixedOutputMetadataValueType: {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+        metadataValueType: 'Literal',
+      },
+    }
   },
   {
-    FixedOutputMetadataValueType: {
-      index: 0,
-      metadataKey: 'SomeMetadataKey',
-      metadataValueType: 'Literal',
-    },
+    restriction: {
+      FixedOutputMetadataValueType: {
+        index: 0,
+        metadataKey: 'SomeOtherMetadataKey',
+        metadataValueType: 'File',
+      },
+    }
   },
-  {
-    FixedOutputMetadataValueType: {
-      index: 0,
-      metadataKey: 'SomeOtherMetadataKey',
-      metadataValueType: 'File',
-    },
-  },
+  { op: 'and' },
+  { op: 'and' },
 ]
