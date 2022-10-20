@@ -93,6 +93,6 @@ export const getProcess = async (
     id: processId,
     version: version,
     status: data.status,
-    restrictions: data.restrictions,
+    restrictions: data.program,
   }
 }
