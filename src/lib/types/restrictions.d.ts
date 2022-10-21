@@ -9,6 +9,7 @@ declare namespace Restrictions {
   export type Restrictions = Restriction[]
   interface Restriction {
     None?: None
+    op?: "AND" | "OR" | null
     SenderOwnsAllInputs?: SenderOwnsAllInputs
     SenderHasInputRole?: SenderHasInputRole
     SenderHasOutputRole?: SenderHasOutputRole

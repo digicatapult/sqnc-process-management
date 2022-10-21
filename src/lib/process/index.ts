@@ -12,6 +12,22 @@ export const defaultOptions: Polkadot.Options = {
   USER_URI: '//Alice',
 }
 
+export const loadProcesses = async (processes: any, res: any = []): Promise<[]|string> => {
+  try {
+    // TODO more elegant promise.series way.
+    for (let i = 0; i < processes.length; i++) {
+      const { name, version, rawRestrictions } = processes[i]
+      res[name] = await createProcess(name, version, rawRestrictions)
+    }
+
+    return res
+  } catch (err) {
+    // TODO handle error
+    console.log('loadProcesses: ', err)
+    return 'error'
+  }
+}
+
 export const createProcess = async (
   name: string,
   version: number,
