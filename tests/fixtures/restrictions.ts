@@ -103,8 +103,8 @@ export const validAllRestrictions = JSON.stringify([
   },
 ])
 
-export const validMultipleOfSameRestrictions = JSON.stringify({
-  FixedInputMetadataValue: [
+export const validMultipleOfSameRestrictions = JSON.stringify([
+  { FixedInputMetadataValue: [
     {
       index: 0,
       metadataKey: 'key0',
@@ -119,6 +119,9 @@ export const validMultipleOfSameRestrictions = JSON.stringify({
         File: '0x',
       },
     },
+  ]},
+  { op: 'or' },
+  { FixedInputMetadataValue: [
     {
       index: 0,
       metadataKey: 'key2',
@@ -133,8 +136,10 @@ export const validMultipleOfSameRestrictions = JSON.stringify({
         None: null,
       },
     },
-  ],
-})
+  ]},
+  { op: 'and' },
+  { op: 'or' },
+])
 
 export const noValidRestrictions = JSON.stringify([
   { NotARestriction: [] },
