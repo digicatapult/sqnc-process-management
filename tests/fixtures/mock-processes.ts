@@ -1,7 +1,7 @@
 export default [
   {
     name: 'mock_post_order',
-    version: 6,
+    version: 1,
     rawRestrictions: JSON.stringify([
       { SenderOwnsAllInputs: [] },
       { SenderHasInputRole: [
@@ -29,7 +29,7 @@ export default [
   },
   {
     name: 'mock_accept_order',
-    version: 6,
+    version: 1,
     rawRestrictions: JSON.stringify([
       { SenderOwnsAllInputs: [] },
       { op: 'or'},
