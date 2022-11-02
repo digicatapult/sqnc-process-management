@@ -48,10 +48,10 @@ program.command('create')
     await loadProcesses(data)
   })
 
-// TODO 
+// TODO
 program.command('disable')
-  .action((str: any, opt: any) => {
-    console.log('', { str, opt })
+  .action((data: string) => {
+    console.log('not implemented', { data })
   })
 
 clear()
