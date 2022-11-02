@@ -43,7 +43,7 @@ program
 
 program.command('create')
   .description('A command for persisting process flows onto the chain')
-  .argument('<string>', `takes JSON as string example: ${example}`)
+  .argument('<string>', `takes JSON as string example: '${example}'`)
   .action(async (data: string) => {
     await loadProcesses(data)
   })
