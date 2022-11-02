@@ -1,8 +1,8 @@
-export default [
+export default JSON.stringify([
   {
     name: 'mock_post_order',
     version: 1,
-    rawRestrictions: JSON.stringify([
+    rawRestrictions: [
       { SenderOwnsAllInputs: [] },
       { SenderHasInputRole: [
         {
@@ -25,12 +25,12 @@ export default [
       ]},
       { op: 'and'},
       { op: 'and'},
-    ]),
+    ],
   },
   {
     name: 'mock_accept_order',
     version: 1,
-    rawRestrictions: JSON.stringify([
+    rawRestrictions: [
       { SenderOwnsAllInputs: [] },
       { op: 'or'},
       { SenderHasInputRole: [
@@ -39,6 +39,6 @@ export default [
           roleKey: 'Supplier',
         },
       ]},
-    ]),
+    ],
   },
-]
+])

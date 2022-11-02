@@ -8,6 +8,7 @@ export const createProcessTransaction = async (
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
 
+  console.log(restrictions)
   return new Promise((resolve, reject) => {
     let unsub: Function
     polkadot.api.tx.sudo

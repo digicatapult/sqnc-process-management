@@ -12,12 +12,13 @@ export const defaultOptions: Polkadot.Options = {
   USER_URI: '//Alice',
 }
 
-export const loadProcesses = async (processes: any, res: any = []): Promise<[]|string> => {
+export const loadProcesses = async (data: string, res: Process.Response = {}): Promise<Process.Response|string> => {
   try {
+    const processes: Process.CLIParsed = JSON.parse(data)
     // TODO more elegant promise.series way.
     for (let i = 0; i < processes.length; i++) {
       const { name, version, rawRestrictions } = processes[i]
-      res[name] = await createProcess(name, version, rawRestrictions)
+      res[name] = await createProcess(name, version, JSON.stringify(rawRestrictions))
     }
 
     return res
@@ -56,7 +57,6 @@ export const createProcess = async (
         restrictions: ${JSON.stringify(restrictions, null, 2)}`,
     }
   }
-
   const process = await createProcessTransaction(polkadot, processId, restrictions, options)
   return {
     process: process,

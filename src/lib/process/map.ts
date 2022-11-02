@@ -6,7 +6,6 @@ import type { ChainRestrictions } from '../types/restrictions.js'
 // { RestrictionName: [RestrictionValue] } -> [ { RestrictionName: RestrictionValue } ]
 export const mapRestrictions = (rawRestrictions: string): any => {
   const restrictions: any = userRestrictionValidation.parse(JSON.parse(rawRestrictions))
-
   if (Object.keys(restrictions[0]).length < 1) {
     throw new NoValidRestrictionsError('No valid restrictions in request')
   }
