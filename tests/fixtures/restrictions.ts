@@ -104,7 +104,7 @@ export const validAllRestrictions: any = [
 ]
 
 export const validMultipleOfSameRestrictions: any = [ 
-  { FixedInputMetadataValue: 
+  { restrintion: { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key0',
@@ -112,8 +112,8 @@ export const validMultipleOfSameRestrictions: any = [
         Literal: 'a',
       },
     },
-  }, 
-  { FixedInputMetadataValue: 
+  }}, 
+  { restriction: { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key1',
@@ -121,9 +121,9 @@ export const validMultipleOfSameRestrictions: any = [
         File: '0x',
       },
     },
-  },
+  }},
   { op: 'or' },
-  { FixedInputMetadataValue: 
+  { restriction: { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key2',
@@ -131,8 +131,8 @@ export const validMultipleOfSameRestrictions: any = [
         TokenId: 0,
       },
     },
-  },
-  { FixedInputMetadataValue: 
+  }} ,
+  { restriction: { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key3',
@@ -140,21 +140,22 @@ export const validMultipleOfSameRestrictions: any = [
         None: null,
       },
     },
-  },
+  }},
   { op: 'and' },
   { op: 'or' },
 ]
 
 export const noValidRestrictions: any = [ 
-  { NotARestriction: {} },
+  { restriction: { NotARestriction: {} }},
 ]
 
 export const invalidRestrictionValue: any = [
   {
+    restriction: {
     FixedInputMetadataValue: 
       {
         invalid: 0,
       },
     
-  },
+  }},
 ]

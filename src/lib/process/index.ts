@@ -11,10 +11,13 @@ export const defaultOptions: Polkadot.Options = {
   USER_URI: '//Alice',
 }
 
-const validate = (program: Process.Program): Process.Program => {
+const validate = (program: Process.Program = []): Process.Program => {
   return program.reduce((out: Process.Program, step: Process.ProgramStep)=> {
-    if (!stepValidation.parse(step)) return out
-    out.push(step) // .push in reduce is more effective than spread, can cause issuecs
+    const validated: Process.ProgramStep = stepValidation.parse(step?.restriction || step)
+    if (Object.keys(validated).length === 0) {
+      return out
+    }
+    out.push(validated) // .push in reduce is more effective than spread, can cause issuecs
     return out
   }, [])
 }
@@ -25,25 +28,26 @@ export const loadProcesses = async (data: string, res: Process.Response = {}): P
     const processes: Process.CLIParsed = JSON.parse(data)
     // TODO more elegant promise.series way.
     for (let i = 0; i < processes.length; i++) {
+      // TODO handle dryRun, options
       const { name, version, program } = processes[i]
-      res[name] = await createProcess(name, version, validate(program))
+      res[name] = await createProcess(name, version, program)
     }
 
     return res
   } catch (err) {
     // TODO handle error
-    console.log('loadProcesses: ', err)
-    return 'error'
+    return `Error occured: ${err}`
   }
 }
 
 export const createProcess = async (
   name: string,
   version: number,
-  program: Process.Program,
+  rawProgram: Process.Program,
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
 ): Promise<Process.Result> => {
+  const program: Process.Program = validate(rawProgram)
   if (program.length === 0) throw new NoValidRestrictionsError('nothing to process')
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
@@ -74,7 +78,7 @@ export const disableProcess = async (
   processVersion: number,
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
-): Promise<Process.DisableResult> => {
+): Promise<Process.Result> => {
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
 
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
@@ -94,6 +98,6 @@ export const disableProcess = async (
   const process = await disableProcessTransaction(polkadot, processId, processVersion, options)
   return {
     message: 'Process has been disabled',
-    ...process,
+    process,
   }
 }

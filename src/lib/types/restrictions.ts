@@ -102,8 +102,8 @@ export const stepValidation = z.object({
 })
 
 const programValidation = z.array(
-  z.object({ op: binaryOperator.optional() }),
-  z.object({ restriction: stepValidation.optional() }),
+  z.object({ op: binaryOperator }).optional(),
+  z.object({ restriction: stepValidation }).optional(),
 )
 
 export type ChainRestrictions = z.infer<typeof programValidation>

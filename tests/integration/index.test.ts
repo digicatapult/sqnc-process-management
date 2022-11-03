@@ -28,7 +28,12 @@ describe('Process creation and deletion', () => {
       })
 
       const disabledProcess = await disableProcess('0', bumpedVersion)
-      expect(disabledProcess).to.deep.equal({ id: '0x30', version: bumpedVersion, status: 'Disabled',  message: 'Process has been disabled' })
+      expect(disabledProcess.process).to.deep.equal({
+        id: '0x30',
+        version: bumpedVersion,
+        status: 'Disabled', 
+        message: 'Process has been disabled',
+      })
     })
 
     it('does not create process if dry run', async () => {
@@ -41,7 +46,12 @@ describe('Process creation and deletion', () => {
     it('does not disable process if dry run', async () => {
       const currentVersion = await getVersionHelper('0x30')
       const disabledProcess = await disableProcess('0', currentVersion, true)
-      expect(disabledProcess).to.equal(null)
+      expect(disabledProcess.process).to.equal(undefined)
+      expect(disabledProcess).to.deep.contain({
+        message: 'This will DISABLE the following process 0',
+        name: '0'
+      })
+
     })
   })
 
@@ -67,7 +77,7 @@ describe('Process creation and deletion', () => {
     it('fails for invalid json', async () => {
       // ts is robust for this. I must use any in order for this test to work
       //Argument of type 'string' is not assignable to parameter of type 'Program'.ts(2345)
-      return assert.isRejected(createProcess(validProcessName, validVersionNumber, 'invalidJson' as any), SyntaxError)
+      return assert.isRejected(createProcess(validProcessName, validVersionNumber, 'invalidJson' as any), TypeError)
     })
 
     it('fails to create for same version', async () => {

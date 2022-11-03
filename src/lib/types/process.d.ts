@@ -14,19 +14,12 @@ namespace Process {
     message: string
   }
 
-  type DisableResult = {
-    message: string,
-    name: string,
-    version: number,
-    program?: Program,
-  }
-
   export type CLIParsed = Core[] 
   export type Program = ProgramStep[]
 
   type ProgramStep = {
     [key: string]: import('./restrictions').ChainRestrictions
-  }
+  } | null | Array
 
   export type Payload = {
     id: string
