@@ -103,48 +103,6 @@ export const validAllRestrictions: Process.Program = [
   },},
 ]
 
-export const validMultipleOfSameRestrictions: Process.Program = [ 
-  { restrintion: { FixedInputMetadataValue: 
-    {
-      index: 0,
-      metadataKey: 'key0',
-      metadataValue: {
-        Literal: 'a',
-      },
-    },
-  }}, 
-  { restriction: { FixedInputMetadataValue: 
-    {
-      index: 0,
-      metadataKey: 'key1',
-      metadataValue: {
-        File: '0x',
-      },
-    },
-  }},
-  { op: 'or' },
-  { restriction: { FixedInputMetadataValue: 
-    {
-      index: 0,
-      metadataKey: 'key2',
-      metadataValue: {
-        TokenId: 0,
-      },
-    },
-  }} ,
-  { restriction: { FixedInputMetadataValue: 
-    {
-      index: 0,
-      metadataKey: 'key3',
-      metadataValue: {
-        None: null,
-      },
-    },
-  }},
-  { op: 'and' },
-  { op: 'or' },
-]
-
 export const noValidRestrictions: Process.Program = [
   { restriction: { NotARestriction: {} }},
 ]
