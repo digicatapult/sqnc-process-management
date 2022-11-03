@@ -15,13 +15,12 @@ import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/
 
 describe('Process creation and deletion', () => {
   describe('Happy path', () => {
-    it.only('creates then disables a process', async () => {
+    it('creates then disables a process', async () => {
 
       const currentVersion = await getVersionHelper('0x30')
       const bumpedVersion = currentVersion + 1
       const newProcess = await createProcess('0', bumpedVersion, validAllRestrictions)
-      console.log({ newProcess }) 
-      expect(newProcess).to.deep.equal({
+      expect(newProcess.process).to.deep.equal({
         id: '0x30',
         version: bumpedVersion,
         status: 'Enabled',
@@ -29,7 +28,7 @@ describe('Process creation and deletion', () => {
       })
 
       const disabledProcess = await disableProcess('0', bumpedVersion)
-      expect(disabledProcess).to.deep.equal({ id: '0x30', version: bumpedVersion, status: 'Disabled' })
+      expect(disabledProcess).to.deep.equal({ id: '0x30', version: bumpedVersion, status: 'Disabled',  message: 'Process has been disabled' })
     })
 
     it('does not create process if dry run', async () => {
