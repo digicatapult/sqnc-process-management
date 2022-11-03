@@ -28,11 +28,11 @@ describe('Process creation and deletion', () => {
       })
 
       const disabledProcess = await disableProcess('0', bumpedVersion)
+      expect(disabledProcess.message).to.equal('Process has been disabled')
       expect(disabledProcess.process).to.deep.equal({
         id: '0x30',
         version: bumpedVersion,
         status: 'Disabled', 
-        message: 'Process has been disabled',
       })
     })
 

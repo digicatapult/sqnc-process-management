@@ -17,7 +17,7 @@ const validate = (program: Process.Program = []): Process.Program => {
     if (Object.keys(validated).length === 0) {
       return out
     }
-    out.push(validated) // .push in reduce is more effective than spread, can cause issuecs
+    out.push(step) // .push in reduce is more effective than spread, can cause issuecs
     return out
   }, [])
 }

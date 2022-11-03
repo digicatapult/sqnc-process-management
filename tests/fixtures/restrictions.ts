@@ -1,4 +1,4 @@
-export const validAllRestrictions: any = [
+export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
   { op: 'or' },
   { restriction: { SenderOwnsAllInputs: {} }},
@@ -100,10 +100,10 @@ export const validAllRestrictions: any = [
         metadataValueType: 'Literal',
       },
     
-  },}
+  },},
 ]
 
-export const validMultipleOfSameRestrictions: any = [ 
+export const validMultipleOfSameRestrictions: Process.Program = [ 
   { restrintion: { FixedInputMetadataValue: 
     {
       index: 0,
@@ -145,11 +145,11 @@ export const validMultipleOfSameRestrictions: any = [
   { op: 'or' },
 ]
 
-export const noValidRestrictions: any = [ 
+export const noValidRestrictions: Process.Program = [
   { restriction: { NotARestriction: {} }},
 ]
 
-export const invalidRestrictionValue: any = [
+export const invalidRestrictionValue: Process.Program = [
   {
     restriction: {
     FixedInputMetadataValue: 

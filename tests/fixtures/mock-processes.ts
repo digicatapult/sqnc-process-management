@@ -2,29 +2,29 @@ export default JSON.stringify([
   {
     name: 'mock_post_order',
     version: 1,
-    rawRestrictions: [
-      { SenderOwnsAllInputs: {} },
-      { SenderHasInputRole: 
+    program: [
+      { restriction:  { SenderOwnsAllInputs: {} }},
+      { restriction: { SenderHasInputRole: 
         {
           index: 0,
           roleKey: 'Supplier',
         },
-      },
+      }},
       { op: 'and'},
-      { FixedOutputMetadataValueType: 
+      { restriction: { FixedOutputMetadataValueType: 
         {
           index: 0,
           metadataKey: 'SomeMetadataKey',
           metadataValueType: 'Literal',
         },
-      }, 
-      { FixedOutputMetadataValueType: 
+      }}, 
+      { restriction: { FixedOutputMetadataValueType: 
         {
           index: 0,
           metadataKey: 'SomeOtherMetadataKey',
           metadataValueType: 'File',
         },
-      },
+      }},
       { op: 'and'},
       { op: 'and'},
     ],
@@ -32,15 +32,15 @@ export default JSON.stringify([
   {
     name: 'mock_accept_order',
     version: 1,
-    rawRestrictions: [
-      { SenderOwnsAllInputs: {} },
+    program: [
+      { restriction: { SenderOwnsAllInputs: {} }},
       { op: 'or'},
-      { SenderHasInputRole: 
+      { restriction: { SenderHasInputRole: 
         {
           index: 0,
           roleKey: 'Supplier',
         },
-      },
+      }},
     ],
   },
 ])
