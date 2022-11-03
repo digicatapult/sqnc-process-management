@@ -6,7 +6,7 @@ describe('loadProcesses function', () => {
   let res: any
 
   beforeEach(async () => {
-    res = await loadProcesses(processes)
+    res = await loadProcesses({ data: processes })
   })
 
   it('creates transactions for each process', () => {

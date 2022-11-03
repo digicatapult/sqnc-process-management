@@ -85,7 +85,7 @@ For the full list of available restrictions see [`dscp-node`](https://github.com
 createProcess (
   name: string, // the name (processId) of the process to create. Max length 32 bytes
   version: number, // version number of the process. Must be `1` for a new process or one higher than the version of an existing process
-  rawRestrictions: string, // JSON of the process restrictions
+  prgoram: Process.Program, // an array of restrictions and binary operators
   dryRun: boolean, // Optional - defaults to false. Shows the expected result of creating the process, without actually running the transaction
   options: Polkadot.Options // Optional - Polkadot API options
 )
