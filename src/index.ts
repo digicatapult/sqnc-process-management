@@ -3,33 +3,36 @@ import chalk from 'chalk'
 import figlet from 'figlet'
 import clear from 'clear'
 import { Command } from 'commander'
+
+import { version } from '../package.json' 
 import { loadProcesses } from './lib/process/index.js'
 
 const program = new Command()
 const example: string = JSON.stringify([{
   name: 'A test',
   version: 1,
-  rawRestrictions: [
-    { SenderOwnsAllInputs: [] },
-    { SenderHasInputRole: [
+  program: [  
+    { SenderOwnsAllInputs: {} },
+    { SenderHasInputRole: 
       {
         index: 0,
         roleKey: 'Supplier',
       },
-    ]},
+    },
     { op: 'and'},
-    { FixedOutputMetadataValueType: [
-      {
+    { FixedOutputMetadataValueType: {
         index: 0,
         metadataKey: 'SomeMetadataKey',
         metadataValueType: 'Literal',
-      },
+      }
+    },
+    { FixedOutputMedataValueType:
       {
         index: 0,
         metadataKey: 'SomeOtherMetadataKey',
         metadataValueType: 'File',
       },
-    ]},
+    },
     { op: 'and'},
     { op: 'and'},
   ],
@@ -38,7 +41,7 @@ const example: string = JSON.stringify([{
 program
   .name('process management')
   .description('a command line interface for managing chain processes')
-  .version('0.1.0')
+  .version(version)
 
 
 program.command('create')

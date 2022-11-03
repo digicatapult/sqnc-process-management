@@ -1,75 +1,75 @@
-export const validAllRestrictions = JSON.stringify([
-  { None: [] },
+export const validAllRestrictions: any = [
+  { restriction: { None: {} } },
   { op: 'or' },
-  { SenderOwnsAllInputs: [] },
+  { restriction: { SenderOwnsAllInputs: {} }},
   { op: 'and' },
-  {
-    SenderHasInputRole: [
+  { restriction: {
+    SenderHasInputRole: 
       {
         index: 0,
         roleKey: 'Supplier',
       },
-    ]
-  },
+    
+  }},
   { op: 'and' },
-  {
-    SenderHasOutputRole: [
+  { restriction: {
+    SenderHasOutputRole: 
       {
         index: 0,
         roleKey: 'Supplier',
       },
-    ]
-  },
+    
+  }},
   { op: 'and' },
-  {
-    OutputHasRole: [
+  { restriction: {
+    OutputHasRole: 
       {
         index: 0,
         roleKey: 'Supplier',
       },
-    ]
-  },
+    
+  }},
   { op: 'and' },
-  {
-    MatchInputOutputRole: [
+  { restriction: {
+    MatchInputOutputRole: 
       {
         inputIndex: 0,
         inputRoleKey: 'Supplier',
         outputIndex: 0,
         outputRoleKey: 'Supplier',
       },
-    ]
-  },
+    
+  }},
   { op: 'and' },
-  {
-    MatchInputOutputMetadataValue: [
+  { restriction: {
+    MatchInputOutputMetadataValue: 
       {
         inputIndex: 0,
         inputMetadataKey: 'SomeMetadataKey',
         outputIndex: 0,
         outputMetadataKey: 'SomeMetadataKey',
       },
-    ]
-  },
+    
+  }},
   { op: 'and' },
-  {
-    FixedNumberOfInputs: [
+  { restriction: {
+    FixedNumberOfInputs: 
       {
         numInputs: 0,
       },
-    ]
-  },
+    
+  },},
   { op: 'and' },
-  {
-    FixedNumberOfOutputs: [
+  { restriction: {
+    FixedNumberOfOutputs: 
       {
         numOutputs: 0,
       },
-    ]
-  },
+    
+  },},
   { op: 'and' },
-  {
-    FixedInputMetadataValue: [
+  { restriction: {
+    FixedInputMetadataValue: 
       {
         index: 0,
         metadataKey: 'SomeMetadataKey',
@@ -77,11 +77,11 @@ export const validAllRestrictions = JSON.stringify([
           Literal: 'a',
         },
       },
-    ]
-  },
+    
+  },},
   { op: 'and' },
-  {
-    FixedOutputMetadataValue: [
+  { restriction: {
+    FixedOutputMetadataValue: 
       {
         index: 0,
         metadataKey: 'SomeMetadataKey',
@@ -89,22 +89,22 @@ export const validAllRestrictions = JSON.stringify([
           Literal: 'a',
         },
       },
-    ]
-  },
+    
+  },},
   { op: 'and' },
-  {
-    FixedOutputMetadataValueType: [
+  { restriction: {
+    FixedOutputMetadataValueType: 
       {
         index: 0,
         metadataKey: 'SomeMetadataKey',
         metadataValueType: 'Literal',
       },
-    ]
-  },
-])
+    
+  },}
+]
 
-export const validMultipleOfSameRestrictions = JSON.stringify([
-  { FixedInputMetadataValue: [
+export const validMultipleOfSameRestrictions: any = [ 
+  { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key0',
@@ -112,6 +112,8 @@ export const validMultipleOfSameRestrictions = JSON.stringify([
         Literal: 'a',
       },
     },
+  }, 
+  { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key1',
@@ -119,9 +121,9 @@ export const validMultipleOfSameRestrictions = JSON.stringify([
         File: '0x',
       },
     },
-  ]},
+  },
   { op: 'or' },
-  { FixedInputMetadataValue: [
+  { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key2',
@@ -129,6 +131,8 @@ export const validMultipleOfSameRestrictions = JSON.stringify([
         TokenId: 0,
       },
     },
+  },
+  { FixedInputMetadataValue: 
     {
       index: 0,
       metadataKey: 'key3',
@@ -136,21 +140,21 @@ export const validMultipleOfSameRestrictions = JSON.stringify([
         None: null,
       },
     },
-  ]},
+  },
   { op: 'and' },
   { op: 'or' },
-])
+]
 
-export const noValidRestrictions = JSON.stringify([
-  { NotARestriction: [] },
-])
+export const noValidRestrictions: any = [ 
+  { NotARestriction: {} },
+]
 
-export const invalidRestrictionValue = JSON.stringify([
+export const invalidRestrictionValue: any = [
   {
-    FixedInputMetadataValue: [
+    FixedInputMetadataValue: 
       {
         invalid: 0,
       },
-    ]
+    
   },
-])
+]
