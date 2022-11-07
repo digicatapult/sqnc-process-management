@@ -1,10 +1,10 @@
-#!/usr/bin/env node --es-module-specifier-resolution=node
+#!/usr/bin/env node
+
 import chalk from 'chalk'
 import figlet from 'figlet'
 import clear from 'clear'
 import { Command, Option } from 'commander'
 
-import pack from '../package.json'
 import { loadProcesses } from './lib/process/index.js'
 
 const program = new Command()

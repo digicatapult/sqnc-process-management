@@ -81,6 +81,25 @@ For the full list of available restrictions see [`dscp-node`](https://github.com
 
 ### Create Process
 
+```sh
+# commander CLI interface
+Usage: process management create [options] <string>
+
+A command for persisting process flows onto the chain
+
+Arguments:
+  string              takes JSON as string example: '[{"name":"A
+                      test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
+
+Options:
+  -d --dry <bool>     performs a dry run (choices: "true", "false", default: false)
+  -h --host <string>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
+  -p --p <number>     spefify substrate blockchain port number, default - 9944 (default: 9944)
+  -u --user <string>  spefify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --help              display help for command
+$ 
+```
+
 ```typescript
 createProcess (
   name: string, // the name (processId) of the process to create. Max length 32 bytes
