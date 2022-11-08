@@ -1,4 +1,5 @@
-namespace Process {
+
+declare namespace Process {
   type Core = {
     name: string
     version: number
@@ -17,16 +18,21 @@ namespace Process {
   export type CLIParsed = Core[] 
   export type Program = ProgramStep[]
 
-  type ProgramStep = {
-    [key: string]: import('./restrictions').ChainRestrictions
-  } | null | Array
+  type Restriction = {
+    [key: string]: import('./restrictions').ChainRestrictions | object
+  }
+
+  interface ProgramStep {
+    restriction?: Restriction
+    op?: any
+  }
 
   export type Payload = {
     id: string
     version: number
     status: 'Enabled' | 'Disabled'
-    program?: import('./restrictions').ChainRestrictions
-  } | null | Array
+    program?: Program 
+  } | null
 
   export type Response = {
     [key: string]: Result
