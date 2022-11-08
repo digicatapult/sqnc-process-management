@@ -111,7 +111,7 @@ Commands:
   help [command]             display help for command
 
 # example of nothing to process result
-$ process-management create -p 20 -h paulius.org '[{}]'
+$ process-management create -p 20 -h paulius.local '[{}]'
   ____                                                ____   _       ___ 
  |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
  | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
@@ -119,7 +119,7 @@ $ process-management create -p 20 -h paulius.org '[{}]'
  |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
                                                                          
 parsed options:  {
-  options: { dryRun: false, host: 'paulius.org', port: '20', user: '//Alice' }
+  options: { dryRun: false, host: 'paulius.local', port: '20', user: '//Alice' }
 }
 { res: 'Error occured: Error: nothing to process' }
 ```
