@@ -35,7 +35,6 @@
   "devDependencies": {
     "@types/chai": "^4.3.3",
     "@types/chai-as-promised": "^7.1.5",
-    "@types/clear": "^0.1.2",
     "@types/figlet": "^1.5.5",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.3",
