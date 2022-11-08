@@ -51,9 +51,7 @@ program.command('create')
   .option('-u, --user <string>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
   .argument('<string>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: { dryRun: boolean, port: number, user: string, host: string }) => {
-    // README it looks like it goes with thedefault values, not sure comming and leaving a comment
-    // TODO figure out why it's not parsing options
-    console.log('parsed options: ', { options })
+    console.log('parsed options: ', options)
     const { dryRun, ...rest } = options
     try {
       const res = await loadProcesses({ data, dryRun, options: {
