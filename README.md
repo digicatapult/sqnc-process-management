@@ -15,7 +15,7 @@ npm run build
 To start the basic application
 
 ```shell
-npm run start
+npm run local
 ```
 
 To run the tests
@@ -25,10 +25,15 @@ npm run test
 npm run test:unit
 ```
 
-To run the application in dev mode with a nodemon watcher
-
+To install npm CLI tool. It will be linked to local binaries so can be executed as `process-management`
 ```shell
-npm run dev
+npm i -g
+
+# using CLI
+process-management help
+
+# example
+process-management create -p 20 -h paulius.org '[{}]'
 ```
 
 ## Library functions
@@ -81,23 +86,42 @@ For the full list of available restrictions see [`dscp-node`](https://github.com
 
 ### Create Process
 
+Takes multiple options which be parsed when initiating a new instance of `polkadot` API. Also, it takes a `dryRun` [true, false] which is basically a tests run that won't be executed against blockchain, default value is false
+
 ```sh
 # commander CLI interface
-Usage: process management create [options] <string>
+$ process-management help
+  ____                                                ____   _       ___ 
+ |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
+ | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
+ |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
+ |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
+                                                                         
+Usage: process management [options] [command]
 
-A command for persisting process flows onto the chain
-
-Arguments:
-  string              takes JSON as string example: '[{"name":"A
-                      test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
+a command line interface for managing chain processes
 
 Options:
-  -d --dry <bool>     performs a dry run (choices: "true", "false", default: false)
-  -h --host <string>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
-  -p --p <number>     spefify substrate blockchain port number, default - 9944 (default: 9944)
-  -u --user <string>  spefify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
-  --help              display help for command
-$ 
+  -V, --version              output the version number
+  -h, --help                 display help for command
+
+Commands:
+  create [options] <string>  A command for persisting process flows onto the chain
+  disable
+  help [command]             display help for command
+
+# example of nothing to process result
+$ process-management create -p 20 -h paulius.org '[{}]'
+  ____                                                ____   _       ___ 
+ |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
+ | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
+ |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
+ |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
+                                                                         
+parsed options:  {
+  options: { dryRun: false, host: 'paulius.org', port: '20', user: '//Alice' }
+}
+{ res: 'Error occured: Error: nothing to process' }
 ```
 
 ```typescript
