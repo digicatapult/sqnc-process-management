@@ -156,7 +156,7 @@ parsed options:  {
 createProcess (
   name: string, // the name (processId) of the process to create. Max length 32 bytes
   version: number, // version number of the process. Must be `1` for a new process or one higher than the version of an existing process
-  prgoram: Process.Program, // an array of restrictions and binary operators
+  prgoram: Process.Program, // an array of program steps. It can restriction or binary operator
   dryRun: boolean, // Optional - defaults to false. Shows the expected result of creating the process, without actually running the transaction
   options: Polkadot.Options // Optional - Polkadot API options
 )
