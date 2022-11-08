@@ -10,30 +10,10 @@ const program = new Command()
 const example: string = JSON.stringify([{
   name: 'A test',
   version: 1,
-  program: [  
+  program: [    
     { restriction: { SenderOwnsAllInputs: {} }} ,
-    { restriction: { SenderHasInputRole: 
-      {
-        index: 0,
-        roleKey: 'Supplier',
-      },
-    }},
-    { op: 'and'},
-    { restriction: { FixedOutputMetadataValueType: {
-        index: 0,
-        metadataKey: 'SomeMetadataKey',
-        metadataValueType: 'Literal',
-      }
-    }},
-    { restriction:{ FixedOutputMedataValueType:
-      {
-        index: 0,
-        metadataKey: 'SomeOtherMetadataKey',
-        metadataValueType: 'File',
-      },
-    }},
-    { op: 'and'},
-    { op: 'and'},
+    { op: 'or' },
+    { restriction: { None: {} }} 
   ],
 }])
  
@@ -47,16 +27,16 @@ program.command('create')
   .description('A command for persisting process flows onto the chain')
   .option('-d, --dryRun <bool>', 'performs a dry run', false)
   .option('-h, --host <string>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
-  .option('-p, --port <number>', 'specify host port number if it is not a default, default - 9944', '9944')
+  .option('-p, --port <string>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('-u, --user <string>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
   .argument('<string>', `takes JSON as string example: '${example}'`)
-  .action(async (data: string, options: { dryRun: boolean, port: number, user: string, host: string }) => {
+  .action(async (data: string, options: { dryRun: boolean, port: string, user: string, host: string }) => {
     console.log('parsed options: ', options)
     const { dryRun, ...rest } = options
     try {
       const res = await loadProcesses({ data, dryRun, options: {
         API_HOST: rest.host,
-        API_PORT: rest.port,
+        API_PORT: parseInt(rest.port),
         USER_URI: rest.user,
       } })
 

@@ -33,8 +33,7 @@ npm i -g
 process-management help
 
 # example
-process-management create -p 9944 -h localhost '[{"name":"A
-                       test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
+process-management create -p 9944 -h localhost '[{"name":"A-test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
 ```
 
 ## Library functions
@@ -118,8 +117,27 @@ Options:
   --help               display help for command
 $ 
 
-# -------------------------------------
-# example of nothing to process result 
+# ----------- Examples -----------
+# a successfull execution of a command
+$ process-management create '[{"name":"A test","version":2,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"op":"or"},{"restriction":{"None":{}}}]}]'
+(node:578) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ____                                                ____   _       ___ 
+ |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
+ | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
+ |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
+ |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
+                                                                         
+{
+  res: {
+    'A test': {
+      message: 'Transaction for new process A test has been successfully submitted',
+      process: [<Processes>] # Process: { version, program, name } - more details in types folder
+    }
+  }
+}
+
+# example of handling an exception or when process-management cli tool throws. In this instance we are passing an empty JSON as can be seen below. As expected we would get 'nothing to process' error. 
 
 $ process-management create -p 9944 -h localhost '[{}]'
   ____                                                ____   _       ___ 
