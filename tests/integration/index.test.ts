@@ -10,7 +10,7 @@ import {
 } from '../fixtures/restrictions.js'
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
-import { ZodError } from 'zod'
+import { unknown, ZodError } from 'zod'
 import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/types/error.js'
 
 describe('Process creation and deletion', () => {
@@ -75,9 +75,7 @@ describe('Process creation and deletion', () => {
     })
 
     it('fails for invalid json', async () => {
-      // ts is robust for this. I must use any in order for this test to work
-      //Argument of type 'string' is not assignable to parameter of type 'Program'.ts(2345)
-      return assert.isRejected(createProcess(validProcessName, validVersionNumber, 'invalidJson' as any), TypeError)
+      return assert.isRejected(createProcess(validProcessName, validVersionNumber, 'invalidJson' as unknown as Process.Program), TypeError)
     })
 
     it('fails to create for same version', async () => {
