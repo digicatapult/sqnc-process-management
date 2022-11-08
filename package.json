@@ -55,7 +55,6 @@
   "dependencies": {
     "@digicatapult/dscp-node": "^4.4.3",
     "chalk": "^5.1.2",
-    "clear": "^0.1.0",
     "commander": "^9.4.1",
     "figlet": "^1.5.2",
     "ts-node": "^10.9.1",
