@@ -23,7 +23,7 @@ const validate = (program: Process.Program = []): Process.Program => {
 }
 
 
-export const loadProcesses = async ({ data, options, dryRun }: { data: string, options?: Polkadot.Options, dryRun?: boolean }): Promise<Process.Response|string> => {
+export const loadProcesses = async ({ data, options, dryRun }: { data: string, options?: Polkadot.Options, dryRun?: boolean }): Promise<Process.Response> => {
   const res: Process.Response = {}
   const processes: Process.CLIParsed = JSON.parse(data)
   // TODO more elegant promise.series way.

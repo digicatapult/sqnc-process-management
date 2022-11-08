@@ -15,9 +15,6 @@ declare namespace Process {
     message: string
   }
 
-  export type CLIParsed = Core[] 
-  export type Program = ProgramStep[]
-
   type Restriction = {
     [key: string]: import('./restrictions').ChainRestrictions | object
   }
@@ -26,6 +23,9 @@ declare namespace Process {
     restriction?: Restriction
     op?: any
   }
+
+  export type CLIParsed = Core[] 
+  export type Program = ProgramStep[]
 
   export type Payload = {
     id: string

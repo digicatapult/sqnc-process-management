@@ -3,16 +3,14 @@ import processes from '../fixtures/mock-processes.js'
 import { loadProcesses } from '../../src/lib/process/index.js'
 
 describe('loadProcesses function', () => {
-  let res: any
+  let res: Process.Response
 
   beforeEach(async () => {
     res = await loadProcesses({ data: processes })
   })
 
   it('creates transactions for each process', () => {
-    const { mock_accept_order, mock_post_order } = res
-
-    expect(mock_accept_order.process.status).to.equal('Enabled')
-    expect(mock_post_order.process.status).to.equal('Enabled')
+    expect(res?.mock_accept_order?.process?.status).to.equal('Enabled')
+    expect(res?.mock_post_order?.process?.status).to.equal('Enabled')
   })
 })

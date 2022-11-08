@@ -10,7 +10,7 @@ export const createNodeApi = async (options: Polkadot.Options): Promise<Polkadot
 
   await api.isReady
 
-  api.on('error', (err: any) => {
+  api.on('error', (err: { message?: string }): void => {
     console.log(`Error from substrate node connection. Error was ${err.message || JSON.stringify(err)}`)
   })
 
