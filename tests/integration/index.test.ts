@@ -10,7 +10,7 @@ import {
 } from '../fixtures/restrictions.js'
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
-import { unknown, ZodError } from 'zod'
+import { ZodError } from 'zod'
 import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/types/error.js'
 
 describe('Process creation and deletion', () => {
