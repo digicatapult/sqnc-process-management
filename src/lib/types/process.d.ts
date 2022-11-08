@@ -1,13 +1,40 @@
-namespace Process {
+
+declare namespace Process {
+  type Core = {
+    name: string
+    version: number
+    program: Program
+  }
+
+  // break down per function
+  interface Result {
+    process?: Payload 
+    name?: string
+    version?: number
+    program?: Program
+    message: string
+  }
+
+  type Restriction = {
+    [key: string]: import('./restrictions').ChainRestrictions | object
+  }
+
+  interface ProgramStep {
+    restriction?: Restriction
+    op?: any
+  }
+
+  export type CLIParsed = Core[] 
+  export type Program = ProgramStep[]
+
   export type Payload = {
     id: string
     version: number
     status: 'Enabled' | 'Disabled'
-    restrictions?: import('./restrictions').ChainRestrictions
+    program?: Program 
   } | null
 
-  type Result = {
-    process: Process
-    message: string
+  export type Response = {
+    [key: string]: Result
   }
 }

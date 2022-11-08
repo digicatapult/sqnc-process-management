@@ -5,21 +5,25 @@ declare namespace Restrictions {
   type MetadataValue = File | string | TokenId | null
   type MetadataValueType = 'File' | 'Literal' | 'TokenId' | 'None'
   type Role = 'Owner' | 'Customer' | 'AdditiveManufacturer' | 'Laboratory' | 'Buyer' | 'Supplier' | 'Reviewer'
+  type Operator = null | 'Identity' | 'TransferL' | 'TransferR' | 'NotL' | 'NotR' | 'And' | 'Nand' | 'Or' | 'Nor' | 'Xor' | 'Xnor' | 'ImplicationL' | 'ImplicationR' | 'InhibitionL' | 'InhibitionR'
 
-  export type Restrictions = Restriction[]
-  interface Restriction {
-    None?: None
-    SenderOwnsAllInputs?: SenderOwnsAllInputs
-    SenderHasInputRole?: SenderHasInputRole
-    SenderHasOutputRole?: SenderHasOutputRole
-    OutputHasRole?: OutputHasRole
-    MatchInputOutputRole?: MatchInputOutputRole
-    MatchInputOutputMetadataValue?: MatchInputOutputMetadataValue
-    FixedNumberOfInputs?: FixedNumberOfInputs
-    FixedNumberOfOutputs?: FixedNumberOfOutputs
-    FixedInputMetadataValue?: FixedInputMetadataValue
-    FixedOutputMetadataValue?: FixedOutputMetadataValue
-    FixedOutputMetadataValueType?: FixedOutputMetadataValueType
+  export type Program = Step[]
+  interface Step {
+    op?: Operator
+    restriction: {
+      None?: None
+      SenderOwnsAllInputs?: SenderOwnsAllInputs
+      SenderHasInputRole?: SenderHasInputRole
+      SenderHasOutputRole?: SenderHasOutputRole
+      OutputHasRole?: OutputHasRole
+      MatchInputOutputRole?: MatchInputOutputRole
+      MatchInputOutputMetadataValue?: MatchInputOutputMetadataValue
+      FixedNumberOfInputs?: FixedNumberOfInputs
+      FixedNumberOfOutputs?: FixedNumberOfOutputs
+      FixedInputMetadataValue?: FixedInputMetadataValue
+      FixedOutputMetadataValue?: FixedOutputMetadataValue
+      FixedOutputMetadataValueType?: FixedOutputMetadataValueType
+    }
   }
 
   export interface None {}

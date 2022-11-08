@@ -15,7 +15,7 @@ npm run build
 To start the basic application
 
 ```shell
-npm run start
+npm run local
 ```
 
 To run the tests
@@ -25,10 +25,15 @@ npm run test
 npm run test:unit
 ```
 
-To run the application in dev mode with a nodemon watcher
-
+To install npm CLI tool. It will be linked to local binaries so can be executed as `process-management`
 ```shell
-npm run dev
+npm i -g
+
+# using CLI
+process-management help
+
+# example
+process-management create -p 9944 -h localhost '[{"name":"A-test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
 ```
 
 ## Library functions
@@ -79,13 +84,79 @@ Restrictions are provided as JSON in the format `{ RestrictionName: [Restriction
 
 For the full list of available restrictions see [`dscp-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
 
-### Create Process
+### Create Process Command
+
+Takes multiple options which be parsed when initiating a new instance of `polkadot` API. Also, it takes a `dryRun` [true, false] which is basically a tests run that won't be executed against blockchain, default value is false. Usage: process management create [options] <string>
+
+
+```sh
+#
+# create command
+#
+
+$ process-management help create
+  ____                                                ____   _       ___ 
+ |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
+ | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
+ |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
+ |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
+                                                                         
+Usage: process management create [options] <string>
+
+A command for persisting process flows onto the chain
+
+Arguments:
+  string               takes JSON as string example: '[{"name":"A
+                       test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
+
+Options:
+  -d, --dryRun <bool>  performs a dry run (default: false)
+  -h, --host <string>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
+  -p, --port <number>  specify substrate blockchain port number, default - 9944 (default: "9944")
+  -u, --user <string>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --help               display help for command
+$ 
+
+# ----------- Examples -----------
+# a successfull execution of a command
+$ process-management create '[{"name":"A test","version":2,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"op":"or"},{"restriction":{"None":{}}}]}]'
+(node:578) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ____                                                ____   _       ___ 
+ |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
+ | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
+ |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
+ |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
+                                                                         
+{
+  res: {
+    'A test': {
+      message: 'Transaction for new process A test has been successfully submitted',
+      process: [<Processes>] # Process: { version, program, name } - more details in types folder
+    }
+  }
+}
+
+# example of handling an exception or when process-management cli tool throws. In this instance we are passing an empty JSON as can be seen below. As expected we would get 'nothing to process' error. 
+
+$ process-management create -p 9944 -h localhost '[{}]'
+  ____                                                ____   _       ___ 
+ |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
+ | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
+ |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
+ |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
+                                                                         
+parsed options:  {
+  options: { dryRun: false, host: 'localhost', port: '9944', user: '//Alice' }
+}
+{ res: 'Error occured: Error: nothing to process' }
+```
 
 ```typescript
 createProcess (
   name: string, // the name (processId) of the process to create. Max length 32 bytes
   version: number, // version number of the process. Must be `1` for a new process or one higher than the version of an existing process
-  rawRestrictions: string, // JSON of the process restrictions
+  program: Process.Program, // an array of program steps. It can restriction or binary operator
   dryRun: boolean, // Optional - defaults to false. Shows the expected result of creating the process, without actually running the transaction
   options: Polkadot.Options // Optional - Polkadot API options
 )

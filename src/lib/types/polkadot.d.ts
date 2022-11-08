@@ -1,4 +1,4 @@
-namespace Polkadot {
+declare namespace Polkadot {
   export type Options = {
     API_HOST: string
     API_PORT: number

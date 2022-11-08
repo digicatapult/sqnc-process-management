@@ -20,8 +20,30 @@ const role = z.union([
   z.literal('Reviewer'),
 ])
 
+const binaryOperator = z.union([
+  z.literal('identity'),
+  z.literal('transferl'),
+  z.literal('transferr'),
+  z.literal('notl'),
+  z.literal('notr'),
+  z.literal('nand'),
+  z.literal('or'),
+  z.literal('nor'),
+  z.literal('xor'),
+  z.literal('xnor'),
+  z.literal('implicationl'),
+  z.literal('implicationr'),
+  z.literal('inhibitionl'),
+  z.literal('inhibitionr'),
+  z.literal('and'),
+  z.literal('or'),
+  z.null(),
+])
+
 const none = z.object({})
+
 const senderOwnsAllInputs = z.object({})
+
 const senderHasInputRole = z.object({
   index: z.number(),
   roleKey: role,
@@ -77,36 +99,25 @@ const fixedOutputMetadataValueType = z.object({
   metadataValueType: metadataValueType,
 })
 
-export const userRestrictionValidation = z.object({
-  None: z.array(none).optional(),
-  SenderOwnsAllInputs: z.array(senderOwnsAllInputs).optional(),
-  SenderHasInputRole: z.array(senderHasInputRole).optional(),
-  SenderHasOutputRole: z.array(senderHasOutputRole).optional(),
-  OutputHasRole: z.array(outputHasRole).optional(),
-  MatchInputOutputRole: z.array(matchInputOutputRole).optional(),
-  MatchInputOutputMetadataValue: z.array(matchInputOutputMetadataValue).optional(),
-  FixedNumberOfInputs: z.array(fixedNumberOfInputs).optional(),
-  FixedNumberOfOutputs: z.array(fixedNumberOfOutputs).optional(),
-  FixedInputMetadataValue: z.array(fixedInputMetadataValue).optional(),
-  FixedOutputMetadataValue: z.array(fixedOutputMetadataValue).optional(),
-  FixedOutputMetadataValueType: z.array(fixedOutputMetadataValueType).optional(),
+export const stepValidation = z.object({
+  op: binaryOperator.optional(),
+  None: none.optional(),
+  SenderOwnsAllInputs: senderOwnsAllInputs.optional(),
+  SenderHasInputRole: senderHasInputRole.optional(),
+  SenderHasOutputRole: senderHasOutputRole.optional(),
+  OutputHasRole: outputHasRole.optional(),
+  MatchInputOutputRole: matchInputOutputRole.optional(),
+  MatchInputOutputMetadataValue: matchInputOutputMetadataValue.optional(),
+  FixedNumberOfInputs: fixedNumberOfInputs.optional(),
+  FixedNumberOfOutputs: fixedNumberOfOutputs.optional(),
+  FixedInputMetadataValue: fixedInputMetadataValue.optional(),
+  FixedOutputMetadataValue: fixedOutputMetadataValue.optional(),
+  FixedOutputMetadataValueType: fixedOutputMetadataValueType.optional(),
 })
 
-const chainRestrictionValidation = z.array(
-  z.object({
-    None: none.optional(),
-    SenderOwnsAllInputs: senderOwnsAllInputs.optional(),
-    SenderHasInputRole: senderHasInputRole.optional(),
-    SenderHasOutputRole: senderHasOutputRole.optional(),
-    OutputHasRole: outputHasRole.optional(),
-    MatchInputOutputRole: matchInputOutputRole.optional(),
-    MatchInputOutputMetadataValue: matchInputOutputMetadataValue.optional(),
-    FixedNumberOfInputs: fixedNumberOfInputs.optional(),
-    FixedNumberOfOutputs: fixedNumberOfOutputs.optional(),
-    FixedInputMetadataValue: fixedInputMetadataValue.optional(),
-    FixedOutputMetadataValue: fixedOutputMetadataValue.optional(),
-    FixedOutputMetadataValueType: fixedOutputMetadataValueType.optional(),
-  })
+const programValidation = z.array(
+  z.object({ op: binaryOperator }).optional(),
+  z.object({ restriction: stepValidation }).optional(),
 )
 
-export type ChainRestrictions = z.infer<typeof chainRestrictionValidation>
+export type ChainRestrictions = z.infer<typeof programValidation>

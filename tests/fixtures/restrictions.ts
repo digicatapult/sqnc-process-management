@@ -1,118 +1,119 @@
-export const validAllRestrictions = JSON.stringify({
-  None: [],
-  SenderOwnsAllInputs: [],
-  SenderHasInputRole: [
-    {
-      index: 0,
-      roleKey: 'Supplier',
-    },
-  ],
-  SenderHasOutputRole: [
-    {
-      index: 0,
-      roleKey: 'Supplier',
-    },
-  ],
-  OutputHasRole: [
-    {
-      index: 0,
-      roleKey: 'Supplier',
-    },
-  ],
-  MatchInputOutputRole: [
-    {
-      inputIndex: 0,
-      inputRoleKey: 'Supplier',
-      outputIndex: 0,
-      outputRoleKey: 'Supplier',
-    },
-  ],
-  MatchInputOutputMetadataValue: [
-    {
-      inputIndex: 0,
-      inputMetadataKey: 'SomeMetadataKey',
-      outputIndex: 0,
-      outputMetadataKey: 'SomeMetadataKey',
-    },
-  ],
-  FixedNumberOfInputs: [
-    {
-      numInputs: 0,
-    },
-  ],
-  FixedNumberOfOutputs: [
-    {
-      numOutputs: 0,
-    },
-  ],
-  FixedInputMetadataValue: [
-    {
-      index: 0,
-      metadataKey: 'SomeMetadataKey',
-      metadataValue: {
-        Literal: 'a',
+export const validAllRestrictions: Process.Program = [
+  { restriction: { None: {} } },
+  { op: 'or' },
+  { restriction: { SenderOwnsAllInputs: {} }},
+  { op: 'and' },
+  { restriction: {
+    SenderHasInputRole: 
+      {
+        index: 0,
+        roleKey: 'Supplier',
       },
-    },
-  ],
-  FixedOutputMetadataValue: [
-    {
-      index: 0,
-      metadataKey: 'SomeMetadataKey',
-      metadataValue: {
-        Literal: 'a',
+    
+  }},
+  { op: 'and' },
+  { restriction: {
+    SenderHasOutputRole: 
+      {
+        index: 0,
+        roleKey: 'Supplier',
       },
-    },
-  ],
-  FixedOutputMetadataValueType: [
-    {
-      index: 0,
-      metadataKey: 'SomeMetadataKey',
-      metadataValueType: 'Literal',
-    },
-  ],
-})
+    
+  }},
+  { op: 'and' },
+  { restriction: {
+    OutputHasRole: 
+      {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    
+  }},
+  { op: 'and' },
+  { restriction: {
+    MatchInputOutputRole: 
+      {
+        inputIndex: 0,
+        inputRoleKey: 'Supplier',
+        outputIndex: 0,
+        outputRoleKey: 'Supplier',
+      },
+    
+  }},
+  { op: 'and' },
+  { restriction: {
+    MatchInputOutputMetadataValue: 
+      {
+        inputIndex: 0,
+        inputMetadataKey: 'SomeMetadataKey',
+        outputIndex: 0,
+        outputMetadataKey: 'SomeMetadataKey',
+      },
+    
+  }},
+  { op: 'and' },
+  { restriction: {
+    FixedNumberOfInputs: 
+      {
+        numInputs: 0,
+      },
+    
+  },},
+  { op: 'and' },
+  { restriction: {
+    FixedNumberOfOutputs: 
+      {
+        numOutputs: 0,
+      },
+    
+  },},
+  { op: 'and' },
+  { restriction: {
+    FixedInputMetadataValue: 
+      {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+        metadataValue: {
+          Literal: 'a',
+        },
+      },
+    
+  },},
+  { op: 'and' },
+  { restriction: {
+    FixedOutputMetadataValue: 
+      {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+        metadataValue: {
+          Literal: 'a',
+        },
+      },
+    
+  },},
+  { op: 'and' },
+  { restriction: {
+    FixedOutputMetadataValueType: 
+      {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+        metadataValueType: 'Literal',
+      },
+    
+  },},
+]
 
-export const validMultipleOfSameRestrictions = JSON.stringify({
-  FixedInputMetadataValue: [
-    {
-      index: 0,
-      metadataKey: 'key0',
-      metadataValue: {
-        Literal: 'a',
-      },
-    },
-    {
-      index: 0,
-      metadataKey: 'key1',
-      metadataValue: {
-        File: '0x',
-      },
-    },
-    {
-      index: 0,
-      metadataKey: 'key2',
-      metadataValue: {
-        TokenId: 0,
-      },
-    },
-    {
-      index: 0,
-      metadataKey: 'key3',
-      metadataValue: {
-        None: null,
-      },
-    },
-  ],
-})
+export const noValidRestrictions: Process.Program = [
+  { restriction: { NotARestriction: {} }},
+]
 
-export const noValidRestrictions = JSON.stringify({
-  NotARestriction: [],
-})
-
-export const invalidRestrictionValue = JSON.stringify({
-  FixedInputMetadataValue: [
-    {
-      invalid: 0,
-    },
-  ],
-})
+export const invalidRestrictionValue: Process.Program = [
+  {
+    restriction: {
+    FixedInputMetadataValue: 
+      {
+        invalid: 0,
+      },
+    
+  }},
+]

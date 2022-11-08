@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "build/",
-    "rootDir": ".",
+    "rootDir": "./",
     "lib": ["ES6", "ES2015", "ESNext"],
     "types": ["node", "mocha"],
     "resolveJsonModule": true,
@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
     "skipLibCheck": true,
     "allowJs": true,
     "checkJs": false,
