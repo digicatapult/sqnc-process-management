@@ -24,20 +24,15 @@ const validate = (program: Process.Program = []): Process.Program => {
 
 
 export const loadProcesses = async ({ data, options, dryRun }: { data: string, options?: Polkadot.Options, dryRun?: boolean }): Promise<Process.Response|string> => {
-  try {
-    const res: Process.Response = {}
-    const processes: Process.CLIParsed = JSON.parse(data)
-    // TODO more elegant promise.series way.
-    for (let i = 0; i < processes.length; i++) {
-      const { name, version, program } = processes[i]
-      res[name] = await createProcess(name, version, program, dryRun, options)
-    }
-
-    return res
-  } catch (err) {
-    // TODO handle error
-    return `Error occured: ${err}`
+  const res: Process.Response = {}
+  const processes: Process.CLIParsed = JSON.parse(data)
+  // TODO more elegant promise.series way.
+  for (let i = 0; i < processes.length; i++) {
+    const { name, version, program } = processes[i]
+    res[name] = await createProcess(name, version, program, dryRun, options)
   }
+
+  return res
 }
 
 export const createProcess = async (
