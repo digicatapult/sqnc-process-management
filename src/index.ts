@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --es-module-specifier-resolution=node
 
 import chalk from 'chalk'
 import figlet from 'figlet'

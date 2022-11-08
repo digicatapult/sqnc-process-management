@@ -33,7 +33,8 @@ npm i -g
 process-management help
 
 # example
-process-management create -p 9944 -h localhost '[{}]'
+process-management create -p 9944 -h localhost '[{"name":"A
+                       test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
 ```
 
 ## Library functions
@@ -84,33 +85,42 @@ Restrictions are provided as JSON in the format `{ RestrictionName: [Restriction
 
 For the full list of available restrictions see [`dscp-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
 
-### Create Process
+### Create Process Command
 
-Takes multiple options which be parsed when initiating a new instance of `polkadot` API. Also, it takes a `dryRun` [true, false] which is basically a tests run that won't be executed against blockchain, default value is false
+Takes multiple options which be parsed when initiating a new instance of `polkadot` API. Also, it takes a `dryRun` [true, false] which is basically a tests run that won't be executed against blockchain, default value is false. Usage: process management create [options] <string>
+
 
 ```sh
-# commander CLI interface
-$ process-management help
+#
+# create command
+#
+
+$ process-management help create
   ____                                                ____   _       ___ 
  |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
  | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
  |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
  |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
                                                                          
-Usage: process management [options] [command]
+Usage: process management create [options] <string>
 
-a command line interface for managing chain processes
+A command for persisting process flows onto the chain
+
+Arguments:
+  string               takes JSON as string example: '[{"name":"A
+                       test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
 
 Options:
-  -V, --version              output the version number
-  -h, --help                 display help for command
+  -d, --dryRun <bool>  performs a dry run (default: false)
+  -h, --host <string>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
+  -p, --port <number>  spefify substrate blockchain port number, default - 9944 (default: "9944")
+  -u, --user <string>  spefify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --help               display help for command
+$ 
 
-Commands:
-  create [options] <string>  A command for persisting process flows onto the chain
-  disable
-  help [command]             display help for command
+# -------------------------------------
+# example of nothing to process result 
 
-# example of nothing to process result
 $ process-management create -p 9944 -h localhost '[{}]'
   ____                                                ____   _       ___ 
  |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
