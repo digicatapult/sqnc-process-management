@@ -21,7 +21,7 @@ const role = z.union([
 ])
 
 const binaryOperator = z.union([
-  z.literal('tdentity'),
+  z.literal('identity'),
   z.literal('transferl'),
   z.literal('transferr'),
   z.literal('notl'),
