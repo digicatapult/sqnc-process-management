@@ -113,8 +113,8 @@ Arguments:
 Options:
   -d, --dryRun <bool>  performs a dry run (default: false)
   -h, --host <string>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
-  -p, --port <number>  spefify substrate blockchain port number, default - 9944 (default: "9944")
-  -u, --user <string>  spefify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  -p, --port <number>  specify substrate blockchain port number, default - 9944 (default: "9944")
+  -u, --user <string>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
   --help               display help for command
 $ 
 

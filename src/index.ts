@@ -48,7 +48,7 @@ program.command('create')
   .option('-d, --dryRun <bool>', 'performs a dry run', false)
   .option('-h, --host <string>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <number>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('-u, --user <string>', 'spefify substrate blockhain user URI, default - "//Alice"', '//Alice')
+  .option('-u, --user <string>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
   .argument('<string>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: { dryRun: boolean, port: number, user: string, host: string }) => {
     // README it looks like it goes with thedefault values, not sure comming and leaving a comment
