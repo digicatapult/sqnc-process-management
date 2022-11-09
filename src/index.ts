@@ -3,8 +3,8 @@
 import chalk from 'chalk'
 import { Command } from 'commander'
 
-import { loadProcesses } from './lib/process/index.js'
 import packageJson from '../package.json' assert { type: 'json' }
+import { loadProcesses } from './lib/process/index.js'
 
 const { log } = console
 
