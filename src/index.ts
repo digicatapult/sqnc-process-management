@@ -1,12 +1,14 @@
-#!/usr/bin/env node 
+#!/usr/bin/env node --no-warnings 
 
 import chalk from 'chalk'
 import { Command } from 'commander'
 
 import { loadProcesses } from './lib/process/index.js'
+import packageJson from '../package.json' assert { type: 'json' }
 
 const { log } = console
-const version = '1.4.1'
+
+const version = packageJson.version
 const program = new Command()
 const example: string = JSON.stringify([{
   name: 'A test',

@@ -6,7 +6,7 @@
     "types": ["node", "mocha"],
     "resolveJsonModule": true,
     "target": "es6",
-    "module": "es6",
+    "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
