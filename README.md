@@ -46,110 +46,65 @@ The library functions of `dscp-process-management` take an optional `Options` ob
 | API_PORT |    N     |   `9944`    | The port of the `dscp-node` the API should connect to                                        |
 | USER_URI |    N     |  `//Alice`  | The Substrate `URI` representing the private key to use when making `dscp-node` transactions |
 
-Restrictions are provided as JSON in the format `{ RestrictionName: [RestrictionValue] } `. For example:
-
-```
-{
-  "SenderOwnsAllInputs": [], // some restrictions do not require a value
-  "SenderHasInputRole": [
-    {
-      "index": 0,
-      "roleKey": "Supplier"
-    }
-  ],
-  "FixedInputMetadataValue": [
-    {
-      "index": 0,
-      "metadataKey": "Type",
-      "metadataValue": {
-        "Literal": "ORDER"
-      }
-    }
-  ],
-  "FixedOutputMetadataValueType": [
-    // the same restriction type can be added multiple times with different values
-    {
-      "index": 0,
-      "metadataKey": "SomeMetadataKey",
-      "metadataValueType": "Literal"
-    },
-    {
-      "index": 0,
-      "metadataKey": "SomeOtherMetadataKey",
-      "metadataValueType": "Literal"
-    }
-  ]
-}
-```
 
 For the full list of available restrictions see [`dscp-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
 
+### Help
+
+Returns all available commands
+```sh
+$ process-management 
+Usage: process management [options] [command]
+
+a command line interface for managing chain processes
+
+Options:
+  -v, --version              output current version
+  -h, --help                 display help for command
+
+Commands:
+  create [options] <string>  A command for persisting process flows onto the chain
+  disable                    A command for disabling an existing process flows. - NOT IMPLEMENTED
+  help [command]             display help for command
+```
+
 ### Create Process Command
-
-Takes multiple options which be parsed when initiating a new instance of `polkadot` API. Also, it takes a `dryRun` [true, false] which is basically a tests run that won't be executed against blockchain, default value is false. Usage: process management create [options] <string>
-
 
 ```sh
 #
-# create command
+# process-management help create
 #
-
 $ process-management help create
-  ____                                                ____   _       ___ 
- |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
- | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
- |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
- |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
-                                                                         
 Usage: process management create [options] <string>
 
 A command for persisting process flows onto the chain
 
 Arguments:
-  string               takes JSON as string example: '[{"name":"A
-                       test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"SenderHasInputRole":{"index":0,"roleKey":"Supplier"}}},{"op":"and"},{"restriction":{"FixedOutputMetadataValueType":{"index":0,"metadataKey":"SomeMetadataKey","metadataValueType":"Literal"}}},{"restriction":{"FixedOutputMedataValueType":{"index":0,"metadataKey":"SomeOtherMetadataKey","metadataValueType":"File"}}},{"op":"and"},{"op":"and"}]}]'
+  string             takes JSON as string example: '[{"name":"A test","version":2,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]},{"name":"B
+                     test","version":2,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
 
 Options:
-  -d, --dryRun <bool>  performs a dry run (default: false)
-  -h, --host <string>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
-  -p, --port <number>  specify substrate blockchain port number, default - 9944 (default: "9944")
-  -u, --user <string>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
-  --help               display help for command
+  --dryRun            adding this flag it will not create a transaction and will return a result
+  -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
+  -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
+  -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --help             display help for command
+
+#
+# process-management create -h localhost -p 9944 '[{"name":"A test","version":2,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]},{"name":"B test","version":2,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
+#
+$ process-management create -h localhost -p 9944 '[{"name":"B test","version":4,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
+
+      attempting to create a process...
+      options: {"host":"localhost","port":"9944","user":"//Alice"}
+      program: [{"name":"B test","version":4,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]
+    
+
+        command create executed successfully
+        response: {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":4,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
+      
 $ 
 
-# ----------- Examples -----------
-# a successfull execution of a command
-$ process-management create '[{"name":"A test","version":2,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"op":"or"},{"restriction":{"None":{}}}]}]'
-(node:578) ExperimentalWarning: The Node.js specifier resolution flag is experimental. It could change or be removed at any time.
-(Use `node --trace-warnings ...` to show where the warning was created)
-  ____                                                ____   _       ___ 
- |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
- | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
- |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
- |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
-                                                                         
-{
-  res: {
-    'A test': {
-      message: 'Transaction for new process A test has been successfully submitted',
-      process: [<Processes>] # Process: { version, program, name } - more details in types folder
-    }
-  }
-}
-
-# example of handling an exception or when process-management cli tool throws. In this instance we are passing an empty JSON as can be seen below. As expected we would get 'nothing to process' error. 
-
-$ process-management create -p 9944 -h localhost '[{}]'
-  ____                                                ____   _       ___ 
- |  _ \   _ __    ___     ___    ___   ___   ___     / ___| | |     |_ _|
- | |_) | | '__|  / _ \   / __|  / _ \ / __| / __|   | |     | |      | | 
- |  __/  | |    | (_) | | (__  |  __/ \__ \ \__ \   | |___  | |___   | | 
- |_|     |_|     \___/   \___|  \___| |___/ |___/    \____| |_____| |___|
-                                                                         
-parsed options:  {
-  options: { dryRun: false, host: 'localhost', port: '9944', user: '//Alice' }
-}
-{ res: 'Error occured: Error: nothing to process' }
 ```
 
 ```typescript
