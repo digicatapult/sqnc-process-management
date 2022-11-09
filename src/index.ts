@@ -33,7 +33,7 @@ program
 
 program.command('create')
   .description('A command for persisting process flows onto the chain')
-  .option('--dryRun', ' adding this flag it will not create a transaction and will return a result')
+  .option('--dryRun', 'will not create a transaction and will run just against local chain')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
