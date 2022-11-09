@@ -1,17 +1,18 @@
-#!/usr/bin/env node 
+#!/usr/bin/env node
 
 import chalk from 'chalk'
 import { Command } from 'commander'
 
 import { loadProcesses } from './lib/process/index.js'
+import packageJson from '../package.json'
 
 const { log } = console
-const version = '1.4.1'
+const version = packageJson.version
 const program = new Command()
 const example: string = JSON.stringify([{
   name: 'A test',
   version: 2,
-  program: [    
+  program: [
     { restriction: { SenderOwnsAllInputs: {} }} ,
     { restriction: { None: {} }},
     { op: 'or' },
@@ -19,13 +20,13 @@ const example: string = JSON.stringify([{
 },  {
   name: 'B test',
 version: 2,
-program: [    
+program: [
   { restriction: { SenderOwnsAllInputs: {} }} ,
-  { restriction: { None: {} }}, 
+  { restriction: { None: {} }},
   { op: 'or' },
 ],
 }])
- 
+
 program
   .name('process management')
   .description('a command line interface for managing chain processes')
@@ -50,14 +51,14 @@ program.command('create')
           API_HOST: rest.host,
           API_PORT: parseInt(rest.port),
           USER_URI: rest.user,
-        } 
+        }
       })
       log(`
         command ${chalk.bold('create')} executed successfully
         response: ${chalk.blueBright(JSON.stringify(res))}
       `);
       process.exit(1)
-      
+
     } catch(err){
       console.log('Exception has been caught: ', err)
       program.help()
