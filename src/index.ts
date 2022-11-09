@@ -31,7 +31,6 @@ program
   .description('a command line interface for managing chain processes')
   .version(version, '-v, --version', 'output current version')
 
-
 program.command('create')
   .description('A command for persisting process flows onto the chain')
   .option('--dryRun', ' adding this flag it will not create a transaction and will return a result')
@@ -80,4 +79,4 @@ if (!program.option) {
 program.on('command:*', function () {
   console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
   process.exit(1);
-});
+})
