@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import { Command } from 'commander'
 
 import { loadProcesses } from './lib/process/index.js'
-import packageJson from '../package.json'
+import packageJson from '../package.json' assert { type: 'json' }
 
 const { log } = console
 const version = packageJson.version
