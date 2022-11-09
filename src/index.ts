@@ -6,7 +6,7 @@ import { Command } from 'commander'
 import { loadProcesses } from './lib/process/index.js'
 
 const { log } = console
-const version = '1.4.0'
+const version = '1.4.1'
 const program = new Command()
 const example: string = JSON.stringify([{
   name: 'A test',

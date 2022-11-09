@@ -24,16 +24,6 @@ declare namespace Process {
     op?: any
   }
 
-  export type CLIArgs = {
-    data: string,
-    options: {
-      dryRun: boolean,
-      port: string,
-      user: string,
-      host: string
-    }
-  }
-
   export type CLIParsed = Core[] 
   export type Program = ProgramStep[]
 
