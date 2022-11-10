@@ -69,7 +69,7 @@ Commands:
 ```
 
 
-### Crete Process Command
+### Create Process Command
 
 ```sh
 #
