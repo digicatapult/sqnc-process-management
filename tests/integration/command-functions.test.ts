@@ -2,12 +2,13 @@ import { default as chai, expect, assert } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
-import { createProcess, disableProcess } from '../../src/lib/process/index.js'
+import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
 import {
   validAllRestrictions,
   noValidRestrictions,
   invalidRestrictionValue,
-} from '../fixtures/restrictions.js'
+  multiple,
+} from '../fixtures/programs.js'
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
@@ -35,6 +36,12 @@ describe('Process creation and deletion', () => {
         status: 'Disabled', 
       })
     })
+    
+    it('creates multiple processes', async () => {
+      const newProcesses = await loadProcesses({ data: multiple })
+      expect(newProcesses?.mock_accept_order?.process?.status).to.equal('Enabled')
+      expect(newProcesses?.mock_post_order?.process?.status).to.equal('Enabled')
+    })
 
     it('does not create process if dry run', async () => {
       const currentVersion = await getVersionHelper('0x30')
@@ -51,7 +58,6 @@ describe('Process creation and deletion', () => {
         message: 'This will DISABLE the following process 0',
         name: '0'
       })
-
     })
   })
 
