@@ -3,12 +3,17 @@
 import chalk from 'chalk'
 import { Command } from 'commander'
 
-import { loadProcesses } from './lib/process/index.js'
+import { loadProcesses, disableProcess } from './lib/process/index.js'
 import version from './version.js'
 
 const { log } = console
-
 const program = new Command()
+const { red: r, blue: b, green: g, yellow: y } = {
+  red: (txt: string) => chalk.redBright(txt),
+  green: (txt: string) => chalk.green(txt),
+  yellow: (txt: string) => chalk.yellow(txt),
+  blue: (txt: string) => chalk.blueBright(txt),
+}
 const example: string = JSON.stringify([{
   name: 'A test',
   version: 2,
@@ -42,8 +47,8 @@ program.command('create')
   .action(async (data: string, options: { dryRun: boolean, port: string, user: string, host: string }) => {
     log(`
       attempting to create a process...
-      options: ${chalk.blueBright(JSON.stringify(options))}
-      program: ${chalk.blueBright(data)}
+      options: ${b(JSON.stringify(options))}
+      program: ${b(data)}
     `)
     const { dryRun, ...rest } = options
     try {
@@ -53,23 +58,31 @@ program.command('create')
           USER_URI: rest.user,
         } 
       })
-      log(`
-        command ${chalk.bold('create')} executed successfully
-        response: ${chalk.blueBright(JSON.stringify(res))}
-      `);
+      log(` ${g('command [create] executed successfully')}: ${JSON.stringify(res)}`)
       process.exit(1)
       
-    } catch(err){
-      console.log('Exception has been caught: ', err)
+    } catch (err){
+      log(`Exception has been caught: ${r(JSON.stringify(err))}`)
       program.help()
     }
   })
 
-// TODO
 program.command('disable')
-  .description('A command for disabling an existing process flows. - NOT IMPLEMENTED')
-  .action((data: string) => {
-    console.log('not implemented', { data })
+  .description('A command for disabling an existing process flows. Required process ID and version')
+  .argument('<id>', 'a valid process id that you would like to disable')
+  .argument('<version>', 'a version number of a process')
+  .action(async (data: string, opt: any) => {
+    log(`attempting to disable ${b(data)}`)
+    try {
+      const res: any = await disableProcess('a', 1)
+      log(` ${g('command [disable] executed successfully')}: ${JSON.stringify(res)}`)
+
+      process.exit(1)
+    } catch (err) {
+      log(`Exception has been caught: ${r(JSON.stringify(err))}`)
+      program.help()
+    }
+    log('not implemented', { data, opt })
   })
 
 program.parse()
@@ -78,6 +91,9 @@ if (!program.option) {
 }
 
 program.on('command:*', function () {
-  console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
-  process.exit(1);
+  log(`
+    ${r('Invalid command: %s\nSee --help for a list of available commands.')}
+    ${program.args.join(' ')}`
+  )
+  process.exit(1)
 })
