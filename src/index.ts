@@ -49,7 +49,7 @@ program.command('create')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
   .argument('<json>', `takes JSON as string example: '${example}'`)
-  .action(async (data: string, options: { dryRun: boolean, port: string, user: string, host: string }) => {
+  .action(async (data: string, options: Process.CLIOptions) => {
     log(`
       attempting to create a process...
       options: ${b(JSON.stringify(options))}
@@ -75,7 +75,7 @@ program.command('disable')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')
-  .action(async (id: string, version: string,  options: Polkadot.Options) => {  
+  .action(async (id: string, version: string,  options: Process.CLIOptions) => {  
     log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
     try {
       const { dryRun } = options
@@ -87,7 +87,6 @@ program.command('disable')
       log(`Exception has been caught: ${r(JSON.stringify(err))}`)
       program.help()
     }
-    log('not implemented', { id, version, options })
   })
 
 program.parse()
