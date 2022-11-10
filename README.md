@@ -68,7 +68,8 @@ Commands:
   help [command]             display help for command
 ```
 
-### Create Process Command
+
+### Crete Process Command
 
 ```sh
 #
@@ -105,6 +106,27 @@ $ process-management create -h localhost -p 9944 '[{"name":"B test","version":4,
       
 $ 
 
+```
+
+### Disable Process Command
+
+```sh
+$ process-management help disable
+Usage: process management disable [options] <id> <version>
+
+A command for disabling an existing process flows. Required process ID and version
+
+Arguments:
+  id                 a valid process id that you would like to disable
+  version            a version number of a process
+
+Options:
+  --dryRun           to validate process and response locally before persisting on the chain, default - false
+  -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
+  -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
+  -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --help             display help for command
+$ 
 ```
 
 ```typescript
