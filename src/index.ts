@@ -61,8 +61,8 @@ program.command('create')
       log(` ${g('command [create] executed successfully')}: ${JSON.stringify(res)}`)
       process.exit(1)
       
-    } catch (err){
-      log(`Exception has been caught: ${r(JSON.stringify(err))}`)
+    } catch (err) {
+      log(err)
       program.help()
     }
   })
@@ -84,7 +84,7 @@ program.command('disable')
 
       process.exit(1)
     } catch (err) {
-      log(`Exception has been caught: ${r(JSON.stringify(err))}`)
+      log(err)
       program.help()
     }
   })

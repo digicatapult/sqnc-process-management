@@ -127,6 +127,27 @@ Options:
   -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
   --help             display help for command
 $ 
+
+#
+# example
+#
+
+# let's create so we have something to disable
+$ process-management create '[{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
+
+      attempting to create a process...
+      options: {"host":"localhost","port":"9944","user":"//Alice"}
+      program: [{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]
+    
+ command [create] executed successfully: {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":1,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
+$
+
+$ process-management disable "B test" '1'
+attempting to disable:
+ID:B test
+Version:1
+ command [disable] executed successfully: {"message":"Process has been disabled","process":{"id":"0x422074657374","version":1,"status":"Disabled"}}
+$ 
 ```
 
 ```typescript
