@@ -8,10 +8,9 @@ import cliVersion from './version.js'
 
 const { log } = console
 const program = new Command()
-const { red: r, blue: b, green: g, yellow: y } = {
+const { red: r, blue: b, green: g } = {
   red: (txt: string) => chalk.redBright(txt),
   green: (txt: string) => chalk.green(txt),
-  yellow: (txt: string) => chalk.yellow(txt),
   blue: (txt: string) => chalk.blueBright(txt),
 }
 const example: string = JSON.stringify([{
@@ -76,11 +75,11 @@ program.command('disable')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')
-  .action(async (id: string, version: string,  options: any) => {
+  .action(async (id: string, version: string,  options: Polkadot.Options) => {  
     log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
     try {
       const { dryRun } = options
-      const res: any = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
+      const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
       log(` ${g('command [disable] executed successfully')}: ${JSON.stringify(res)}`)
 
       process.exit(1)
