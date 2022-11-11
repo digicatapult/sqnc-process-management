@@ -34,13 +34,13 @@ export default JSON.stringify([
     version: 1,
     program: [
       { restriction: { SenderOwnsAllInputs: {} }},
-      { op: 'or'},
       { restriction: { SenderHasInputRole: 
         {
           index: 0,
           roleKey: 'Supplier',
         },
       }},
+      { op: 'or'},
     ],
   },
 ])
