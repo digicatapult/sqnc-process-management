@@ -25,7 +25,9 @@ declare namespace Process {
   }
 
   export type CLIOptions =  {
-    dryRun: boolean,
+    dryRun?: boolean,
+    active?: boolean,
+    disabled?: boolean,
     port: string,
     user: string,
     host: string

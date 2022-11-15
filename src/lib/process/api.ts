@@ -1,5 +1,7 @@
-import type { ChainRestrictions } from '../types/restrictions'
+import { createNodeApi } from '../utils/polkadot.js'
 
+// TODO refactor since api.ts eother should be a util
+// since createNodeApi, set's all routes we could use in process.index.ts
 export const createProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
   processId: string,
@@ -75,6 +77,18 @@ export const disableProcessTransaction = async (
         reject(err)
       })
   })
+}
+
+// TODO sort types for all functions if time allows
+// validate ids?
+type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
+
+export const getAll: GetAllFn = async (options) => {
+  const polkadot: Polkadot.Polkadot = await createNodeApi(options)
+
+  return (
+    await polkadot.api.query.processValidation.processModel.entries()
+  ).map(([id, data]: any) => ({ id, ...data }))
 }
 
 export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string): Promise<number> => {

@@ -4,6 +4,7 @@ import chalk from 'chalk'
 import { Command } from 'commander'
 
 import { loadProcesses, disableProcess } from './lib/process/index.js'
+import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
 
 const { log } = console
@@ -37,10 +38,41 @@ const mapOptions = (options: Process.CLIOptions): Polkadot.Options => ({
   USER_URI: options.user,
 })
  
+// TODO nice to have, a local config file for substrate host details e.g. name, port, address
+// so no need to parse everytime calling a commond, or ability to set
 program
   .name('process management')
   .description('a command line interface for managing chain processes')
   .version(cliVersion, '-v, --version', 'output current version')
+
+program.command('list')
+  .description('A command for listing all active process flows')
+  .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
+  .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
+  .option('--active', 'returns only active process flows')
+  .option('--disabled', 'returns only disabled process flows')
+  .action(async (options: Process.CLIOptions) => {
+    log(`
+      retrieving all process flows from a chain...
+      options: ${b(JSON.stringify(options))}
+    `)
+    try {
+      const res: Process.Payload[] = JSON.parse(JSON.stringify(await getAll(mapOptions(options))))
+      
+      if (options.active) {
+        return log(res.filter((process: Process.Payload) => process.status === 'Enabled'))
+      }
+      if (options.disabled) {
+        return log(res.filter((process: Process.Payload) => process.status === 'Disabled'))
+      }
+      log(res)
+      process.exit(1)
+      
+    } catch (err) {
+      log(err)
+      program.help()
+    }
+  })
 
 program.command('create')
   .description('A command for persisting process flows onto the chain')

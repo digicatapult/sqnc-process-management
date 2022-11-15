@@ -11,6 +11,8 @@ export const defaultOptions: Polkadot.Options = {
   USER_URI: '//Alice',
 }
 
+// TODO merge api.sts and this together since they are both doing almost the same thing
+// and api is already mapped by polkadot e.g. storagemaps
 const validate = (program: Process.Program = []): Process.Program => {
   return program.reduce((out: Process.Program, step: Process.ProgramStep)=> {
     const validated: Process.ProgramStep = stepValidation.parse(step?.restriction || step)
