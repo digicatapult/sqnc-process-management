@@ -85,10 +85,11 @@ type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
 
 export const getAll: GetAllFn = async (options) => {
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
+  const processes = (await polkadot.api.query.processValidation.processModel.entries())
+    .map(([id, data]: any) => ({ id, ...data }))
 
-  return (
-    await polkadot.api.query.processValidation.processModel.entries()
-  ).map(([id, data]: any) => ({ id, ...data }))
+  // a quick hack to stringify substrate values
+  return JSON.parse(JSON.stringify(processes))
 }
 
 export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string): Promise<number> => {

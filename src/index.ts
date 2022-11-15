@@ -57,15 +57,17 @@ program.command('list')
       options: ${b(JSON.stringify(options))}
     `)
     try {
-      const res: Process.Payload[] = JSON.parse(JSON.stringify(await getAll(mapOptions(options))))
+      const res: Process.Payload[] = await getAll(mapOptions(options))
+      const { active, disabled } = options
       
-      if (options.active) {
-        return log(res.filter((process: Process.Payload) => process.status === 'Enabled'))
+      // TODO status optional and enum value e.g. disabled/enabled
+      if (active) {
+        log(res.filter(({ status }) => status === 'Enabled'))
+      } else if (disabled) {
+        log(res.filter(({ status }) => status === 'Disabled'))
+      } else {
+        log(res)
       }
-      if (options.disabled) {
-        return log(res.filter((process: Process.Payload) => process.status === 'Disabled'))
-      }
-      log(res)
       process.exit(1)
       
     } catch (err) {
