@@ -3,6 +3,7 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
 import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
+import { getAll } from '../../src/lib/process/api.js'
 import {
   validAllRestrictions,
   noValidRestrictions,
@@ -13,6 +14,23 @@ import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
 import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/types/error.js'
+
+const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
+
+describe.only('Listing all processes', () => {
+  beforeEach(async () => {
+    await createProcess('0 list', 1, validAllRestrictions)
+    
+    await createProcess('1 list', 1, validAllRestrictions)
+    await disableProcess('0 list', 1, true) 
+  })
+
+  it('returns a list of all processes', async () => {
+    const res = await getAll(polkadotOptions)
+
+    expect(res).to.be.an('array')
+  })
+})
 
 describe('Process creation and deletion', () => {
   describe('Happy path', () => {
