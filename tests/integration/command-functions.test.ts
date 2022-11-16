@@ -17,22 +17,7 @@ import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
-describe('Listing all processes', () => {
-  beforeEach(async () => {
-    await createProcess('10', 1, validAllRestrictions)
-    
-    await createProcess('11', 1, validAllRestrictions)
-    await disableProcess('10', 1, true) 
-  })
-
-  it('returns a list of all processes', async () => {
-    const res = await getAll(polkadotOptions)
-
-    expect(res).to.be.an('array')
-  })
-})
-
-describe('Process creation and deletion', () => {
+describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
     it('creates then disables a process', async () => {
       const currentVersion = await getVersionHelper('0x30')
@@ -130,5 +115,11 @@ describe('Process creation and deletion', () => {
     it('fails to disable process that does not exist', async () => {
       return assert.isRejected(disableProcess('incorrectProcessName', 1), VersionError)
     })
+  })
+
+  it('Lists all process flows', async () => {
+    const res = await getAll(polkadotOptions)
+
+    expect(res).to.be.an('array')
   })
 })

@@ -114,7 +114,6 @@ program.command('disable')
   .argument('<version>', 'a version number of a process')
   .action(async (id: string, version: string,  options: Process.CLIOptions) => {  
     if (options.print) log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
-    
     try {
       const { dryRun } = options
       const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
