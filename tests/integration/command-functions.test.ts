@@ -17,6 +17,13 @@ import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
+describe('Listing all processes', () => {
+  beforeEach(async () => {
+
+  })
+
+})
+
 describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
     it('creates then disables a process', async () => {
@@ -117,9 +124,8 @@ describe('Process creation and deletion, listing', () => {
     })
   })
 
-  it('Lists all process flows', async () => {
+  it.skip('Lists all process flows', async () => {
     const res = await getAll(polkadotOptions)
-
     expect(res).to.be.an('array')
   })
 })
