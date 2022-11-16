@@ -51,8 +51,9 @@ program.command('list')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('--active', 'returns only active process flows')
   .option('--disabled', 'returns only disabled process flows')
+  .option('--print', 'print debugging info')
   .action(async (options: Process.CLIOptions) => {
-    log(`
+    if (options.print) log(`
       retrieving all process flows from a chain...
       options: ${b(JSON.stringify(options))}
     `)
@@ -82,9 +83,10 @@ program.command('create')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
+  .option('--print', 'print debugging info')
   .argument('<json>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: Process.CLIOptions) => {
-    log(`
+    if (options.print) log(`
       attempting to create a process...
       options: ${b(JSON.stringify(options))}
       program: ${b(data)}
@@ -107,10 +109,12 @@ program.command('disable')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
+  .option('--print', 'print debugging info')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')
   .action(async (id: string, version: string,  options: Process.CLIOptions) => {  
-    log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
+    if (options.print) log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
+    
     try {
       const { dryRun } = options
       const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))

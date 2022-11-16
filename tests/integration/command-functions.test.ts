@@ -17,7 +17,7 @@ import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
-describe.only('Listing all processes', () => {
+describe('Listing all processes', () => {
   beforeEach(async () => {
     await createProcess('10', 1, validAllRestrictions)
     
