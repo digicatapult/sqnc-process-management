@@ -3,7 +3,6 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
 import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
-import { getAll } from '../../src/lib/process/api.js'
 import {
   validAllRestrictions,
   noValidRestrictions,
@@ -125,7 +124,5 @@ describe('Process creation and deletion, listing', () => {
   })
 
   it.skip('Lists all process flows', async () => {
-    const res = await getAll(polkadotOptions)
-    expect(res).to.be.an('array')
   })
 })
