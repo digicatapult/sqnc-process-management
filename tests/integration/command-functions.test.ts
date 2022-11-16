@@ -30,12 +30,11 @@ describe('Listing all processes', () => {
 
     expect(res).to.be.an('array')
   })
-}).timeout(30000)
+})
 
 describe('Process creation and deletion', () => {
   describe('Happy path', () => {
     it('creates then disables a process', async () => {
-
       const currentVersion = await getVersionHelper('0x30')
       const bumpedVersion = currentVersion + 1
       const newProcess = await createProcess('0', bumpedVersion, validAllRestrictions)
