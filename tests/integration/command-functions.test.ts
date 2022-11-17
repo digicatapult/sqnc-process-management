@@ -77,7 +77,7 @@ describe('Process creation and deletion, listing', () => {
       expect(res).to.be.an('array')
       expect(res.length).to.equal(3)
       expect(res[0]).to.be.an('object')
-        .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'registry'])
+        .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'registry', 'version'])
     })
   })
 
