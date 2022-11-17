@@ -4,6 +4,7 @@ import chalk from 'chalk'
 import { Command } from 'commander'
 
 import { loadProcesses, disableProcess } from './lib/process/index.js'
+import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
 
 const { log } = console
@@ -37,10 +38,44 @@ const mapOptions = (options: Process.CLIOptions): Polkadot.Options => ({
   USER_URI: options.user,
 })
  
+// TODO nice to have, a local config file for substrate host details e.g. name, port, address
+// so no need to parse everytime calling a commond, or ability to set
 program
   .name('process management')
   .description('a command line interface for managing chain processes')
   .version(cliVersion, '-v, --version', 'output current version')
+
+program.command('list')
+  .description('A command for listing all active process flows')
+  .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
+  .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
+  .option('--active', 'returns only active process flows')
+  .option('--disabled', 'returns only disabled process flows')
+  .option('--print', 'print debugging info')
+  .action(async (options: Process.CLIOptions) => {
+    if (options.print) log(`
+      retrieving all process flows from a chain...
+      options: ${b(JSON.stringify(options))}
+    `)
+    try {
+      const res: Process.Payload[] = await getAll(mapOptions(options))
+      const { active, disabled } = options
+      
+      // TODO status optional and enum value e.g. disabled/enabled
+      if (active) {
+        log(res.filter(({ status }) => status === 'Enabled'))
+      } else if (disabled) {
+        log(res.filter(({ status }) => status === 'Disabled'))
+      } else {
+        log(res)
+      }
+      process.exit(0)
+      
+    } catch (err) {
+      log(err)
+      program.help()
+    }
+  })
 
 program.command('create')
   .description('A command for persisting process flows onto the chain')
@@ -48,9 +83,10 @@ program.command('create')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
+  .option('--print', 'print debugging info')
   .argument('<json>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: Process.CLIOptions) => {
-    log(`
+    if (options.print) log(`
       attempting to create a process...
       options: ${b(JSON.stringify(options))}
       program: ${b(data)}
@@ -58,8 +94,8 @@ program.command('create')
     const { dryRun } = options
     try {
       const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
-      log(` ${g('command [create] executed successfully')}: ${JSON.stringify(res)}`)
-      process.exit(1)
+      log(JSON.stringify(res))
+      process.exit(0)
       
     } catch (err) {
       log(err)
@@ -73,16 +109,17 @@ program.command('disable')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
+  .option('--print', 'print debugging info')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')
   .action(async (id: string, version: string,  options: Process.CLIOptions) => {  
-    log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
+    if (options.print) log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
     try {
       const { dryRun } = options
       const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
-      log(` ${g('command [disable] executed successfully')}: ${JSON.stringify(res)}`)
+      log(JSON.stringify(res))
 
-      process.exit(1)
+      process.exit(0)
     } catch (err) {
       log(err)
       program.help()
@@ -99,5 +136,5 @@ program.on('command:*', function () {
     ${r('Invalid command: %s\nSee --help for a list of available commands.')}
     ${program.args.join(' ')}`
   )
-  process.exit(1)
+  process.exit(110)
 })

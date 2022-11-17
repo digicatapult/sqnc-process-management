@@ -8,24 +8,27 @@ import {
   noValidRestrictions,
   invalidRestrictionValue,
   multiple,
+  simple,
 } from '../fixtures/programs.js'
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
 import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/types/error.js'
+import { getAll } from '../../src/lib/process/api.js'
 
-describe('Process creation and deletion', () => {
+const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
+
+describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
     it('creates then disables a process', async () => {
-
       const currentVersion = await getVersionHelper('0x30')
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess('0', bumpedVersion, validAllRestrictions)
+      const newProcess = await createProcess('0', bumpedVersion, simple)
       expect(newProcess.process).to.deep.equal({
         id: '0x30',
         version: bumpedVersion,
         status: 'Enabled',
-        program: validAllRestrictions, 
+        program: simple, 
       })
 
       const disabledProcess = await disableProcess('0', bumpedVersion)
@@ -37,10 +40,18 @@ describe('Process creation and deletion', () => {
       })
     })
     
-    it('creates multiple processes', async () => {
-      const newProcesses = await loadProcesses({ data: multiple })
-      expect(newProcesses?.mock_accept_order?.process?.status).to.equal('Enabled')
-      expect(newProcesses?.mock_post_order?.process?.status).to.equal('Enabled')
+    it ('creates multiple processes', async () => {
+      const newProcesses = await loadProcesses({ options: polkadotOptions, data: multiple })
+      expect(newProcesses['process-1'].message).to.deep.equal('Transaction for new process process-1 has been successfully submitted')
+      expect(newProcesses['process-1'].process).to.deep.contain({
+        version: 1,
+        status: 'Enabled',
+      })
+      expect(newProcesses['process-2'].message).to.deep.equal('Transaction for new process process-2 has been successfully submitted')
+      expect(newProcesses['process-2'].process).to.deep.contain({
+        version: 1,
+        status: 'Enabled',
+      })
     })
 
     it('does not create process if dry run', async () => {
@@ -58,6 +69,15 @@ describe('Process creation and deletion', () => {
         message: 'This will DISABLE the following process 0',
         name: '0'
       })
+    })
+
+    it('returns a list of processes that have been created so far', async () => {
+      const res = await getAll(polkadotOptions)
+
+      expect(res).to.be.an('array')
+      expect(res.length).to.equal(3)
+      expect(res[0]).to.be.an('object')
+        .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'registry', 'version'])
     })
   })
 

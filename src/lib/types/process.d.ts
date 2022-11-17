@@ -7,6 +7,7 @@ declare namespace Process {
   }
 
   // break down per function
+  // TODO rename types as this is causing a little confussion
   interface Result {
     process?: Payload 
     name?: string
@@ -25,7 +26,10 @@ declare namespace Process {
   }
 
   export type CLIOptions =  {
-    dryRun: boolean,
+    print?: boolean,
+    dryRun?: boolean,
+    active?: boolean,
+    disabled?: boolean,
     port: string,
     user: string,
     host: string

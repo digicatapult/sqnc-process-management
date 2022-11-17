@@ -1,8 +1,11 @@
+export const simple: Process.Program = [
+  { restriction: { None: {} } },
+]
+
 export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
-  { op: 'or' },
   { restriction: { SenderOwnsAllInputs: {} }},
-  { op: 'and' },
+  { op: 'or' },
   { restriction: {
     SenderHasInputRole: 
       {
@@ -101,6 +104,7 @@ export const validAllRestrictions: Process.Program = [
       },
     
   },},
+  { op: 'and' },
 ]
 
 export const noValidRestrictions: Process.Program = [
@@ -120,7 +124,7 @@ export const invalidRestrictionValue: Process.Program = [
 
 export const multiple: string = JSON.stringify([
   {
-    name: 'mock_post_order',
+    name: 'process-1',
     version: 1,
     program: [
       { restriction:  { SenderOwnsAllInputs: {} }},
@@ -131,26 +135,10 @@ export const multiple: string = JSON.stringify([
         },
       }},
       { op: 'and'},
-      { restriction: { FixedOutputMetadataValueType: 
-        {
-          index: 0,
-          metadataKey: 'SomeMetadataKey',
-          metadataValueType: 'Literal',
-        },
-      }}, 
-      { restriction: { FixedOutputMetadataValueType: 
-        {
-          index: 0,
-          metadataKey: 'SomeOtherMetadataKey',
-          metadataValueType: 'File',
-        },
-      }},
-      { op: 'and'},
-      { op: 'and'},
     ],
   },
   {
-    name: 'mock_accept_order',
+    name: 'process-2',
     version: 1,
     program: [
       { restriction: { SenderOwnsAllInputs: {} }},

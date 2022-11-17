@@ -89,6 +89,7 @@ Options:
   -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
   -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
   -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --print            print debugging info
   --help             display help for command
 
 #
@@ -96,13 +97,7 @@ Options:
 #
 $ process-management create -h localhost -p 9944 '[{"name":"B test","version":4,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
 
-      attempting to create a process...
-      options: {"host":"localhost","port":"9944","user":"//Alice"}
-      program: [{"name":"B test","version":4,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]
-    
-
-        command create executed successfully
-        response: {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":4,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
+{"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":4,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
       
 $ 
 
@@ -125,6 +120,7 @@ Options:
   -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
   -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
   -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --print            print debugging info
   --help             display help for command
 $ 
 
@@ -134,12 +130,8 @@ $
 
 # let's create so we have something to disable
 $ process-management create '[{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
-
-      attempting to create a process...
-      options: {"host":"localhost","port":"9944","user":"//Alice"}
-      program: [{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]
     
- command [create] executed successfully: {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":1,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
+{"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":1,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
 $
 
 $ process-management disable "B test" '1'
@@ -147,6 +139,89 @@ attempting to disable:
 ID:B test
 Version:1
  command [disable] executed successfully: {"message":"Process has been disabled","process":{"id":"0x422074657374","version":1,"status":"Disabled"}}
+$ 
+```
+
+### List Processes Command
+```sh
+$ process-management list --help
+Usage: process management list [options]
+
+A command for listing all active process flows
+
+Options:
+  -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
+  -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
+  --active           returns only active process flows
+  --disabled         returns only disabled process flows
+  --print            print debugging info
+  --help             display help for command
+
+#
+# examples
+#
+
+# --active
+$ process-management list --active 
+[
+  {
+    id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a1c8e677ed0f6c7a01b80a29e829baa5ee446d6f636b5f6163636570745f6f72646572d82c12285b5d4551f88e8f6e7eb52b8101000000',
+    version: 0,
+    initialU8aLength: 13,
+    registry: {},
+    status: 'Enabled',
+    program: [
+      {
+        restriction: {
+          senderOwnsAllInputs: null
+        }
+      },
+      {
+        restriction: {
+          senderHasInputRole: {
+            index: 0,
+            roleKey: "Supplier"
+          }
+        }
+      },
+      {
+        op: "And"
+      }
+    ],
+    createdAtHash: '0xc1f1730f66e2675c6397a1f50338c072f242669faadec1548f2bca751f6dc8ff'
+  }
+]
+
+# --disabled
+$ process-management list --disabled    
+[
+  {
+    id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a17eee87b9b8852fc5e5a1611a1818848818422074657374d82c12285b5d4551f88e8f6e7eb52b8101000000',
+    version: 0,
+    initialU8aLength: 8,
+    registry: {},
+    status: 'Disabled',
+    program: [
+            {
+        restriction: {
+          senderOwnsAllInputs: null
+        }
+      },
+      {
+        restriction: {
+          senderHasInputRole: {
+            index: 0,
+            roleKey: "Supplier"
+          }
+        }
+      },
+      {
+        op: "And"
+      }
+    ],
+    createdAtHash: '0x4a3842f4d0428eabe10e74dfcfe15a65e1148b645bb39e3fd2fac3f190cb240c'
+  },
+]
 $ 
 ```
 
