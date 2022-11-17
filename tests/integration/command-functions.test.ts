@@ -42,21 +42,15 @@ describe('Process creation and deletion, listing', () => {
     
     it ('creates multiple processes', async () => {
       const newProcesses = await loadProcesses({ options: polkadotOptions, data: multiple })
-      console.log('multi; ', newProcesses)
-      expect(newProcesses['process-1']).to.deep.contain({
-          message: 'Transaction for new process process-1 has been successfully submitted',
-          process: {
-            version: 1,
-            status: 'Enabled',
-          }
+      expect(newProcesses['process-1'].message).to.deep.equal('Transaction for new process process-1 has been successfully submitted')
+      expect(newProcesses['process-1'].process).to.deep.contain({
+        version: 1,
+        status: 'Enabled',
       })
-      expect(newProcesses['process-2']).to.deep.contain({
-          message: 'Transaction for new process process-2 has been successfully submitted',
-          process: {
-            version: 1,
-            status: 'Enabled',
-          }
-
+      expect(newProcesses['process-2'].message).to.deep.equal('Transaction for new process process-2 has been successfully submitted')
+      expect(newProcesses['process-2'].process).to.deep.contain({
+        version: 1,
+        status: 'Enabled',
       })
     })
 
@@ -81,12 +75,8 @@ describe('Process creation and deletion, listing', () => {
       const res = await getAll(polkadotOptions)
 
       expect(res).to.be.an('array')
-        .that.has.lengthOf(3)
-      expect(res).to.deep.contain([{
-          initialU8aLength: 8,
-          registry: {},
-          status: 'Disabled',
-        }])
+      expect(res[0]).to.be.an('object')
+        .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'registry'])
     })
   })
 
