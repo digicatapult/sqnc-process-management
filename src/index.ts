@@ -94,7 +94,7 @@ program.command('create')
     const { dryRun } = options
     try {
       const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
-      log(` ${g('command [create] executed successfully')}: ${JSON.stringify(res)}`)
+      log(JSON.stringify(res))
       process.exit(1)
       
     } catch (err) {
@@ -117,7 +117,7 @@ program.command('disable')
     try {
       const { dryRun } = options
       const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
-      log(` ${g('command [disable] executed successfully')}: ${JSON.stringify(res)}`)
+      log(JSON.stringify(res))
 
       process.exit(1)
     } catch (err) {
