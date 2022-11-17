@@ -81,7 +81,7 @@ export const disableProcessTransaction = async (
 
 // TODO sort types for all functions if time allows
 // validate ids?
-type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[] | void>
+type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
 
 export const getAll: GetAllFn = async (options) => {
   const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)    

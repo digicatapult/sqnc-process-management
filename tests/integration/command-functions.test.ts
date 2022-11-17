@@ -75,6 +75,7 @@ describe('Process creation and deletion, listing', () => {
       const res = await getAll(polkadotOptions)
 
       expect(res).to.be.an('array')
+      expect(res.length).to.equal(3)
       expect(res[0]).to.be.an('object')
         .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'registry'])
     })

@@ -89,6 +89,7 @@ Options:
   -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
   -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
   -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --print            print debugging info
   --help             display help for command
 
 #
@@ -96,13 +97,7 @@ Options:
 #
 $ process-management create -h localhost -p 9944 '[{"name":"B test","version":4,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
 
-      attempting to create a process...
-      options: {"host":"localhost","port":"9944","user":"//Alice"}
-      program: [{"name":"B test","version":4,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]
-    
-
-        command create executed successfully
-        response: {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":4,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
+{"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":4,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
       
 $ 
 
@@ -125,6 +120,7 @@ Options:
   -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
   -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
   -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
+  --print            print debugging info
   --help             display help for command
 $ 
 
@@ -134,12 +130,8 @@ $
 
 # let's create so we have something to disable
 $ process-management create '[{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
-
-      attempting to create a process...
-      options: {"host":"localhost","port":"9944","user":"//Alice"}
-      program: [{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]
     
- command [create] executed successfully: {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":1,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
+{"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":1,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
 $
 
 $ process-management disable "B test" '1'
@@ -162,6 +154,7 @@ Options:
   -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
   --active           returns only active process flows
   --disabled         returns only disabled process flows
+  --print            print debugging info
   --help             display help for command
 
 #
@@ -169,91 +162,63 @@ Options:
 #
 
 # --active
-$ process-management list --active
-
-      retrieving all process flows from a chain...
-      options: {"host":"localhost","port":"9944","active":true}
-    
+$ process-management list --active 
 [
-  {
-    id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a1aebdeca4745f8a62395de679a6b7332e3c6d6f636b5f706f73745f6f72646572d82c12285b5d4551f88e8f6e7eb52b8101000000',
-    initialU8aLength: 68,
-    registry: {},
-    status: 'Enabled',
-    program: [
-      [Object], [Object],
-      [Object], [Object],
-      [Object], [Object],
-      [Object]
-    ],
-    createdAtHash: '0xc1f1730f66e2675c6397a1f50338c072f242669faadec1548f2bca751f6dc8ff'
-  },
   {
     id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a1c8e677ed0f6c7a01b80a29e829baa5ee446d6f636b5f6163636570745f6f72646572d82c12285b5d4551f88e8f6e7eb52b8101000000',
     initialU8aLength: 13,
     registry: {},
     status: 'Enabled',
-    program: [ [Object], [Object], [Object] ],
+    program: [
+      {
+        restriction: {
+          senderOwnsAllInputs: null
+        }
+      },
+      {
+        restriction: {
+          senderHasInputRole: {
+            index: 0,
+            roleKey: "Supplier"
+          }
+        }
+      },
+      {
+        op: "And"
+      }
+    ],
     createdAtHash: '0xc1f1730f66e2675c6397a1f50338c072f242669faadec1548f2bca751f6dc8ff'
   }
 ]
 
 # --disabled
-$ process-management list --disabled
-
-      retrieving all process flows from a chain...
-      options: {"host":"localhost","port":"9944","disabled":true}
-    
+$ process-management list --disabled    
 [
   {
     id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a17eee87b9b8852fc5e5a1611a1818848818422074657374d82c12285b5d4551f88e8f6e7eb52b8101000000',
     initialU8aLength: 8,
     registry: {},
     status: 'Disabled',
-    program: [ [Object], [Object], [Object] ],
-    createdAtHash: '0x4a3842f4d0428eabe10e74dfcfe15a65e1148b645bb39e3fd2fac3f190cb240c'
-  },
-  {
-    id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a184708ea3557e63d2d8e8b8ae44331bdd0461754faa9acf0378f8c3543d9f132d85bc02000000',
-    initialU8aLength: 8,
-    registry: {},
-    status: 'Disabled',
-    program: [ [Object], [Object], [Object] ],
-    createdAtHash: '0x4a3842f4d0428eabe10e74dfcfe15a65e1148b645bb39e3fd2fac3f190cb240c'
-  },
-  {
-    id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a184708ea3557e63d2d8e8b8ae44331bdd0461d82c12285b5d4551f88e8f6e7eb52b8101000000',
-    initialU8aLength: 8,
-    registry: {},
-    status: 'Disabled',
-    program: [ [Object], [Object], [Object] ],
-    createdAtHash: '0x4a3842f4d0428eabe10e74dfcfe15a65e1148b645bb39e3fd2fac3f190cb240c'
-  },
-  {
-    id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a184708ea3557e63d2d8e8b8ae44331bdd0461de18007c0afadc771c45bf719bc7fe5103000000',
-    initialU8aLength: 8,
-    registry: {},
-    status: 'Disabled',
-    program: [ [Object], [Object], [Object] ],
-    createdAtHash: '0x4a3842f4d0428eabe10e74dfcfe15a65e1148b645bb39e3fd2fac3f190cb240c'
-  },
-  {
-    id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a1ed48f77a0ca720aa763ad1131dd8e9950430d82c12285b5d4551f88e8f6e7eb52b8101000000',
-    initialU8aLength: 188,
-    registry: {},
-    status: 'Disabled',
     program: [
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object], [Object],
-      [Object], [Object]
+            {
+        restriction: {
+          senderOwnsAllInputs: null
+        }
+      },
+      {
+        restriction: {
+          senderHasInputRole: {
+            index: 0,
+            roleKey: "Supplier"
+          }
+        }
+      },
+      {
+        op: "And"
+      }
     ],
     createdAtHash: '0x4a3842f4d0428eabe10e74dfcfe15a65e1148b645bb39e3fd2fac3f190cb240c'
-  }
+  },
 ]
 $ 
 ```
