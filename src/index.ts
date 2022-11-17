@@ -69,7 +69,7 @@ program.command('list')
       } else {
         log(res)
       }
-      process.exit(1)
+      process.exit(0)
       
     } catch (err) {
       log(err)
@@ -95,7 +95,7 @@ program.command('create')
     try {
       const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
       log(JSON.stringify(res))
-      process.exit(1)
+      process.exit(0)
       
     } catch (err) {
       log(err)
@@ -119,7 +119,7 @@ program.command('disable')
       const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
       log(JSON.stringify(res))
 
-      process.exit(1)
+      process.exit(0)
     } catch (err) {
       log(err)
       program.help()
@@ -136,5 +136,5 @@ program.on('command:*', function () {
     ${r('Invalid command: %s\nSee --help for a list of available commands.')}
     ${program.args.join(' ')}`
   )
-  process.exit(1)
+  process.exit(110)
 })
