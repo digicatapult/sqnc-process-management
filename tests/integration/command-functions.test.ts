@@ -46,7 +46,6 @@ describe('Process creation and deletion, listing', () => {
       expect(newProcesses['process-1']).to.deep.contain({
           message: 'Transaction for new process process-1 has been successfully submitted',
           process: {
-            id: '0x6d6f636b5f706f73745f6f72646572',
             version: 1,
             status: 'Enabled',
           }
@@ -54,7 +53,6 @@ describe('Process creation and deletion, listing', () => {
       expect(newProcesses['process-2']).to.deep.contain({
           message: 'Transaction for new process process-2 has been successfully submitted',
           process: {
-            id: '0x6d6f636b5f6163636570745f6f72646572',
             version: 1,
             status: 'Enabled',
           }
@@ -83,7 +81,8 @@ describe('Process creation and deletion, listing', () => {
       const res = await getAll(polkadotOptions)
 
       expect(res).to.be.an('array')
-        .that.has.members([{
+        .that.has.lengthOf(3)
+      expect(res).to.deep.contain([{
           initialU8aLength: 8,
           registry: {},
           status: 'Disabled',
