@@ -166,6 +166,7 @@ $ process-management list --active
 [
   {
     id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a1c8e677ed0f6c7a01b80a29e829baa5ee446d6f636b5f6163636570745f6f72646572d82c12285b5d4551f88e8f6e7eb52b8101000000',
+    version: 0,
     initialU8aLength: 13,
     registry: {},
     status: 'Enabled',
@@ -196,6 +197,7 @@ $ process-management list --disabled
 [
   {
     id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a17eee87b9b8852fc5e5a1611a1818848818422074657374d82c12285b5d4551f88e8f6e7eb52b8101000000',
+    version: 0,
     initialU8aLength: 8,
     registry: {},
     status: 'Disabled',

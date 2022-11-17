@@ -9,7 +9,7 @@ export const getVersionHelper = async (processId: string): Promise<number> => {
   return version
 }
 
-export const getProcessHelper = async (processId: string, version: number): Promise<Process.Payload> => {
+export const Helper = async (processId: string, version: number): Promise<Process.Payload> => {
   const polkadot = await createNodeApi(defaultOptions)
   const process = await getProcess(polkadot, processId, version)
   await polkadot.api.disconnect()
