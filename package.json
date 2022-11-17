@@ -51,7 +51,7 @@
     "ts-mocha": "^10.0.0"
   },
   "dependencies": {
-    "@digicatapult/dscp-node": "^4.4.3",
+    "@digicatapult/dscp-node": "^4.4.6",
     "chalk": "^5.1.2",
     "commander": "^9.4.1",
     "ts-node": "^10.9.1",

@@ -8,32 +8,27 @@ import {
   noValidRestrictions,
   invalidRestrictionValue,
   multiple,
+  simple,
 } from '../fixtures/programs.js'
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
 import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/types/error.js'
+import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
-
-describe('Listing all processes', () => {
-  beforeEach(async () => {
-
-  })
-
-})
 
 describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
     it('creates then disables a process', async () => {
       const currentVersion = await getVersionHelper('0x30')
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess('0', bumpedVersion, validAllRestrictions)
+      const newProcess = await createProcess('0', bumpedVersion, simple)
       expect(newProcess.process).to.deep.equal({
         id: '0x30',
         version: bumpedVersion,
         status: 'Enabled',
-        program: validAllRestrictions, 
+        program: simple, 
       })
 
       const disabledProcess = await disableProcess('0', bumpedVersion)
@@ -45,10 +40,28 @@ describe('Process creation and deletion, listing', () => {
       })
     })
     
-    it('creates multiple processes', async () => {
-      const newProcesses = await loadProcesses({ data: multiple })
-      expect(newProcesses?.mock_accept_order?.process?.status).to.equal('Enabled')
-      expect(newProcesses?.mock_post_order?.process?.status).to.equal('Enabled')
+    it ('creates multiple processes', async () => {
+      const newProcesses = await loadProcesses({ options: polkadotOptions, data: multiple })
+      console.log('multi; ', newProcesses)
+      expect(newProcesses).to.deep.contain([{
+        mock_post_order: {
+          message: 'Transaction for new process mock_post_order has been successfully submitted',
+          process: {
+            id: '0x6d6f636b5f706f73745f6f72646572',
+            version: 1,
+            status: 'Enabled',
+          }
+        },
+      }, {
+        mock_accept_order: {
+          message: 'Transaction for new process mock_accept_order has been successfully submitted',
+          process: {
+            id: '0x6d6f636b5f6163636570745f6f72646572',
+            version: 1,
+            status: 'Enabled',
+          }
+        },
+      }])
     })
 
     it('does not create process if dry run', async () => {
@@ -66,6 +79,17 @@ describe('Process creation and deletion, listing', () => {
         message: 'This will DISABLE the following process 0',
         name: '0'
       })
+    })
+
+    it('returns a list of processes that have been created so far', async () => {
+      const res = await getAll(polkadotOptions)
+
+      expect(res).to.be.an('array')
+        .that.deep.contains([{
+          initialU8aLength: 8,
+          registry: {},
+          status: 'Disabled',
+        }])
     })
   })
 
@@ -121,8 +145,5 @@ describe('Process creation and deletion, listing', () => {
     it('fails to disable process that does not exist', async () => {
       return assert.isRejected(disableProcess('incorrectProcessName', 1), VersionError)
     })
-  })
-
-  it.skip('Lists all process flows', async () => {
   })
 })

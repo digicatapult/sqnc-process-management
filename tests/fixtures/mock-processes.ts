@@ -11,22 +11,6 @@ export default JSON.stringify([
         },
       }},
       { op: 'and'},
-      { restriction: { FixedOutputMetadataValueType: 
-        {
-          index: 0,
-          metadataKey: 'SomeMetadataKey',
-          metadataValueType: 'Literal',
-        },
-      }}, 
-      { restriction: { FixedOutputMetadataValueType: 
-        {
-          index: 0,
-          metadataKey: 'SomeOtherMetadataKey',
-          metadataValueType: 'File',
-        },
-      }},
-      { op: 'and'},
-      { op: 'and'},
     ],
   },
   {
