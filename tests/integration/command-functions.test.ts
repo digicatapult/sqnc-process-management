@@ -43,25 +43,23 @@ describe('Process creation and deletion, listing', () => {
     it ('creates multiple processes', async () => {
       const newProcesses = await loadProcesses({ options: polkadotOptions, data: multiple })
       console.log('multi; ', newProcesses)
-      expect(newProcesses).to.deep.contain([{
-        mock_post_order: {
+      expect(newProcesses['process-1']).to.deep.contain({
           message: 'Transaction for new process mock_post_order has been successfully submitted',
           process: {
             id: '0x6d6f636b5f706f73745f6f72646572',
             version: 1,
             status: 'Enabled',
           }
-        },
-      }, {
-        mock_accept_order: {
+      })
+      expect(newProcesses['process-2']).to.deep.contain({
           message: 'Transaction for new process mock_accept_order has been successfully submitted',
           process: {
             id: '0x6d6f636b5f6163636570745f6f72646572',
             version: 1,
             status: 'Enabled',
           }
-        },
-      }])
+
+      })
     })
 
     it('does not create process if dry run', async () => {
@@ -85,7 +83,7 @@ describe('Process creation and deletion, listing', () => {
       const res = await getAll(polkadotOptions)
 
       expect(res).to.be.an('array')
-        .that.deep.contains([{
+        .that.deep.contain([{
           initialU8aLength: 8,
           registry: {},
           status: 'Disabled',
