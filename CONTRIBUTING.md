@@ -1,4 +1,4 @@
-# Contributing to DSCP-Process-Management
+# Contributing to Veritable-Process-Management
 
 Firstly, we would like to thank you for taking the time to contribute!
 
@@ -24,7 +24,7 @@ The following is a set of guidelines for contributing to our packages, which are
 
 ## Code of Conduct
 
-This project and all those participating in it are governed by the [Digital Catapult's Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behaviour to [opensource@digicatapult.org.uk](mailto:opensource@digicatapult.org.uk?subject=DSCP-Process-Management).
+This project and all those participating in it are governed by the [Digital Catapult's Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behaviour to [opensource@digicatapult.org.uk](mailto:opensource@digicatapult.org.uk?subject=Veritable-Process-Management).
 
 ## FAQs
 
@@ -34,7 +34,7 @@ We don't have any frequently asked questions yet.
 
 ### Reporting Bugs
 
-This section guides you through submitting a bug report for dscp-process-management. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behaviour :computer: :computer:, and find related reports :mag_right:.
+This section guides you through submitting a bug report for veritable-process-management. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behaviour :computer: :computer:, and find related reports :mag_right:.
 
 Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you don't need to create one. When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-good-bug-report). Fill out [the required template](https://github.com/digicatapult/dscp-process-management/blob/main/.github/ISSUE_TEMPLATE/bug_report.md), the information it asks for helps us resolve issues faster.
 
@@ -60,19 +60,19 @@ Explain the problem and include additional details to help maintainers reproduce
 
 Provide more context by answering these questions:
 
-- **Did the problem start happening recently** (e.g. after updating to a new version of dscp-process-management) or was this always a problem?
-- If the problem started happening recently, **can you reproduce the problem in an older version of dscp-process-management?** What's the most recent version in which the problem doesn't happen? You can checkout older versions of dscp-process-management from [the releases page](https://github.com/digicatapult/dscp-process-management/releases).
+- **Did the problem start happening recently** (e.g. after updating to a new version of veritable-process-management) or was this always a problem?
+- If the problem started happening recently, **can you reproduce the problem in an older version of veritable-process-management?** What's the most recent version in which the problem doesn't happen? You can checkout older versions of veritable-process-management from [the releases page](https://github.com/digicatapult/dscp-process-management/releases).
 - **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 
 Include details about your configuration and environment:
 
-- **Which version of dscp-process-management are you using?** You can get the exact version from the version attribute within package.json.
-- **What's the name and version of the OS you've deployed dscp-process-management to**?
-- **Are you running dscp-process-management in a virtual machine?** If so, which VM software are you using and which operating systems and versions are used for the host and the guest?
+- **Which version of veritable-process-management are you using?** You can get the exact version from the version attribute within package.json.
+- **What's the name and version of the OS you've deployed veritable-process-management to**?
+- **Are you running veritable-process-management in a virtual machine?** If so, which VM software are you using and which operating systems and versions are used for the host and the guest?
 
 ### Suggesting Enhancements
 
-This section guides you through submitting an enhancement suggestion for dscp-process-management, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
+This section guides you through submitting an enhancement suggestion for veritable-process-management, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related suggestions :mag_right:.
 
 Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) as you might find out that you don't need to create one. When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). Fill in [the template](https://github.com/digicatapult/dscp-process-management/blob/main/.github/ISSUE_TEMPLATE/feature_request.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
@@ -88,19 +88,19 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 - **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
 - **Provide specific examples to demonstrate the steps**. Include copy/pasteable snippets which you use in those examples, as [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 - **Describe the current behaviour** and **explain which behaviour you expected to see instead** and why.
-- **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of dscp-process-management which the suggestion is related to. You can use [this tool](https://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
-- **Explain why this enhancement would be useful** to most dscp-process-management users.
+- **Include screenshots and animated GIFs** which help you demonstrate the steps or point out the part of veritable-process-management which the suggestion is related to. You can use [this tool](https://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux.
+- **Explain why this enhancement would be useful** to most veritable-process-management users.
 - **List some other text editors or applications where this enhancement exists.**
-- **Specify which version of dscp-process-management you're using.** You can get the exact version from the version attribute within package.json.
-- **What's the name and version of the OS you've deployed dscp-process-management to**?
+- **Specify which version of veritable-process-management you're using.** You can get the exact version from the version attribute within package.json.
+- **What's the name and version of the OS you've deployed veritable-process-management to**?
 
 ### Pull Requests
 
 The process described here has several goals:
 
-- Maintain dscp-process-management's quality
+- Maintain veritable-process-management's quality
 - Fix problems that are important to users
-- Enable a sustainable system for dscp-process-management's maintainers to review contributions
+- Enable a sustainable system for veritable-process-management's maintainers to review contributions
 
 Please follow these steps to have your contribution considered by the maintainers:
 

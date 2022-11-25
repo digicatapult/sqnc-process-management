@@ -1,6 +1,6 @@
-# dscp-process-management
+# veritable-process-management
 
-A Library for managing restricted process flows in `DSCP`.
+A Library for managing restricted process flows in `Veritable`.
 
 ## Getting started
 
@@ -38,16 +38,16 @@ process-management create -p 9944 -h localhost '[{"name":"A-test","version":1,"p
 
 ## Library functions
 
-The library functions of `dscp-process-management` take an optional `Options` object to configure the `Polkadot.js` API connection:
+The library functions of `veritable-process-management` take an optional `Options` object to configure the `Polkadot.js` API connection:
 
 | variable | required |   default   | description                                                                                  |
 | :------- | :------: | :---------: | :------------------------------------------------------------------------------------------- |
-| API_HOST |    N     | `localhost` | The hostname of the `dscp-node` the API should connect to                                    |
-| API_PORT |    N     |   `9944`    | The port of the `dscp-node` the API should connect to                                        |
-| USER_URI |    N     |  `//Alice`  | The Substrate `URI` representing the private key to use when making `dscp-node` transactions |
+| API_HOST |    N     | `localhost` | The hostname of the `veritable-node` the API should connect to                                    |
+| API_PORT |    N     |   `9944`    | The port of the `veritable-node` the API should connect to                                        |
+| USER_URI |    N     |  `//Alice`  | The Substrate `URI` representing the private key to use when making `veritable-node` transactions |
 
 
-For the full list of available restrictions see [`dscp-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
+For the full list of available restrictions see [`eritable-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
 
 ### Help
 
