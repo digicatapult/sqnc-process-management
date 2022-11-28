@@ -1,154 +1,159 @@
-export const simple: Process.Program = [
-  { restriction: { None: {} } },
-]
+export const simple: Process.Program = [{ restriction: { None: {} } }]
 
 export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
-  { restriction: { SenderOwnsAllInputs: {} }},
+  { restriction: { SenderOwnsAllInputs: {} } },
   { op: 'or' },
-  { restriction: {
-    SenderHasInputRole: 
-      {
+  {
+    restriction: {
+      SenderHasInputRole: {
         index: 0,
         roleKey: 'Supplier',
       },
-    
-  }},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    SenderHasOutputRole: 
-      {
+  {
+    restriction: {
+      SenderHasOutputRole: {
         index: 0,
         roleKey: 'Supplier',
       },
-    
-  }},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    OutputHasRole: 
-      {
+  {
+    restriction: {
+      OutputHasRole: {
         index: 0,
         roleKey: 'Supplier',
       },
-    
-  }},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    MatchInputOutputRole: 
-      {
+  {
+    restriction: {
+      MatchInputOutputRole: {
         inputIndex: 0,
         inputRoleKey: 'Supplier',
         outputIndex: 0,
         outputRoleKey: 'Supplier',
       },
-    
-  }},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    MatchInputOutputMetadataValue: 
-      {
+  {
+    restriction: {
+      MatchInputOutputMetadataValue: {
         inputIndex: 0,
         inputMetadataKey: 'SomeMetadataKey',
         outputIndex: 0,
         outputMetadataKey: 'SomeMetadataKey',
       },
-    
-  }},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    FixedNumberOfInputs: 
-      {
+  {
+    restriction: {
+      FixedNumberOfInputs: {
         numInputs: 0,
       },
-    
-  },},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    FixedNumberOfOutputs: 
-      {
+  {
+    restriction: {
+      FixedNumberOfOutputs: {
         numOutputs: 0,
       },
-    
-  },},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    FixedInputMetadataValue: 
-      {
+  {
+    restriction: {
+      FixedInputMetadataValue: {
         index: 0,
         metadataKey: 'SomeMetadataKey',
         metadataValue: {
           Literal: 'a',
         },
       },
-    
-  },},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    FixedOutputMetadataValue: 
-      {
+  {
+    restriction: {
+      FixedOutputMetadataValue: {
         index: 0,
         metadataKey: 'SomeMetadataKey',
         metadataValue: {
           Literal: 'a',
         },
       },
-    
-  },},
+    },
+  },
   { op: 'and' },
-  { restriction: {
-    FixedOutputMetadataValueType: 
-      {
+  {
+    restriction: {
+      FixedOutputMetadataValueType: {
         index: 0,
         metadataKey: 'SomeMetadataKey',
         metadataValueType: 'Literal',
       },
-    
-  },},
+    },
+  },
   { op: 'and' },
 ]
 
-export const noValidRestrictions: Process.Program = [
-  { restriction: { NotARestriction: {} }},
-]
+export const noValidRestrictions: Process.Program = [{ restriction: { NotARestriction: {} } }]
 
 export const invalidRestrictionValue: Process.Program = [
   {
     restriction: {
-    FixedInputMetadataValue: 
-      {
+      FixedInputMetadataValue: {
         invalid: 0,
       },
-    
-  }},
+    },
+  },
 ]
 
-export const multiple: string = JSON.stringify([
-  {
-    name: 'process-1',
-    version: 1,
-    program: [
-      { restriction:  { SenderOwnsAllInputs: {} }},
-      { restriction: { SenderHasInputRole: 
+export const multiple = (
+  process1Name: string,
+  process1BumpedV: number,
+  process2Name: string,
+  process2BumpedV: number
+): string =>
+  JSON.stringify([
+    {
+      name: process1Name,
+      version: process1BumpedV,
+      program: [
+        { restriction: { SenderOwnsAllInputs: {} } },
         {
-          index: 0,
-          roleKey: 'Supplier',
+          restriction: {
+            SenderHasInputRole: {
+              index: 0,
+              roleKey: 'Supplier',
+            },
+          },
         },
-      }},
-      { op: 'and'},
-    ],
-  },
-  {
-    name: 'process-2',
-    version: 1,
-    program: [
-      { restriction: { SenderOwnsAllInputs: {} }},
-      { restriction: { SenderHasInputRole: 
+        { op: 'and' },
+      ],
+    },
+    {
+      name: process2Name,
+      version: process2BumpedV,
+      program: [
+        { restriction: { SenderOwnsAllInputs: {} } },
         {
-          index: 0,
-          roleKey: 'Supplier',
+          restriction: {
+            SenderHasInputRole: {
+              index: 0,
+              roleKey: 'Supplier',
+            },
+          },
         },
-      }},
-      { op: 'or'},
-    ],
-  },
-])
+        { op: 'or' },
+      ],
+    },
+  ])
