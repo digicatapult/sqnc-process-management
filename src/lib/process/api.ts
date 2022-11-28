@@ -95,11 +95,9 @@ export const getAll: GetAllFn = async (options) => {
             return r({
               id,
               version,
-              createdAtHash: data.createdAtHash,
-              initialU8aLength: data.initialU8aLength,
-              registry: data.registry,
               status: data.status,
               program: JSON.stringify(data.program),
+              ...data,
             })
           })
         })
