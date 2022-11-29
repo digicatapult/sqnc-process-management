@@ -11,7 +11,7 @@
     "start": "ts-node --esm src/index.ts",
     "local": "npm i -g && process-management",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node --esm src/index.ts",
-    "lint": "eslint . --ext .ts --fix",
+    "lint": "eslint . --ext .ts",
     "build": "tsc --build",
     "depcheck": "depcheck",
     "test": "ts-mocha --config ./tests/mocharc.json -n  loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit",

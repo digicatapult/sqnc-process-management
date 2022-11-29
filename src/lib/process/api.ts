@@ -28,23 +28,25 @@ const checkResult: CheckResult = ({
   version,
   fn,
 }) => {
-  return events.reduce((out, next) => {
-    switch (next.event.method) {
+  return events.reduce((out, { event }) => {
+    switch (event.method) {
       case 'ProcessDisabled':
         if ('disableProcess' == fn) return {
           ...out,
           status: 'Disabled',
           version: version,
         } 
+        throw new Error('error validating process disabled event')
       case 'ProcessCreated':
         if ('createProcess' == fn) return {
           ...out,
           status: 'Enabled',
-          version: next.data[1].toNumber(),
+          version: event.data[1].toNumber(),
           program,
         } 
+        throw new Error('error validating process created event')
       default:
-        return false
+        return out
     }
   }, { id })
 }
