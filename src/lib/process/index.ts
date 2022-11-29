@@ -62,7 +62,7 @@ export const createProcess = async (
     program,
   }
 
-  const process: Process.Payload = await createTransaction({ polkadot, id, fn: 'createProcess', data: program, options })
+  const process: Process.Payload = await createTransaction('createProcess', { polkadot, id, data: program, options })
 
   return {
     message: `Transaction for new process ${name} has been successfully submitted`,
@@ -91,7 +91,7 @@ export const disableProcess = async (
   }
 
 
-  const process = await createTransaction({ polkadot, id, data: version, options, fn: 'disableProcess'})
+  const process = await createTransaction('disableProcess', { polkadot, id, data: version, options })
   return {
     message: 'Process has been disabled',
     process,
