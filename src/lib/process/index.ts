@@ -1,6 +1,6 @@
 import { createNodeApi } from '../utils/polkadot.js'
 import { Constants } from './constants.js'
-import { createProcessTransaction, disableProcessTransaction, getVersion } from './api.js'
+import { createTransaction, getVersion } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { stepValidation } from '../types/restrictions.js'
 import { NoValidRestrictionsError, VersionError } from '../types/error.js'
@@ -46,9 +46,9 @@ export const createProcess = async (
 ): Promise<Process.Result> => {
   const program: Process.Program = validate(rawProgram)
   if (program.length === 0) throw new NoValidRestrictionsError('nothing to process')
-  const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
+  const id = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
-  const expectedVersion: number = await getVersion(polkadot, processId) + 1
+  const expectedVersion: number = await getVersion(polkadot, id) + 1
 
   if (version !== expectedVersion) {
     throw new VersionError(`Version: ${version} must be incremented: ${expectedVersion}`)
@@ -62,7 +62,7 @@ export const createProcess = async (
     program,
   }
 
-  const process: Process.Payload = await createProcessTransaction(polkadot, processId, program, options)
+  const process: Process.Payload = await createTransaction({ polkadot, id, fn: 'createProcess', data: program, options })
 
   return {
     message: `Transaction for new process ${name} has been successfully submitted`,
@@ -72,17 +72,16 @@ export const createProcess = async (
 
 export const disableProcess = async (
   name: string,
-  processVersion: number,
+  version: number,
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
 ): Promise<Process.Result> => {
-  const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
-
+  const id = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
-  const currentVersion: number = await getVersion(polkadot, processId)
+  const currentVersion: number = await getVersion(polkadot, id)
 
   if (!currentVersion) {
-    throw new VersionError(`Version: ${processVersion} does not exist for name: ${name}`)
+    throw new VersionError(`Version: ${version} does not exist for name: ${name}`)
   }
 
   if (dryRun) return {
@@ -92,7 +91,7 @@ export const disableProcess = async (
   }
 
 
-  const process = await disableProcessTransaction(polkadot, processId, processVersion, options)
+  const process = await createTransaction({ polkadot, id, data: version, options, fn: 'disableProcess'})
   return {
     message: 'Process has been disabled',
     process,
