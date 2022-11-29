@@ -43,7 +43,6 @@ const checkResult: CheckResult = ({
           version: next.data[1].toNumber(),
           program,
         } 
-        throw new Error('result validation failed')
       default:
         return false
     }
@@ -57,7 +56,8 @@ export const createTransaction: CreateTransaction = async ({ polkadot, id, fn, d
   return new Promise((resolve, reject) => {
     const { sudo, processValidation } = polkadot.api.tx
     let unsub: Function
-    sudo.sudo(processValidation[fn](id, data)).signAndSend(sudoKey, ({ status, events }: any) => {
+    sudo.sudo(processValidation[fn](id, data))
+      .signAndSend(sudoKey, ({ status, events }: any) => {
         if (status.isInBlock) {
           const payload = typeof data !== 'number' ? { program: data } : { version: data } 
           const res = checkResult({ ...payload, id, events, fn })
