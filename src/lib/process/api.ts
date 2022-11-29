@@ -13,53 +13,59 @@ type TransactionArgs = {
 
 type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
 type CreateTransaction = (args: TransactionArgs) => Promise<Process.Payload>
-type CheckResult = (method: string, nodeFn: PorcessValidationMethods) => Boolean
+type CheckResult = (args: {
+  id: string,
+  events: Array<any>,
+  fn: PorcessValidationMethods,
+  program?: Process.Program,
+  version?: number,
+}) => Process.Payload
 
-const checkResult: CheckResult = (method, fn) => {
-  switch(method) {
-    // TODO container for knowm methods and make it nicer
-    case 'ProcessCreated':
-      return 'createProcess' == fn 
-    case 'ProcessDisabled':
-      return 'disableProcess' == fn 
-    default: false
-  }
+const checkResult: CheckResult = ({
+  events,
+  id,
+  program,
+  version,
+  fn,
+}) => {
+  return events.reduce((out, next) => {
+    switch (next.event.method) {
+      case 'ProcessDisabled':
+        if ('disableProcess' == fn) return {
+          ...out,
+          status: 'Disabled',
+          version: version,
+        } 
+      case 'ProcessCreated':
+        if ('createProcess' == fn) return {
+          ...out,
+          status: 'Enabled',
+          version: next.data[1].toNumber(),
+          program,
+        } 
+        throw new Error('result validation failed')
+      default:
+        return false
+    }
+  }, { id })
 }
 
 // TODO make it class? so stuff like polkadot can be part of constructor?
-export const createTransaction: CreateTransaction = async ({
-  polkadot,
-  id,
-  fn = null,
-  data,
-  options,
-}) => {
-  // if (nodeFn) throw new Error('nodeFn property is undefined')
+export const createTransaction: CreateTransaction = async ({ polkadot, id, fn, data, options }) => {
   const sudoKey = polkadot.keyring.addFromUri(options.USER_URI)
   
   return new Promise((resolve, reject) => {
     const { sudo, processValidation } = polkadot.api.tx
     let unsub: Function
-    sudo.sudo(processValidation[fn](id, data)).signAndSend(sudoKey, (result: any) => {
-        if (result.status.isInBlock) {
-          const { event } = result.events.find( // TODO move to checkResult and rename helper
-            ({ event: { method } }: { event: { method: string } }) => checkResult(method, fn)
-          )
-
-          const res = typeof data !== 'number' ? { program: data } : undefined
-
+    sudo.sudo(processValidation[fn](id, data)).signAndSend(sudoKey, ({ status, events }: any) => {
+        if (status.isInBlock) {
+          const payload = typeof data !== 'number' ? { program: data } : { version: data } 
+          const res = checkResult({ ...payload, id, events, fn })
           unsub() // what does this do?
-          resolve({
-            id,
-            version: event.data[1].toNumber(),
-            status: 'Enabled',
-            ...res,
-          })
-
+          resolve(res)
         }
       })
-      // already wrapped in try/catch should be covered?
-      // TODO investigate
+      // already wrapped in try/catch should be covered? TODO investigate
       .then((res: Function) => unsub = res)
       .catch((err: Error) => reject(err))
   })
