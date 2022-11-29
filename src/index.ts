@@ -4,7 +4,7 @@ import chalk from 'chalk'
 import { Command } from 'commander'
 
 import { loadProcesses, disableProcess } from './lib/process/index.js'
-import { formatProcess, getAll } from './lib/process/api.js'
+import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
 
 const { log, dir } = console
@@ -101,8 +101,8 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('-u, --user <user>', 'specify substrate blockchain user URI, default - "//Alice"', '//Alice')
   .option('--print', 'print debugging info')
+  .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<json>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: Process.CLIOptions) => {
     if (options.print)
@@ -128,8 +128,8 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('-u, --user <user>', 'specify substrate blockhain user URI, default - "//Alice"', '//Alice')
   .option('--print', 'print debugging info')
+  .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')
   .action(async (id: string, version: string, options: Process.CLIOptions) => {

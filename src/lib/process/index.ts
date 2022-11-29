@@ -8,7 +8,6 @@ import { NoValidRestrictionsError, VersionError } from '../types/error.js'
 export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
   API_PORT: 9944,
-  USER_URI: '//Alice',
 }
 
 // TODO merge api.sts and this together since they are both doing almost the same thing
@@ -40,11 +39,11 @@ export const loadProcesses = async ({ data, options, dryRun }: { data: string, o
 export const createProcess = async (
   name: string,
   version: number,
-  rawProgram: Process.Program,
+  userProgram: Process.Program,
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
 ): Promise<Process.Result> => {
-  const program: Process.Program = validate(rawProgram)
+  const program: Process.Program = validate(userProgram)
   if (program.length === 0) throw new NoValidRestrictionsError('nothing to process')
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)

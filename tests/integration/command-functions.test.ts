@@ -25,7 +25,7 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(processName, bumpedVersion, simple)
+      const newProcess = await createProcess(processName, bumpedVersion, simple, false, polkadotOptions)
       expect(newProcess.process).to.deep.equal({
         id: utf8ToHex(processName, Constants.PROCESS_ID_LENGTH),
         version: bumpedVersion,
@@ -33,7 +33,7 @@ describe('Process creation and deletion, listing', () => {
         program: simple,
       })
 
-      const disabledProcess = await disableProcess(processName, bumpedVersion)
+      const disabledProcess = await disableProcess(processName, bumpedVersion, false, polkadotOptions)
       expect(disabledProcess.message).to.equal('Process has been disabled')
       expect(disabledProcess.process).to.deep.equal({
         id: utf8ToHex(processName, Constants.PROCESS_ID_LENGTH),
@@ -71,14 +71,14 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(processName, bumpedVersion, validAllRestrictions, true)
+      const newProcess = await createProcess(processName, bumpedVersion, validAllRestrictions, true, polkadotOptions)
       expect(newProcess.process).to.equal(null)
     })
 
     it('does not disable process if dry run', async () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
-      const disabledProcess = await disableProcess(processName, currentVersion, true)
+      const disabledProcess = await disableProcess(processName, currentVersion, true, polkadotOptions)
       expect(disabledProcess.process).to.equal(undefined)
       expect(disabledProcess).to.deep.contain({
         message: 'This will DISABLE the following process 0',
@@ -86,7 +86,7 @@ describe('Process creation and deletion, listing', () => {
       })
     })
 
-    it.only('returns a list of raw processes', async () => {
+    it('returns a list of raw processes', async () => {
       const res = await getAll(polkadotOptions)
 
       console.log(res)
@@ -96,7 +96,7 @@ describe('Process creation and deletion, listing', () => {
         .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'version'])
     })
 
-    it.only('returns a list of pretty processes', async () => {
+    it('returns a list of pretty processes', async () => {
       const res = await getAll(polkadotOptions)
       console.dir(
         res.map((p) => {
@@ -122,50 +122,59 @@ describe('Process creation and deletion, listing', () => {
 
     it('fails for invalid restriction name', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber, noValidRestrictions),
+        createProcess(validProcessName, validVersionNumber, noValidRestrictions, false, polkadotOptions),
         NoValidRestrictionsError
       )
     })
 
     it('fails for invalid restriction value', async () => {
-      return assert.isRejected(createProcess(validProcessName, validVersionNumber, invalidRestrictionValue), ZodError)
+      return assert.isRejected(
+        createProcess(validProcessName, validVersionNumber, invalidRestrictionValue, false, polkadotOptions),
+        ZodError
+      )
     })
 
     it('fails for invalid json', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber, 'invalidJson' as unknown as Process.Program),
+        createProcess(
+          validProcessName,
+          validVersionNumber,
+          'invalidJson' as unknown as Process.Program,
+          false,
+          polkadotOptions
+        ),
         TypeError
       )
     })
 
     it('fails to create for same version', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber - 1, validAllRestrictions),
+        createProcess(validProcessName, validVersionNumber - 1, validAllRestrictions, false, polkadotOptions),
         VersionError
       )
     })
 
     it('fails to create for too low version', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions),
+        createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions),
         VersionError
       )
     })
 
     it('fails to create for too high version', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions),
+        createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions),
         VersionError
       )
     })
 
     it('fails to create with too long process id', async () => {
       const processName = '0'.repeat(Constants.PROCESS_ID_LENGTH + 1)
-      return assert.isRejected(createProcess(processName, 1, validAllRestrictions), HexError)
+      return assert.isRejected(createProcess(processName, 1, validAllRestrictions, false, polkadotOptions), HexError)
     })
 
     it('fails to disable process that does not exist', async () => {
-      return assert.isRejected(disableProcess('incorrectProcessName', 1), VersionError)
+      return assert.isRejected(disableProcess('incorrectProcessName', 1, false, polkadotOptions), VersionError)
     })
   })
 })
