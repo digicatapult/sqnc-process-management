@@ -1,3 +1,4 @@
+import { json } from 'stream/consumers'
 import * as api from '../utils/polkadot.js'
 
 // TODO refactor since api.ts eother should be a util
@@ -81,11 +82,11 @@ export const disableProcessTransaction = async (
 
 // TODO sort types for all functions if time allows
 // validate ids?
-type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
+type GetAllFn = (options: Polkadot.Options) => Promise<Process.RawPayload[]>
 
 export const getAll: GetAllFn = async (options) => {
   const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)
-  const processes = await Promise.all(
+  const processes = await Promise.all<Process.RawPayload>(
     (
       await polkadot.api.query.processValidation.processModel.entries()
     ).map(
@@ -93,19 +94,27 @@ export const getAll: GetAllFn = async (options) => {
         new Promise((r) => {
           getVersion(polkadot, id).then((version) => {
             return r({
-              id,
+              id: id.toJSON(),
               version,
-              status: data.status,
-              program: JSON.stringify(data.program),
-              ...data,
+              status: data.status.toJSON(),
+              program: data.program.toJSON(),
+              createdAtHash: data.createdAtHash.toJSON(),
+              initialU8aLength: data.initialU8aLength,
             })
           })
         })
     )
   )
+  return processes
+}
 
-  // a quick hack to stringify substrate values
-  return JSON.parse(JSON.stringify(processes))
+export const formatProcess = (process: Process.RawPayload): Process.Payload => {
+  return {
+    id: process.id,
+    version: process.version,
+    status: process.status,
+    program: process.program,
+  }
 }
 
 export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string): Promise<number> => {
