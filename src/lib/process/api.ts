@@ -15,13 +15,13 @@ type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
 type CreateTransaction = (args: TransactionArgs) => Promise<Process.Payload>
 type CheckResult = (method: string, nodeFn: PorcessValidationMethods) => Boolean
 
-const checkResult: CheckResult = (method, nodeFn) => {
+const checkResult: CheckResult = (method, fn) => {
   switch(method) {
     // TODO container for knowm methods and make it nicer
     case 'ProcessCreated':
-      return 'createProcess' == nodeFn 
+      return 'createProcess' == fn 
     case 'ProcessDisabled':
-      return 'disableProcess' == nodeFn
+      return 'disableProcess' == fn 
     default: false
   }
 }
@@ -46,14 +46,14 @@ export const createTransaction: CreateTransaction = async ({
             ({ event: { method } }: { event: { method: string } }) => checkResult(method, fn)
           )
 
+          const res = typeof data !== 'number' ? { program: data } : undefined
+
           unsub() // what does this do?
           resolve({
             id,
             version: event.data[1].toNumber(),
             status: 'Enabled',
-            ...typeof data !== 'number' ? {
-              program: data
-            } : undefined,
+            ...res,
           })
 
         }

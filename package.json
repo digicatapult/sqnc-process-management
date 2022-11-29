@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -11,7 +11,7 @@
     "start": "ts-node --esm src/index.ts",
     "local": "npm i -g && process-management",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node --esm src/index.ts",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .ts --fix",
     "build": "tsc --build",
     "depcheck": "depcheck",
     "test": "ts-mocha --config ./tests/mocharc.json -n  loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit",
