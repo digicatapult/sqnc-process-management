@@ -14,7 +14,7 @@ import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
 import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/types/error.js'
-import { formatProcess, getAll } from '../../src/lib/process/api.js'
+import { getAll } from '../../src/lib/process/api.js'
 import { utf8ToHex } from '../../src/lib/process/hex.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
@@ -86,7 +86,7 @@ describe('Process creation and deletion, listing', () => {
       })
     })
 
-    it('returns a list of raw processes', async () => {
+    it.only('returns a list of raw processes', async () => {
       const res = await getAll(polkadotOptions)
 
       console.log(res)
@@ -99,7 +99,14 @@ describe('Process creation and deletion, listing', () => {
     it.only('returns a list of pretty processes', async () => {
       const res = await getAll(polkadotOptions)
       console.dir(
-        res.map((p) => formatProcess(p)),
+        res.map((p) => {
+          return {
+            id: p.id,
+            version: p.version,
+            status: p.status,
+            program: p.program,
+          }
+        }),
         { depth: null }
       )
     })

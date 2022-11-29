@@ -89,32 +89,18 @@ export const getAll: GetAllFn = async (options) => {
   const processes = await Promise.all<Process.RawPayload>(
     (
       await polkadot.api.query.processValidation.processModel.entries()
-    ).map(
-      ([id, data]: any) =>
-        new Promise((r) => {
-          getVersion(polkadot, id).then((version) => {
-            return r({
-              id: id.toJSON(),
-              version,
-              status: data.status.toJSON(),
-              program: data.program.toJSON(),
-              createdAtHash: data.createdAtHash.toJSON(),
-              initialU8aLength: data.initialU8aLength,
-            })
-          })
-        })
-    )
+    ).map(([id, data]: any) => {
+      return {
+        id: id.toHuman()[0],
+        version: parseInt(id.toHuman()[1]),
+        status: data.status.toString(),
+        program: data.program.toJSON(),
+        createdAtHash: data.createdAtHash.toHuman(),
+        initialU8aLength: data.initialU8aLength,
+      }
+    })
   )
   return processes
-}
-
-export const formatProcess = (process: Process.RawPayload): Process.Payload => {
-  return {
-    id: process.id,
-    version: process.version,
-    status: process.status,
-    program: process.program,
-  }
 }
 
 export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string): Promise<number> => {

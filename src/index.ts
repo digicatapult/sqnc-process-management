@@ -76,7 +76,14 @@ program
         dir(processes, { depth: null })
       } else {
         dir(
-          processes.map((p) => formatProcess(p)),
+          processes.map((p) => {
+            return {
+              id: p.id,
+              version: p.version,
+              status: p.status,
+              program: p.program,
+            }
+          }),
           { depth: null }
         )
       }
