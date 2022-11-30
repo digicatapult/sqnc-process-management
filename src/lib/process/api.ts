@@ -81,16 +81,22 @@ export const getProcess = async (
 export const getAll: GetAll = async (options) => {
   const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)    
   const processes = await Promise.all(
-    (await polkadot.api.query.processValidation.processModel.entries())
-      .map(([id, data]: any) => new Promise((r) => {
-        getVersion(polkadot, id).then((version) => {
-          return r({
-            id,
-            version,
-            ...data
+    (
+      await polkadot.api.query.processValidation.processModel.entries()
+    ).map(
+      ([id, data]: any) =>
+        new Promise((r) => {
+          getVersion(polkadot, id).then((version) => {
+            return r({
+              id,
+              version,
+              status: data.status,
+              program: JSON.stringify(data.program),
+              ...data,
+            })
           })
         })
-      }))
+    )
   )
 
   // a quick hack to stringify substrate values

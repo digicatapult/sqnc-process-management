@@ -1,24 +1,22 @@
-import { buildApi } from '@digicatapult/dscp-node'
+import { ApiPromise, WsProvider, Keyring } from '@polkadot/api'
 
-export const createNodeApi = async (options: Polkadot.Options): Promise<Polkadot.Polkadot>  => {
-  const { api, keyring } = buildApi({
-    options: {
-      apiHost: options.API_HOST,
-      apiPort: options.API_PORT,
-    },
-  })
+export const createNodeApi = async (options: Polkadot.Options): Promise<Polkadot.Polkadot> => {
+  const provider = new WsProvider(`ws://${options.API_HOST}:${options.API_PORT}`)
+  const api = new ApiPromise({ provider })
+
+  api.isReadyOrError.catch(() => {}) // prevent unhandled promise rejection errors
 
   await api.isReady
 
-  api.on('error', (err: { message?: string }): string => { 
+  api.on('error', (err: { message?: string }): string => {
     const msg = err.message || JSON.stringify(err)
     console.log(`Error from substrate node connection. Error was ${msg}`)
 
-    return msg 
+    return msg
   })
 
   return {
     api,
-    keyring,
+    keyring: new Keyring({ type: 'sr25519' }),
   }
 }
