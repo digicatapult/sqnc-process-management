@@ -84,18 +84,24 @@ export const disableProcessTransaction = async (
 type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
 
 export const getAll: GetAllFn = async (options) => {
-  const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)    
+  const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)
   const processes = await Promise.all(
-    (await polkadot.api.query.processValidation.processModel.entries())
-      .map(([id, data]: any) => new Promise((r) => {
-        getVersion(polkadot, id).then((version) => {
-          return r({
-            id,
-            version,
-            ...data
+    (
+      await polkadot.api.query.processValidation.processModel.entries()
+    ).map(
+      ([id, data]: any) =>
+        new Promise((r) => {
+          getVersion(polkadot, id).then((version) => {
+            return r({
+              id,
+              version,
+              status: data.status,
+              program: JSON.stringify(data.program),
+              ...data,
+            })
           })
         })
-      }))
+    )
   )
 
   // a quick hack to stringify substrate values
@@ -116,7 +122,7 @@ export const getProcess = async (
   const data = Object(result.toJSON())
   return {
     id: processId,
-    version, 
+    version,
     status: data.status,
     program: data.program,
   }
