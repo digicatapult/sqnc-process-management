@@ -26,6 +26,7 @@ npm run test:unit
 ```
 
 To install npm CLI tool. It will be linked to local binaries so can be executed as `process-management`
+
 ```shell
 npm i -g
 
@@ -40,20 +41,20 @@ process-management create -p 9944 -h localhost '[{"name":"A-test","version":1,"p
 
 The library functions of `veritable-process-management` take an optional `Options` object to configure the `Polkadot.js` API connection:
 
-| variable | required |   default   | description                                                                                  |
-| :------- | :------: | :---------: | :------------------------------------------------------------------------------------------- |
+| variable | required |   default   | description                                                                                       |
+| :------- | :------: | :---------: | :------------------------------------------------------------------------------------------------ |
 | API_HOST |    N     | `localhost` | The hostname of the `veritable-node` the API should connect to                                    |
 | API_PORT |    N     |   `9944`    | The port of the `veritable-node` the API should connect to                                        |
 | USER_URI |    N     |  `//Alice`  | The Substrate `URI` representing the private key to use when making `veritable-node` transactions |
 
-
-For the full list of available restrictions see [`eritable-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
+For the full list of available restrictions see [`veritable-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
 
 ### Help
 
 Returns all available commands
+
 ```sh
-$ process-management 
+$ process-management
 Usage: process management [options] [command]
 
 a command line interface for managing chain processes
@@ -67,7 +68,6 @@ Commands:
   disable                    A command for disabling an existing process flows. - NOT IMPLEMENTED
   help [command]             display help for command
 ```
-
 
 ### Create Process Command
 
@@ -98,8 +98,8 @@ Options:
 $ process-management create -h localhost -p 9944 '[{"name":"B test","version":4,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
 
 {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":4,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
-      
-$ 
+
+$
 
 ```
 
@@ -122,7 +122,7 @@ Options:
   -u, --user <user>  specify substrate blockhain user URI, default - "//Alice" (default: "//Alice")
   --print            print debugging info
   --help             display help for command
-$ 
+$
 
 #
 # example
@@ -130,7 +130,7 @@ $
 
 # let's create so we have something to disable
 $ process-management create '[{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
-    
+
 {"B test":{"message":"Transaction for new process B test has been successfully submitted","process":{"id":"0x422074657374","version":1,"status":"Enabled","program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}}}
 $
 
@@ -139,10 +139,11 @@ attempting to disable:
 ID:B test
 Version:1
  command [disable] executed successfully: {"message":"Process has been disabled","process":{"id":"0x422074657374","version":1,"status":"Disabled"}}
-$ 
+$
 ```
 
 ### List Processes Command
+
 ```sh
 $ process-management list --help
 Usage: process management list [options]
@@ -162,7 +163,7 @@ Options:
 #
 
 # --active
-$ process-management list --active 
+$ process-management list --active
 [
   {
     id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a1c8e677ed0f6c7a01b80a29e829baa5ee446d6f636b5f6163636570745f6f72646572d82c12285b5d4551f88e8f6e7eb52b8101000000',
@@ -193,7 +194,7 @@ $ process-management list --active
 ]
 
 # --disabled
-$ process-management list --disabled    
+$ process-management list --disabled
 [
   {
     id: '0x732e69d9bee930b67c907ac97ef0deeac8e52635c16b266071d2f42211f485a17eee87b9b8852fc5e5a1611a1818848818422074657374d82c12285b5d4551f88e8f6e7eb52b8101000000',
@@ -222,7 +223,7 @@ $ process-management list --disabled
     createdAtHash: '0x4a3842f4d0428eabe10e74dfcfe15a65e1148b645bb39e3fd2fac3f190cb240c'
   },
 ]
-$ 
+$
 ```
 
 ```typescript
