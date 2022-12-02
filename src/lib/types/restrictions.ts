@@ -113,7 +113,7 @@ export const stepValidation = z.object({
   FixedInputMetadataValue: fixedInputMetadataValue.optional(),
   FixedOutputMetadataValue: fixedOutputMetadataValue.optional(),
   FixedOutputMetadataValueType: fixedOutputMetadataValueType.optional(),
-})
+}).strict()
 
 const programValidation = z.array(
   z.object({ op: binaryOperator }).optional(),

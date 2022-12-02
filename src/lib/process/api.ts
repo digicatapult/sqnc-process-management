@@ -23,7 +23,7 @@ export const createProcessTransaction = async (
 
           const data = event.data
           const newProcess: Process.Payload = {
-            id: processId,
+            id: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Enabled',
             program,
@@ -62,7 +62,7 @@ export const disableProcessTransaction = async (
 
           const data = event.data
           const disabledProcess: Process.Payload = {
-            id: processId,
+            id: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Disabled',
           }

@@ -105,7 +105,7 @@ export const validAllRestrictions: Process.Program = [
   { op: 'and' },
 ]
 
-export const noValidRestrictions: Process.Program = [{ restriction: { NotARestriction: {} } }]
+export const invalidRestrictionKey: Process.Program = [{ restriction: { NotARestriction: {} } }]
 
 export const invalidRestrictionValue: Process.Program = [
   {

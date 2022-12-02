@@ -6,7 +6,7 @@ declare namespace Process {
   }
 
   // break down per function
-  // TODO rename types as this is causing a little confussion
+  // TODO rename types as this is causing a little confusion
   interface Result {
     process?: Payload
     name?: string

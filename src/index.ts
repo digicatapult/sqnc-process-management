@@ -21,12 +21,7 @@ const {
 const example: string = JSON.stringify([
   {
     name: 'A test',
-    version: 2,
-    program: [{ restriction: { SenderOwnsAllInputs: {} } }, { restriction: { None: {} } }, { op: 'or' }],
-  },
-  {
-    name: 'B test',
-    version: 2,
+    version: 1,
     program: [{ restriction: { SenderOwnsAllInputs: {} } }, { restriction: { None: {} } }, { op: 'or' }],
   },
 ])
@@ -38,11 +33,12 @@ const mapOptions = (options: Process.CLIOptions): Polkadot.Options => ({
 })
 
 // TODO nice to have, a local config file for substrate host details e.g. name, port, address
-// so no need to parse everytime calling a command, or ability to set
+// so no need to parse every time calling a command, or ability to set
 program
   .name('process management')
   .description('a command line interface for managing chain processes')
   .version(cliVersion, '-v, --version', 'output current version')
+  .helpOption('--help', 'display help for command') //override -h
 
 program
   .command('list')
@@ -114,7 +110,7 @@ program
     const { dryRun } = options
     try {
       const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
-      log(JSON.stringify(res))
+      dir(res, { depth: null })
       process.exit(0)
     } catch (err) {
       log(err)
@@ -137,7 +133,7 @@ program
     try {
       const { dryRun } = options
       const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
-      log(JSON.stringify(res))
+      dir(res, { depth: null })
 
       process.exit(0)
     } catch (err) {

@@ -5,7 +5,7 @@ chai.use(chaiAsPromised)
 import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
 import {
   validAllRestrictions,
-  noValidRestrictions,
+  invalidRestrictionKey,
   invalidRestrictionValue,
   multiple,
   simple,
@@ -13,9 +13,8 @@ import {
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
-import { HexError, NoValidRestrictionsError, VersionError } from '../../src/lib/types/error.js'
+import { HexError, VersionError, DisableError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
-import { utf8ToHex } from '../../src/lib/process/hex.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
@@ -27,7 +26,7 @@ describe('Process creation and deletion, listing', () => {
       const bumpedVersion = currentVersion + 1
       const newProcess = await createProcess(processName, bumpedVersion, simple, false, polkadotOptions)
       expect(newProcess.process).to.deep.equal({
-        id: utf8ToHex(processName, Constants.PROCESS_ID_LENGTH),
+        id: processName,
         version: bumpedVersion,
         status: 'Enabled',
         program: simple,
@@ -36,7 +35,7 @@ describe('Process creation and deletion, listing', () => {
       const disabledProcess = await disableProcess(processName, bumpedVersion, false, polkadotOptions)
       expect(disabledProcess.message).to.equal('Process has been disabled')
       expect(disabledProcess.process).to.deep.equal({
-        id: utf8ToHex(processName, Constants.PROCESS_ID_LENGTH),
+        id: processName,
         version: bumpedVersion,
         status: 'Disabled',
       })
@@ -89,26 +88,10 @@ describe('Process creation and deletion, listing', () => {
     it('returns a list of raw processes', async () => {
       const res = await getAll(polkadotOptions)
 
-      console.log(res)
       expect(res).to.be.an('array')
       expect(res[0])
         .to.be.an('object')
         .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'version'])
-    })
-
-    it('returns a list of pretty processes', async () => {
-      const res = await getAll(polkadotOptions)
-      console.dir(
-        res.map((p) => {
-          return {
-            id: p.id,
-            version: p.version,
-            status: p.status,
-            program: p.program,
-          }
-        }),
-        { depth: null }
-      )
     })
   })
 
@@ -120,10 +103,10 @@ describe('Process creation and deletion, listing', () => {
       validVersionNumber = currentVersion + 1
     })
 
-    it('fails for invalid restriction name', async () => {
+    it('fails for invalid restriction key', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber, noValidRestrictions, false, polkadotOptions),
-        NoValidRestrictionsError
+        createProcess(validProcessName, validVersionNumber, invalidRestrictionKey, false, polkadotOptions),
+        ZodError
       )
     })
 
@@ -174,7 +157,16 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails to disable process that does not exist', async () => {
-      return assert.isRejected(disableProcess('incorrectProcessName', 1, false, polkadotOptions), VersionError)
+      return assert.isRejected(disableProcess('incorrectProcessName', 1, false, polkadotOptions), DisableError)
+    })
+
+    it('fails to disable process a second time', async () => {
+      const newProcess = await createProcess(validProcessName, validVersionNumber, simple, false, polkadotOptions)
+      expect(newProcess.process).to.exist
+      const firstDisable = await disableProcess(validProcessName, validVersionNumber, false, polkadotOptions)
+      expect(firstDisable.process).to.exist
+
+      return assert.isRejected(disableProcess(validProcessName, validVersionNumber, false, polkadotOptions), DisableError)
     })
   })
 })
