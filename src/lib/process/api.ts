@@ -1,4 +1,3 @@
-import { json } from 'stream/consumers'
 import * as api from '../utils/polkadot.js'
 
 // TODO refactor since api.ts eother should be a util
