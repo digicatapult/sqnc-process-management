@@ -77,10 +77,14 @@ describe('Process creation and deletion, listing', () => {
     it('does not disable process if dry run', async () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
-      const disabledProcess = await disableProcess(processName, currentVersion, true, polkadotOptions)
+      const bumpedVersion = currentVersion + 1
+      const newProcess = await createProcess(processName, bumpedVersion, validAllRestrictions, false, polkadotOptions)
+      expect(newProcess.process).to.exist
+
+      const disabledProcess = await disableProcess(processName, bumpedVersion, true, polkadotOptions)
       expect(disabledProcess.process).to.equal(undefined)
       expect(disabledProcess).to.deep.contain({
-        message: 'This will DISABLE the following process 0',
+        message: `This will DISABLE the following process ${processName}`,
         name: processName,
       })
     })
