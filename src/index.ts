@@ -91,7 +91,7 @@ program
       process.exit(0)
     } catch (err) {
       log(err)
-      program.help()
+      process.exit(1)
     }
   })
 
@@ -118,7 +118,7 @@ program
       process.exit(0)
     } catch (err) {
       log(err)
-      program.help()
+      process.exit(1)
     }
   })
 
@@ -142,7 +142,7 @@ program
       process.exit(0)
     } catch (err) {
       log(err)
-      program.help()
+      process.exit(1)
     }
   })
 
@@ -155,5 +155,5 @@ program.on('command:*', function () {
   log(`
     ${r('Invalid command: %s\nSee --help for a list of available commands.')}
     ${program.args.join(' ')}`)
-  process.exit(110)
+  process.exit(127)
 })
