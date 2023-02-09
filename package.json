@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -24,7 +24,7 @@
   },
   "engines": {
     "node": "16.x.x",
-    "npm": "8.x.x"
+    "npm": "9.x"
   },
   "author": "Digital Catapult",
   "license": "Apache-2.0",
