@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -51,7 +51,7 @@
     "ts-mocha": "^10.0.0"
   },
   "dependencies": {
-    "@polkadot/api": "^9.9.4",
+    "@polkadot/api": "^10.0.0",
     "chalk": "^5.1.2",
     "commander": "^9.4.1",
     "ts-node": "^10.9.1",
