@@ -1,20 +1,19 @@
 import { createNodeApi } from '../utils/polkadot.js'
 import { Constants } from './constants.js'
-import { createProcessTransaction, disableProcessTransaction, getVersion } from './api.js'
+import { createProcessTransaction, disableProcessTransaction, getVersion, getProcess } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { stepValidation } from '../types/restrictions.js'
-import { NoValidRestrictionsError, VersionError } from '../types/error.js'
+import { VersionError, DisableError } from '../types/error.js'
 
 export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
   API_PORT: 9944,
-  USER_URI: '//Alice',
 }
 
 // TODO merge api.sts and this together since they are both doing almost the same thing
 // and api is already mapped by polkadot e.g. storagemaps
 const validate = (program: Process.Program = []): Process.Program => {
-  return program.reduce((out: Process.Program, step: Process.ProgramStep)=> {
+  return program.reduce((out: Process.Program, step: Process.ProgramStep) => {
     const validated: Process.ProgramStep = stepValidation.parse(step?.restriction || step)
     if (Object.keys(validated).length === 0) {
       return out
@@ -24,8 +23,15 @@ const validate = (program: Process.Program = []): Process.Program => {
   }, [])
 }
 
-
-export const loadProcesses = async ({ data, options, dryRun }: { data: string, options?: Polkadot.Options, dryRun?: boolean }): Promise<Process.Response> => {
+export const loadProcesses = async ({
+  data,
+  options,
+  dryRun,
+}: {
+  data: string
+  options?: Polkadot.Options
+  dryRun?: boolean
+}): Promise<Process.Response> => {
   const res: Process.Response = {}
   const processes: Process.CLIParsed = JSON.parse(data)
   // TODO more elegant promise.series way.
@@ -40,27 +46,27 @@ export const loadProcesses = async ({ data, options, dryRun }: { data: string, o
 export const createProcess = async (
   name: string,
   version: number,
-  rawProgram: Process.Program,
+  userProgram: Process.Program,
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
 ): Promise<Process.Result> => {
-  const program: Process.Program = validate(rawProgram)
-  if (program.length === 0) throw new NoValidRestrictionsError('nothing to process')
+  const program: Process.Program = validate(userProgram)
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
-  const expectedVersion: number = await getVersion(polkadot, processId) + 1
+  const expectedVersion: number = (await getVersion(polkadot, processId)) + 1
 
   if (version !== expectedVersion) {
     throw new VersionError(`Version: ${version} must be incremented: ${expectedVersion}`)
   }
 
-  if (dryRun) return {
-    process: null,
-    message: 'Dry run: transaction has not been created',
-    name,
-    version: expectedVersion,
-    program,
-  }
+  if (dryRun)
+    return {
+      process: null,
+      message: 'Dry run: transaction has not been created',
+      name,
+      version: expectedVersion,
+      program,
+    }
 
   const process: Process.Payload = await createProcessTransaction(polkadot, processId, program, options)
 
@@ -79,18 +85,18 @@ export const disableProcess = async (
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
 
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
-  const currentVersion: number = await getVersion(polkadot, processId)
+  const currentProcess: Process.Payload = await getProcess(polkadot, processId, processVersion)
 
-  if (!currentVersion) {
-    throw new VersionError(`Version: ${processVersion} does not exist for name: ${name}`)
+  if (currentProcess.status === 'Disabled'){
+    throw new DisableError(`${name} with version ${processVersion} doesn't exist or is already disabled`)
   }
 
-  if (dryRun) return {
-    message: `This will DISABLE the following process ${name}`,
-    name, 
-    version: currentVersion,
-  }
-
+  if (dryRun)
+    return {
+      message: `This will DISABLE the following process ${name}`,
+      name,
+      version: processVersion,
+    }
 
   const process = await disableProcessTransaction(polkadot, processId, processVersion, options)
   return {

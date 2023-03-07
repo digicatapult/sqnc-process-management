@@ -1,7 +1,7 @@
-export class NoValidRestrictionsError extends Error {
+export class DisableError extends Error {
   constructor(m: string) {
     super(m)
-    Object.setPrototypeOf(this, NoValidRestrictionsError.prototype)
+    Object.setPrototypeOf(this, DisableError.prototype)
   }
 }
 
@@ -18,3 +18,4 @@ export class VersionError extends Error {
     Object.setPrototypeOf(this, VersionError.prototype)
   }
 }
+

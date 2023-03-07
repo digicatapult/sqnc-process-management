@@ -22,7 +22,7 @@ export const createProcessTransaction = async (
 
           const data = event.data
           const newProcess: Process.Payload = {
-            id: processId,
+            id: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Enabled',
             program,
@@ -61,7 +61,7 @@ export const disableProcessTransaction = async (
 
           const data = event.data
           const disabledProcess: Process.Payload = {
-            id: processId,
+            id: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Disabled',
           }
@@ -81,31 +81,25 @@ export const disableProcessTransaction = async (
 
 // TODO sort types for all functions if time allows
 // validate ids?
-type GetAllFn = (options: Polkadot.Options) => Promise<Process.Payload[]>
+type GetAllFn = (options: Polkadot.Options) => Promise<Process.RawPayload[]>
 
 export const getAll: GetAllFn = async (options) => {
   const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)
-  const processes = await Promise.all(
+  const processes = await Promise.all<Process.RawPayload>(
     (
       await polkadot.api.query.processValidation.processModel.entries()
-    ).map(
-      ([id, data]: any) =>
-        new Promise((r) => {
-          getVersion(polkadot, id).then((version) => {
-            return r({
-              id,
-              version,
-              status: data.status,
-              program: JSON.stringify(data.program),
-              ...data,
-            })
-          })
-        })
-    )
+    ).map(([id, data]: any) => {
+      return {
+        id: id.toHuman()[0],
+        version: parseInt(id.toHuman()[1]),
+        status: data.status.toString(),
+        program: data.program.toJSON(),
+        createdAtHash: data.createdAtHash.toHuman(),
+        initialU8aLength: data.initialU8aLength,
+      }
+    })
   )
-
-  // a quick hack to stringify substrate values
-  return JSON.parse(JSON.stringify(processes))
+  return processes
 }
 
 export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string): Promise<number> => {

@@ -1,4 +1,3 @@
-
 declare namespace Process {
   type Core = {
     name: string
@@ -7,9 +6,9 @@ declare namespace Process {
   }
 
   // break down per function
-  // TODO rename types as this is causing a little confussion
+  // TODO rename types as this is causing a little confusion
   interface Result {
-    process?: Payload 
+    process?: Payload
     name?: string
     version?: number
     program?: Program
@@ -25,24 +24,30 @@ declare namespace Process {
     op?: any
   }
 
-  export type CLIOptions =  {
-    print?: boolean,
-    dryRun?: boolean,
-    active?: boolean,
-    disabled?: boolean,
-    port: string,
-    user: string,
+  export type CLIOptions = {
+    print?: boolean
+    dryRun?: boolean
+    active?: boolean
+    disabled?: boolean
+    raw?: boolean
+    port: string
+    user: string
     host: string
   }
-  export type CLIParsed = Core[] 
+  export type CLIParsed = Core[]
   export type Program = ProgramStep[]
 
   export type Payload = {
     id: string
     version: number
     status: 'Enabled' | 'Disabled'
-    program?: Program 
+    program?: Program
   } | null
+
+  export interface RawPayload extends Payload {
+    createdAtHash: string
+    initialU8aLength: string
+  }
 
   export type Response = {
     [key: string]: Result
