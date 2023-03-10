@@ -3,7 +3,7 @@ export const simple: Process.Program = [{ restriction: { None: {} } }]
 export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
   { restriction: { SenderOwnsAllInputs: {} } },
-  { op: 'or' },
+  { op: 'Or' },
   {
     restriction: {
       SenderHasInputRole: {
@@ -12,7 +12,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       SenderHasOutputRole: {
@@ -21,7 +21,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       OutputHasRole: {
@@ -30,7 +30,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       MatchInputOutputRole: {
@@ -41,7 +41,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       MatchInputOutputMetadataValue: {
@@ -52,7 +52,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       FixedNumberOfInputs: {
@@ -60,7 +60,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       FixedNumberOfOutputs: {
@@ -68,7 +68,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       FixedInputMetadataValue: {
@@ -80,7 +80,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       FixedOutputMetadataValue: {
@@ -92,7 +92,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
   {
     restriction: {
       FixedOutputMetadataValueType: {
@@ -102,7 +102,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'and' },
+  { op: 'And' },
 ]
 
 export const invalidRestrictionKey: Process.Program = [{ restriction: { NotARestriction: {} } }]
@@ -137,7 +137,7 @@ export const multiple = (
             },
           },
         },
-        { op: 'and' },
+        { op: 'And' },
       ],
     },
     {
@@ -153,7 +153,7 @@ export const multiple = (
             },
           },
         },
-        { op: 'or' },
+        { op: 'Or' },
       ],
     },
   ])
