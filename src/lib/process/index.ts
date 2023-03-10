@@ -56,7 +56,7 @@ export const createProcess = async (
   const expectedVersion: number = (await getVersion(polkadot, processId)) + 1
 
   if (version !== expectedVersion) {
-    throw new VersionError(`Version: ${version} must be incremented: ${expectedVersion}`)
+    throw new VersionError(`Version: ${version} must be incremented to: ${expectedVersion}`)
   }
 
   if (dryRun)
@@ -87,7 +87,7 @@ export const disableProcess = async (
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
   const currentProcess: Process.Payload = await getProcess(polkadot, processId, processVersion)
 
-  if (currentProcess.status === 'Disabled'){
+  if (currentProcess.status === 'Disabled') {
     throw new DisableError(`${name} with version ${processVersion} doesn't exist or is already disabled`)
   }
 

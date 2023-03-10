@@ -1,6 +1,6 @@
 import * as api from '../utils/polkadot.js'
 
-// TODO refactor since api.ts eother should be a util
+// TODO refactor since api.ts other should be a util
 // since createNodeApi, set's all routes we could use in process.index.ts
 export const createProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
