@@ -112,6 +112,12 @@ $ process-management create -h localhost -p 9944 -u //Alice '[{"name":"A test","
 }
 ```
 
+Or use a `.json` file
+
+```
+process-management create -h localhost -p 9944 -u //Alice "$(cat exampleProcess.json)"
+```
+
 ### Disable Process Command
 
 ```sh
