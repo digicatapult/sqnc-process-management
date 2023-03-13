@@ -9,13 +9,8 @@ import cliVersion from './version.js'
 
 const { log, dir } = console
 const program = new Command()
-const {
-  red: r,
-  blue: b,
-  green: g,
-} = {
+const { red: r, blue: b } = {
   red: (txt: string) => chalk.redBright(txt),
-  green: (txt: string) => chalk.green(txt),
   blue: (txt: string) => chalk.blueBright(txt),
 }
 const example: string = JSON.stringify([
