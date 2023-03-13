@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
