@@ -2,8 +2,6 @@ export const simple: Process.Program = [{ restriction: { None: {} } }]
 
 export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
-  { restriction: { SenderOwnsAllInputs: {} } },
-  { op: 'Or' },
   {
     restriction: {
       SenderHasInputRole: {
@@ -12,7 +10,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'And' },
+  { op: 'Or' },
   {
     restriction: {
       SenderHasOutputRole: {
@@ -33,6 +31,33 @@ export const validAllRestrictions: Process.Program = [
   { op: 'And' },
   {
     restriction: {
+      OutputHasMetadata: {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
+      InputHasRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
+      InputHasMetadata: {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
       MatchInputOutputRole: {
         inputIndex: 0,
         inputRoleKey: 'Supplier',
@@ -47,6 +72,16 @@ export const validAllRestrictions: Process.Program = [
       MatchInputOutputMetadataValue: {
         inputIndex: 0,
         inputMetadataKey: 'SomeMetadataKey',
+        outputIndex: 0,
+        outputMetadataKey: 'SomeMetadataKey',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
+      MatchInputIdOutputMetadataValue: {
+        inputIndex: 0,
         outputIndex: 0,
         outputMetadataKey: 'SomeMetadataKey',
       },
@@ -128,7 +163,6 @@ export const multiple = (
       name: process1Name,
       version: process1BumpedV,
       program: [
-        { restriction: { SenderOwnsAllInputs: {} } },
         {
           restriction: {
             SenderHasInputRole: {
@@ -137,14 +171,12 @@ export const multiple = (
             },
           },
         },
-        { op: 'And' },
       ],
     },
     {
       name: process2Name,
       version: process2BumpedV,
       program: [
-        { restriction: { SenderOwnsAllInputs: {} } },
         {
           restriction: {
             SenderHasInputRole: {
@@ -153,7 +185,6 @@ export const multiple = (
             },
           },
         },
-        { op: 'Or' },
       ],
     },
   ])
