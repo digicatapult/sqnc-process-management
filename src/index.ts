@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --no-warnings
 
 import chalk from 'chalk'
 import { Command } from 'commander'
@@ -17,7 +17,11 @@ const example: string = JSON.stringify([
   {
     name: 'A test',
     version: 1,
-    program: [{ restriction: { SenderOwnsAllInputs: {} } }, { restriction: { None: {} } }, { op: 'or' }],
+    program: [
+      { restriction: { FixedNumberOfOutputs: { numOutputs: 1 } } },
+      { restriction: { None: {} } },
+      { op: 'Or' },
+    ],
   },
 ])
 

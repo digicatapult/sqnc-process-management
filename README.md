@@ -79,7 +79,7 @@ Usage: process management create [options] <json>
 A command for persisting process flows onto the chain
 
 Arguments:
-  json               takes JSON as string example: '[{"name":"A test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
+  json               takes JSON as string example: '[{"name":"A test","version":1,"program":[{"restriction":{"FixedNumberOfOutputs":{"numOutputs":1}}},{"restriction":{"None":{}}},{"op":"Or"}]}]'
 
 Options:
   --dryRun           to validate process and response locally before persisting on the chain, default - false
@@ -93,7 +93,7 @@ Options:
 # example
 #
 
-$ process-management create -h localhost -p 9944 -u //Alice '[{"name":"A test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
+$ process-management create -h localhost -p 9944 -u //Alice '[{"name":"A test","version":1,"program":[{"restriction":{"FixedNumberOfOutputs":{"numOutputs":1}}},{"restriction":{"None":{}}},{"op":"Or"}]}]'
 
 {
   'A test': {
@@ -103,9 +103,9 @@ $ process-management create -h localhost -p 9944 -u //Alice '[{"name":"A test","
       version: 1,
       status: 'Enabled',
       program: [
-        { restriction: { SenderOwnsAllInputs: {} } },
+        { restriction: { FixedNumberOfOutputs: { numOutputs: 1 } } },
         { restriction: { None: {} } },
-        { op: 'or' }
+        { op: 'Or' }
       ]
     }
   }
@@ -143,7 +143,7 @@ Options:
 #
 
 # let's create so we have something to disable
-$ process-management create -u //Alice '[{"name":"B test","version":1,"program":[{"restriction":{"SenderOwnsAllInputs":{}}},{"restriction":{"None":{}}},{"op":"or"}]}]'
+$ process-management create -u //Alice '[{"name":"B test","version":1,"program":[{"restriction":{"FixedNumberOfOutputs":{"numOutputs":1}}},{"restriction":{"None":{}}},{"op":"Or"}]}]'
 
 {
   'B test': {
@@ -153,9 +153,9 @@ $ process-management create -u //Alice '[{"name":"B test","version":1,"program":
       version: 1,
       status: 'Enabled',
       program: [
-        { restriction: { SenderOwnsAllInputs: {} } },
+        { restriction: { FixedNumberOfOutputs: { numOutputs: 1 } } },
         { restriction: { None: {} } },
-        { op: 'or' }
+        { op: 'Or' }
       ]
     }
   }

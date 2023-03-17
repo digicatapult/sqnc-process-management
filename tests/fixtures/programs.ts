@@ -2,7 +2,6 @@ export const simple: Process.Program = [{ restriction: { None: {} } }]
 
 export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
-  { restriction: { SenderOwnsAllInputs: {} } },
   { op: 'Or' },
   {
     restriction: {
@@ -128,7 +127,6 @@ export const multiple = (
       name: process1Name,
       version: process1BumpedV,
       program: [
-        { restriction: { SenderOwnsAllInputs: {} } },
         {
           restriction: {
             SenderHasInputRole: {
@@ -144,7 +142,6 @@ export const multiple = (
       name: process2Name,
       version: process2BumpedV,
       program: [
-        { restriction: { SenderOwnsAllInputs: {} } },
         {
           restriction: {
             SenderHasInputRole: {

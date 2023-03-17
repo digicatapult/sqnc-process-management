@@ -94,7 +94,6 @@ export const stepValidation = z
   .object({
     op: binaryOperator.optional(),
     None: none.optional(),
-    SenderOwnsAllInputs: senderOwnsAllInputs.optional(),
     SenderHasInputRole: senderHasInputRole.optional(),
     SenderHasOutputRole: senderHasOutputRole.optional(),
     OutputHasRole: outputHasRole.optional(),
