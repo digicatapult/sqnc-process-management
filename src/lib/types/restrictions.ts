@@ -33,8 +33,6 @@ const binaryOperator = z.enum([
 
 const none = z.object({})
 
-const senderOwnsAllInputs = z.object({})
-
 const senderHasInputRole = z.object({
   index: z.number(),
   roleKey: role,
