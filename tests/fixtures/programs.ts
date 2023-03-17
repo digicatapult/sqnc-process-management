@@ -2,7 +2,6 @@ export const simple: Process.Program = [{ restriction: { None: {} } }]
 
 export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
-  { op: 'Or' },
   {
     restriction: {
       SenderHasInputRole: {
@@ -11,7 +10,7 @@ export const validAllRestrictions: Process.Program = [
       },
     },
   },
-  { op: 'And' },
+  { op: 'Or' },
   {
     restriction: {
       SenderHasOutputRole: {
@@ -135,7 +134,6 @@ export const multiple = (
             },
           },
         },
-        { op: 'And' },
       ],
     },
     {
@@ -150,7 +148,6 @@ export const multiple = (
             },
           },
         },
-        { op: 'Or' },
       ],
     },
   ])
