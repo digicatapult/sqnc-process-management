@@ -48,6 +48,21 @@ const outputHasRole = z.object({
   roleKey: role,
 })
 
+const outputHasMetadata = z.object({
+  index: z.number(),
+  metadataKey: tokenMetadataKey,
+})
+
+const inputHasRole = z.object({
+  index: z.number(),
+  roleKey: role,
+})
+
+const inputHasMetadata = z.object({
+  index: z.number(),
+  metadataKey: tokenMetadataKey,
+})
+
 const matchInputOutputRole = z.object({
   inputIndex: z.number(),
   inputRoleKey: role,
@@ -58,6 +73,12 @@ const matchInputOutputRole = z.object({
 const matchInputOutputMetadataValue = z.object({
   inputIndex: z.number(),
   inputMetadataKey: tokenMetadataKey,
+  outputIndex: z.number(),
+  outputMetadataKey: tokenMetadataKey,
+})
+
+const matchInputIdOutputMetadataValue = z.object({
+  inputIndex: z.number(),
   outputIndex: z.number(),
   outputMetadataKey: tokenMetadataKey,
 })
@@ -95,8 +116,12 @@ export const stepValidation = z
     SenderHasInputRole: senderHasInputRole.optional(),
     SenderHasOutputRole: senderHasOutputRole.optional(),
     OutputHasRole: outputHasRole.optional(),
+    OutputHasMetadata: outputHasMetadata.optional(),
+    InputHasRole: inputHasRole.optional(),
+    InputHasMetadata: inputHasMetadata.optional(),
     MatchInputOutputRole: matchInputOutputRole.optional(),
     MatchInputOutputMetadataValue: matchInputOutputMetadataValue.optional(),
+    MatchInputIdOutputMetadataValue: matchInputIdOutputMetadataValue.optional(),
     FixedNumberOfInputs: fixedNumberOfInputs.optional(),
     FixedNumberOfOutputs: fixedNumberOfOutputs.optional(),
     FixedInputMetadataValue: fixedInputMetadataValue.optional(),

@@ -31,6 +31,33 @@ export const validAllRestrictions: Process.Program = [
   { op: 'And' },
   {
     restriction: {
+      OutputHasMetadata: {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
+      InputHasRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
+      InputHasMetadata: {
+        index: 0,
+        metadataKey: 'SomeMetadataKey',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
       MatchInputOutputRole: {
         inputIndex: 0,
         inputRoleKey: 'Supplier',
@@ -45,6 +72,16 @@ export const validAllRestrictions: Process.Program = [
       MatchInputOutputMetadataValue: {
         inputIndex: 0,
         inputMetadataKey: 'SomeMetadataKey',
+        outputIndex: 0,
+        outputMetadataKey: 'SomeMetadataKey',
+      },
+    },
+  },
+  { op: 'And' },
+  {
+    restriction: {
+      MatchInputIdOutputMetadataValue: {
+        inputIndex: 0,
         outputIndex: 0,
         outputMetadataKey: 'SomeMetadataKey',
       },
