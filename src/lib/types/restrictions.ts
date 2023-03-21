@@ -10,7 +10,7 @@ const metadataValue = z.union([
   z.object({ None: z.null() }),
 ])
 const metadataValueType = z.enum(['File', 'Literal', 'TokenId', 'None'])
-const role = z.enum(['Owner', 'Customer', 'AdditiveManufacturer', 'Laboratory', 'Buyer', 'Supplier', 'Reviewer'])
+const role = z.enum(['Owner', 'Customer', 'AdditiveManufacturer', 'Laboratory', 'Buyer', 'Supplier', 'Reviewer', 'Optimiser', 'MemberA', 'MemberB'])
 
 const binaryOperator = z.enum([
   null,
