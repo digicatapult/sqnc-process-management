@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "1.6.28",
+  "version": "1.6.29",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -40,8 +40,8 @@
     "@types/chai-as-promised": "^7.1.5",
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.11",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "depcheck": "^1.4.3",
@@ -54,7 +54,7 @@
     "ts-mocha": "^10.0.0"
   },
   "dependencies": {
-    "@polkadot/api": "^10.3.1",
+    "@polkadot/api": "^10.3.2",
     "chalk": "^5.2.0",
     "commander": "^10.0.0",
     "ts-node": "^10.9.1",
