@@ -14,13 +14,84 @@ import {
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
-import { HexError, VersionError, ProgramError, DisableError } from '../../src/lib/types/error.js'
+import { HexError, ProgramError, DisableError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
+const multipleProgram = [
+  {
+    restriction: {
+      SenderHasInputRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    },
+  },
+]
 
 describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
+    describe('Multiple processes', () => {
+      it('skips already created processes and creates new ones', async () => {
+        await createProcess('existing-process-test', 1, multipleProgram, false, polkadotOptions)
+        const process2Name = 'process-to-be-created'
+        const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+        // TODO multiple to take an array?, better assertation
+        const newProcesses = await loadProcesses({
+          options: polkadotOptions,
+          data: multiple('existing-process-test', 1, process2Name, process2BumpedV),
+        })
+        expect(newProcesses['existing-process-test']).to.deep.contain({
+          message: 'Process existing-process-test has been already created.',
+          process: {
+            id: '0x6578697374696e672d70726f636573732d74657374',
+            version: 1,
+            status: 'Enabled',
+            program: [{
+              restriction: {
+                senderHasInputRole: {
+                  index: 0,
+                  roleKey: 'Supplier',
+                },
+              },
+            }],
+          },
+        })
+        expect(newProcesses[process2Name].message).to.deep.equal(
+          'Transaction for new process process-to-be-created has been successfully submitted'
+        )
+        expect(newProcesses[process2Name].process).to.deep.contain({
+          version: process2BumpedV,
+          status: 'Enabled',
+        })
+      })
+
+      it('creates multiple processes', async () => {
+        const process1Name = 'process-1'
+        const process1BumpedV = (await getVersionHelper(process1Name)) + 1
+        const process2Name = 'process-2'
+        const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+        const newProcesses = await loadProcesses({
+          options: polkadotOptions,
+          data: multiple(process1Name, process1BumpedV, process2Name, process2BumpedV),
+        })
+        expect(newProcesses[process1Name].message).to.deep.equal(
+          'Transaction for new process process-1 has been successfully submitted'
+        )
+        expect(newProcesses[process1Name].process).to.deep.contain({
+          version: process1BumpedV,
+          status: 'Enabled',
+        })
+        expect(newProcesses[process2Name].message).to.deep.equal(
+          'Transaction for new process process-2 has been successfully submitted'
+        )
+        expect(newProcesses[process2Name].process).to.deep.contain({
+          version: process2BumpedV,
+          status: 'Enabled',
+        })
+      })
+    })
+    
     it('creates then disables a process', async () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
@@ -39,31 +110,6 @@ describe('Process creation and deletion, listing', () => {
         id: processName,
         version: bumpedVersion,
         status: 'Disabled',
-      })
-    })
-
-    it('creates multiple processes', async () => {
-      const process1Name = 'process-1'
-      const process1BumpedV = (await getVersionHelper(process1Name)) + 1
-      const process2Name = 'process-2'
-      const process2BumpedV = (await getVersionHelper(process2Name)) + 1
-      const newProcesses = await loadProcesses({
-        options: polkadotOptions,
-        data: multiple(process1Name, process1BumpedV, process2Name, process2BumpedV),
-      })
-      expect(newProcesses[process1Name].message).to.deep.equal(
-        'Transaction for new process process-1 has been successfully submitted'
-      )
-      expect(newProcesses[process1Name].process).to.deep.contain({
-        version: process1BumpedV,
-        status: 'Enabled',
-      })
-      expect(newProcesses[process2Name].message).to.deep.equal(
-        'Transaction for new process process-2 has been successfully submitted'
-      )
-      expect(newProcesses[process2Name].process).to.deep.contain({
-        version: process2BumpedV,
-        status: 'Enabled',
       })
     })
 
@@ -142,6 +188,7 @@ describe('Process creation and deletion, listing', () => {
       )
     })
 
+    /*
     it('fails to create for same version', async () => {
       return assert.isRejected(
         createProcess(validProcessName, validVersionNumber - 1, validAllRestrictions, false, polkadotOptions),
@@ -162,6 +209,7 @@ describe('Process creation and deletion, listing', () => {
         VersionError
       )
     })
+    */
 
     it('fails to create with too long process id', async () => {
       const processName = '0'.repeat(Constants.PROCESS_ID_LENGTH + 1)

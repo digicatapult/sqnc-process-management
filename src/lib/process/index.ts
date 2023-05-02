@@ -3,12 +3,14 @@ import { Constants } from './constants.js'
 import { createProcessTransaction, disableProcessTransaction, getVersion, getProcess } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { stepValidation } from '../types/restrictions.js'
-import { VersionError, DisableError } from '../types/error.js'
+import { DisableError, ProgramError } from '../types/error.js'
 
 export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
   API_PORT: 9944,
 }
+
+const textify = (obj: Process.ProgramStep): string => JSON.stringify(obj).toLowerCase()
 
 // TODO merge api.sts and this together since they are both doing almost the same thing
 // and api is already mapped by polkadot e.g. storagemaps
@@ -55,8 +57,18 @@ export const createProcess = async (
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
   const expectedVersion: number = (await getVersion(polkadot, processId)) + 1
 
+  // TODO log.warn(`Version: ${version} must be incremented to: ${expectedVersion}`)
+  // same for other checks e.g. program's size and actual program
   if (version !== expectedVersion) {
-    throw new VersionError(`Version: ${version} must be incremented to: ${expectedVersion}`)
+    const old = await getProcess(polkadot, processId, version)
+
+    if (program.length !== old.program.length) throw new ProgramError('multiple: different lengths')
+    if (!program.every((step, i) => textify(step) === textify(old.program[i]))) throw new ProgramError('multiple: steps do not match')
+
+    return {
+      message: `Process ${name} has been already created.`,
+      process: old,
+    }
   }
 
   if (dryRun)

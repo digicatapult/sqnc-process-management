@@ -173,6 +173,7 @@ export const invalidRestrictionValue: Process.Program = [
   },
 ]
 
+// WHY not to use simple/etc? why not name1 name2?
 export const multiple = (
   process1Name: string,
   process1BumpedV: number,
