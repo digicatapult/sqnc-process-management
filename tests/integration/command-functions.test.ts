@@ -6,6 +6,7 @@ import { createProcess, disableProcess, loadProcesses } from '../../src/lib/proc
 import {
   validAllRestrictions,
   invalidRestrictionKey,
+  invalidPOSIX,
   invalidRestrictionValue,
   multiple,
   simple,
@@ -105,6 +106,13 @@ describe('Process creation and deletion, listing', () => {
     before(async () => {
       const currentVersion = await getVersionHelper(validProcessName)
       validVersionNumber = currentVersion + 1
+    })
+
+    it('fails for invalid POSIX notation', async () => {
+      return assert.isRejected(
+        createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions),
+        Error
+      ) 
     })
 
     it('fails for invalid restriction key', async () => {

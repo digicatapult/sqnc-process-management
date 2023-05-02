@@ -1,5 +1,26 @@
 export const simple: Process.Program = [{ restriction: { None: {} } }]
 
+export const invalidPOSIX: Process.Program = [
+  { restriction: { None: {} } },
+  {
+    restriction: {
+      SenderHasInputRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    },
+  },
+  { op: 'Or' },
+  {
+    restriction: {
+      SenderHasOutputRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    },
+  },
+]
+
 export const validAllRestrictions: Process.Program = [
   { restriction: { None: {} } },
   {

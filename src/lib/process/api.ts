@@ -1,5 +1,17 @@
 import * as api from '../utils/polkadot.js'
 
+// TODO - refactor to validate payload?
+// for some reason reduce did not work with Process.Program or ProgramStep[] type due to symbol.iterator
+const isProgramValid = (program: Process.Program, out = { ops: 0, restrictions: -1 }): Boolean => {
+  program.forEach((step: Process.ProgramStep) => {
+    out = Object.hasOwn(step, 'op')
+      ? { ...out, ops: out.ops + 1 }
+      : { ...out, restrictions: out.restrictions + 1 }
+  })
+
+  return out.ops === out.restrictions
+}
+
 // TODO refactor since api.ts other should be a util
 // since createNodeApi, set's all routes we could use in process.index.ts
 export const createProcessTransaction = async (
@@ -9,6 +21,8 @@ export const createProcessTransaction = async (
   options: Polkadot.Options
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
+  
+  if (!isProgramValid(program)) throw new Error('invalid program')
 
   return new Promise((resolve, reject) => {
     let unsub: Function
