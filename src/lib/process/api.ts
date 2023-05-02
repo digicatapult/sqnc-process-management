@@ -1,3 +1,4 @@
+import { ProgramError } from '../types/error.js'
 import * as api from '../utils/polkadot.js'
 
 // TODO - refactor to validate payload?
@@ -22,7 +23,7 @@ export const createProcessTransaction = async (
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
   
-  if (!isProgramValid(program)) throw new Error('invalid program')
+  if (!isProgramValid(program)) throw new ProgramError('invalid program')
 
   return new Promise((resolve, reject) => {
     let unsub: Function
