@@ -11,3 +11,17 @@ describe('utf8ToHex', () => {
     expect(() => utf8ToHex('test123', 1)).to.throw(HexError)
   })
 })
+
+/* TODO will update with other due to this being covered in integration test suites
+describe('createProcessTransaction', () => {
+  describe('if POSIX is invalid', () => {
+    it('throws invalid program error', () => {
+    
+    })
+  })
+
+  it('successfully creates process transaction', () => {
+    
+  })
+})
+*/

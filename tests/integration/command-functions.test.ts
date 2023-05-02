@@ -6,6 +6,7 @@ import { createProcess, disableProcess, loadProcesses } from '../../src/lib/proc
 import {
   validAllRestrictions,
   invalidRestrictionKey,
+  invalidPOSIX,
   invalidRestrictionValue,
   multiple,
   simple,
@@ -13,7 +14,7 @@ import {
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
-import { HexError, VersionError, DisableError } from '../../src/lib/types/error.js'
+import { HexError, VersionError, ProgramError, DisableError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
@@ -105,6 +106,13 @@ describe('Process creation and deletion, listing', () => {
     before(async () => {
       const currentVersion = await getVersionHelper(validProcessName)
       validVersionNumber = currentVersion + 1
+    })
+
+    it('fails for invalid POSIX notation', async () => {
+      return assert.isRejected(
+        createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions),
+        ProgramError
+      ) 
     })
 
     it('fails for invalid restriction key', async () => {

@@ -19,3 +19,10 @@ export class VersionError extends Error {
   }
 }
 
+export class ProgramError extends Error {
+  constructor(m: string) {
+    super(m)
+    Object.setPrototypeOf(this, ProgramError.prototype)
+  }
+}
+
