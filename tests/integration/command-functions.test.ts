@@ -9,6 +9,7 @@ import {
   invalidPOSIX,
   invalidRestrictionValue,
   multiple,
+  multipleProgram,
   simple,
 } from '../fixtures/programs.js'
 import { Constants } from '../../src/lib/process/constants.js'
@@ -19,16 +20,6 @@ import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
-const multipleProgram = [
-  {
-    restriction: {
-      SenderHasInputRole: {
-        index: 0,
-        roleKey: 'Supplier',
-      },
-    },
-  },
-]
 
 describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
@@ -43,7 +34,7 @@ describe('Process creation and deletion, listing', () => {
           data: multiple('existing-process-test', 1, process2Name, process2BumpedV),
         })
         expect(newProcesses['existing-process-test']).to.deep.contain({
-          message: 'Process existing-process-test has been already created.',
+          message: 'Process existing-process-test is already created.',
           process: {
             id: '0x6578697374696e672d70726f636573732d74657374',
             version: 1,
@@ -156,21 +147,59 @@ describe('Process creation and deletion, listing', () => {
       validVersionNumber = currentVersion + 1
     })
 
-    describe('Multiple and existing processes', () => {
-      it('fails if process is already found and number of steps do not match', async () => {
-        await createProcess('existing-sad', 1, multipleProgram, false, polkadotOptions)
-        return assert.isRejected(
-          createProcess('existing-sad', 1, simple, false, polkadotOptions),
-          ProgramError
-        )
+    describe('If process already exists', () => {
+      describe('Multiple uploads', () => {
+        // TODO could prestage in before if more scenarios
+        it('skips and notifies if process programs are different', async () => {
+          await createProcess('existing-length', 1, validAllRestrictions, false, polkadotOptions)
+          const process2Name = 'should-create-1'
+          const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+          const res = await loadProcesses({
+            options: polkadotOptions,
+            data: multiple('existing-length', 1, process2Name, process2BumpedV),
+          })
+
+          expect(res['existing-length'].message).to.equal('multiple: different lengths')
+          expect(res[process2Name].message).to.equal('Transaction for new process should-create-1 has been successfully submitted')
+
+        })
+
+        it('also fails if number of steps matches but POSIX does not', async () => {
+          await createProcess('existing-steps', 1, simple, false, polkadotOptions)
+          const process2Name = 'should-create-2'
+          const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+          const res = await loadProcesses({
+            options: polkadotOptions,
+            data: multiple('existing-steps', 1, process2Name, process2BumpedV),
+          })
+
+          expect(res['existing-steps'].message).to.equal('multiple: steps do not match')
+          expect(res[process2Name].message).to.equal('Transaction for new process should-create-2 has been successfully submitted')
+        })
       })
 
-      it('also fails if number of steps matches but POSIX does not', async () => {
-        await createProcess('existing-sad', 1, multipleProgram, false, polkadotOptions)
-        return assert.isRejected(
-          createProcess('existing-sad', 1, [{ restriction: { None: {} }}], false, polkadotOptions),
-          ProgramError
-        )
+      it('does not create new one and notifies if programs are different length', async () => {
+        await createProcess('existing-single', 1, validAllRestrictions, false, polkadotOptions)
+        const { message, process } = await createProcess('existing-single', 1, simple, false, polkadotOptions)
+
+        expect(message).to.equal('multiple: different lengths')
+        expect(process).to.deep.contain({
+          id: '0x6578697374696e672d73696e676c65',
+          version: 1,
+          status: 'Enabled',
+        })
+      })
+
+      it('does not create new one and notifies if programs same are length but do not match', async () => {
+        await createProcess('existing-steps-single', 1, multipleProgram, false, polkadotOptions)
+        const { message, process } = await createProcess('existing-steps-single', 1, [{ restriction: { None: {} }}], false, polkadotOptions)
+
+        expect(message).to.equal('multiple: steps do not match')
+        expect(process).to.deep.contain({
+          id: '0x6578697374696e672d73746570732d73696e676c65',
+          version: 1,
+          status: 'Enabled',
+        })
       })
     })
 

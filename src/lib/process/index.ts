@@ -57,6 +57,7 @@ export const createProcess = async (
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
   const expectedVersion: number = (await getVersion(polkadot, processId)) + 1
 
+  // TODO simplify
   if (version < 1 || version > expectedVersion) {
     throw new VersionError(`Version: ${version} must be incremented to: ${expectedVersion}`)
   }
@@ -64,11 +65,18 @@ export const createProcess = async (
   if (version !== expectedVersion) {
     const old = await getProcess(polkadot, processId, version)
 
-    if (program.length !== old.program.length) throw new ProgramError('multiple: different lengths')
-    if (!program.every((step, i) => textify(step) === textify(old.program[i]))) throw new ProgramError('multiple: steps do not match')
+    if (program.length !== old.program.length) return {
+      message: 'multiple: different lengths',
+      process: old,
+    }
+
+    if (!program.every((step, i) => textify(step) === textify(old.program[i]))) return {
+      message: 'multiple: steps do not match',
+      process: old,
+    }
 
     return {
-      message: `Process ${name} has been already created.`,
+      message: `Process ${name} is already created.`,
       process: old,
     }
   }

@@ -1,5 +1,16 @@
 export const simple: Process.Program = [{ restriction: { None: {} } }]
 
+export const multipleProgram = [
+  {
+    restriction: {
+      SenderHasInputRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    },
+  },
+]
+
 export const invalidPOSIX: Process.Program = [
   { restriction: { None: {} } },
   {
