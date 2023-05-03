@@ -14,10 +14,11 @@ import {
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
-import { HexError, ProgramError, DisableError } from '../../src/lib/types/error.js'
+import { HexError, ProgramError, DisableError, VersionError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
+
 const multipleProgram = [
   {
     restriction: {
@@ -91,7 +92,7 @@ describe('Process creation and deletion, listing', () => {
         })
       })
     })
-    
+
     it('creates then disables a process', async () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
@@ -149,9 +150,28 @@ describe('Process creation and deletion, listing', () => {
   describe('Sad path', () => {
     const validProcessName = '0'
     let validVersionNumber: number
+
     before(async () => {
       const currentVersion = await getVersionHelper(validProcessName)
       validVersionNumber = currentVersion + 1
+    })
+
+    describe('Multiple and existing processes', () => {
+      it('fails if process is already found and number of steps do not match', async () => {
+        await createProcess('existing-sad', 1, multipleProgram, false, polkadotOptions)
+        return assert.isRejected(
+          createProcess('existing-sad', 1, simple, false, polkadotOptions),
+          ProgramError
+        )
+      })
+
+      it('also fails if number of steps matches but POSIX does not', async () => {
+        await createProcess('existing-sad', 1, multipleProgram, false, polkadotOptions)
+        return assert.isRejected(
+          createProcess('existing-sad', 1, [{ restriction: { None: {} }}], false, polkadotOptions),
+          ProgramError
+        )
+      })
     })
 
     it('fails for invalid POSIX notation', async () => {
@@ -188,28 +208,19 @@ describe('Process creation and deletion, listing', () => {
       )
     })
 
-    /*
-    it('fails to create for same version', async () => {
-      return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber - 1, validAllRestrictions, false, polkadotOptions),
-        VersionError
-      )
-    })
-
     it('fails to create for too low version', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions),
+        createProcess(validProcessName, -1, validAllRestrictions, false, polkadotOptions),
         VersionError
       )
     })
 
     it('fails to create for too high version', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions),
+        createProcess(validProcessName, validVersionNumber + 99, validAllRestrictions, false, polkadotOptions),
         VersionError
       )
     })
-    */
 
     it('fails to create with too long process id', async () => {
       const processName = '0'.repeat(Constants.PROCESS_ID_LENGTH + 1)

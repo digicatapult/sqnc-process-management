@@ -12,6 +12,13 @@ export class HexError extends Error {
   }
 }
 
+export class VersionError extends Error {
+  constructor(m: string) {
+    super(m)
+    Object.setPrototypeOf(this, VersionError.prototype)
+  }
+}
+
 export class ProgramError extends Error {
   constructor(m: string) {
     super(m)

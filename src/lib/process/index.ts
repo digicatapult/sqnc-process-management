@@ -3,7 +3,7 @@ import { Constants } from './constants.js'
 import { createProcessTransaction, disableProcessTransaction, getVersion, getProcess } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { stepValidation } from '../types/restrictions.js'
-import { DisableError, ProgramError } from '../types/error.js'
+import { DisableError, ProgramError, VersionError } from '../types/error.js'
 
 export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
@@ -57,8 +57,10 @@ export const createProcess = async (
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
   const expectedVersion: number = (await getVersion(polkadot, processId)) + 1
 
-  // TODO log.warn(`Version: ${version} must be incremented to: ${expectedVersion}`)
-  // same for other checks e.g. program's size and actual program
+  if (version < 1 || version > expectedVersion) {
+    throw new VersionError(`Version: ${version} must be incremented to: ${expectedVersion}`)
+  }
+  
   if (version !== expectedVersion) {
     const old = await getProcess(polkadot, processId, version)
 
