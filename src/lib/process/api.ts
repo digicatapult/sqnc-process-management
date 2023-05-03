@@ -51,7 +51,6 @@ export const createProcessTransaction = async (
         unsub = res
       })
       .catch((err: Error) => {
-        console.log(err, ' asd as d')
         reject(err)
       })
   })
