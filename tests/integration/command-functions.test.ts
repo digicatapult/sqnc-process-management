@@ -238,18 +238,16 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails to create for too low version', async () => {
-      return assert.isRejected(
         // - 2 because -1 would make current = valid
-        createProcess(validProcessName, validVersionNumber -2, validAllRestrictions, false, polkadotOptions),
-        VersionError
-      )
+      const res = await createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions)
+
+      expect(res.message).to.equal('Version: 1 must be: 3')
     })
 
     it('fails to create for too high version', async () => {
-      return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions),
-        VersionError
-      )
+      const res = await createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions)
+
+      expect(res.message).to.equal('Version: 4 must be: 3')
     })
 
     it('fails to create with too long process id', async () => {

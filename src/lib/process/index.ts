@@ -3,7 +3,7 @@ import { Constants } from './constants.js'
 import { createProcessTransaction, disableProcessTransaction, getVersion, getProcess } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { stepValidation } from '../types/restrictions.js'
-import { DisableError, ProgramError, VersionError } from '../types/error.js'
+import { DisableError } from '../types/error.js'
 
 export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
@@ -58,10 +58,10 @@ export const createProcess = async (
   const currentVersion: number = await getVersion(polkadot, processId)
   const expectedVersion: number = currentVersion + 1
 
-  // TODO simplify
-  if (version > expectedVersion || version < currentVersion) {
-    throw new VersionError(`Version: ${version} must be: ${expectedVersion}`)
-  }
+  if (version > expectedVersion || version < currentVersion)
+    return {
+      message: `Version: ${version} must be: ${expectedVersion}`
+    }
 
   if (dryRun)
     return {
