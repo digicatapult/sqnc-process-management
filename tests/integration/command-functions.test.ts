@@ -9,7 +9,7 @@ import {
   invalidPOSIX,
   invalidRestrictionValue,
   multiple,
-  multipleProgram,
+  simple2,
   simple,
 } from '../fixtures/programs.js'
 import { Constants } from '../../src/lib/process/constants.js'
@@ -25,7 +25,7 @@ describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
     describe('Multiple processes', () => {
       it('skips already created processes and creates new ones', async () => {
-        await createProcess('existing-process-test', 1, multipleProgram, false, polkadotOptions)
+        await createProcess('existing-process-test', 1, simple2, false, polkadotOptions)
         const process2Name = 'process-to-be-created'
         const process2BumpedV = (await getVersionHelper(process2Name)) + 1
         // TODO multiple to take an array?, better assertation
@@ -159,12 +159,12 @@ describe('Process creation and deletion, listing', () => {
             data: multiple('existing-length', 1, process2Name, process2BumpedV),
           })
 
-          expect(res['existing-length'].message).to.equal('multiple: different lengths')
+          expect(res['existing-length'].message).to.equal('existing: programs are different lengths')
           expect(res[process2Name].message).to.equal('Transaction for new process should-create-1 has been successfully submitted')
 
         })
 
-        it('also fails if number of steps matches but POSIX does not', async () => {
+        it('also fails if number of steps matches but POSTFIX does not', async () => {
           await createProcess('existing-steps', 1, simple, false, polkadotOptions)
           const process2Name = 'should-create-2'
           const process2BumpedV = (await getVersionHelper(process2Name)) + 1
@@ -173,7 +173,7 @@ describe('Process creation and deletion, listing', () => {
             data: multiple('existing-steps', 1, process2Name, process2BumpedV),
           })
 
-          expect(res['existing-steps'].message).to.equal('multiple: steps do not match')
+          expect(res['existing-steps'].message).to.equal('existing: program steps did not match')
           expect(res[process2Name].message).to.equal('Transaction for new process should-create-2 has been successfully submitted')
         })
       })
@@ -182,7 +182,7 @@ describe('Process creation and deletion, listing', () => {
         await createProcess('existing-single', 1, validAllRestrictions, false, polkadotOptions)
         const { message, process } = await createProcess('existing-single', 1, simple, false, polkadotOptions)
 
-        expect(message).to.equal('multiple: different lengths')
+        expect(message).to.equal('existing: programs are different lengths')
         expect(process).to.deep.contain({
           id: '0x6578697374696e672d73696e676c65',
           version: 1,
@@ -191,10 +191,10 @@ describe('Process creation and deletion, listing', () => {
       })
 
       it('does not create new one and notifies if programs same are length but do not match', async () => {
-        await createProcess('existing-steps-single', 1, multipleProgram, false, polkadotOptions)
+        await createProcess('existing-steps-single', 1, simple2, false, polkadotOptions)
         const { message, process } = await createProcess('existing-steps-single', 1, [{ restriction: { None: {} }}], false, polkadotOptions)
 
-        expect(message).to.equal('multiple: steps do not match')
+        expect(message).to.equal('existing: program steps did not match')
         expect(process).to.deep.contain({
           id: '0x6578697374696e672d73746570732d73696e676c65',
           version: 1,
@@ -203,7 +203,7 @@ describe('Process creation and deletion, listing', () => {
       })
     })
 
-    it('fails for invalid POSIX notation', async () => {
+    it('fails for invalid POSTFIX notation', async () => {
       return assert.isRejected(
         createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions),
         ProgramError
@@ -239,14 +239,15 @@ describe('Process creation and deletion, listing', () => {
 
     it('fails to create for too low version', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, -1, validAllRestrictions, false, polkadotOptions),
+        // - 2 because -1 would make current = valid
+        createProcess(validProcessName, validVersionNumber -2, validAllRestrictions, false, polkadotOptions),
         VersionError
       )
     })
 
     it('fails to create for too high version', async () => {
       return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber + 99, validAllRestrictions, false, polkadotOptions),
+        createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions),
         VersionError
       )
     })

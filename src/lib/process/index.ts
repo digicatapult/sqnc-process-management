@@ -55,30 +55,12 @@ export const createProcess = async (
   const program: Process.Program = validate(userProgram)
   const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
   const polkadot: Polkadot.Polkadot = await createNodeApi(options)
-  const expectedVersion: number = (await getVersion(polkadot, processId)) + 1
+  const currentVersion: number = await getVersion(polkadot, processId)
+  const expectedVersion: number = currentVersion + 1
 
   // TODO simplify
-  if (version < 1 || version > expectedVersion) {
-    throw new VersionError(`Version: ${version} must be incremented to: ${expectedVersion}`)
-  }
-  
-  if (version !== expectedVersion) {
-    const old = await getProcess(polkadot, processId, version)
-
-    if (program.length !== old.program.length) return {
-      message: 'multiple: different lengths',
-      process: old,
-    }
-
-    if (!program.every((step, i) => textify(step) === textify(old.program[i]))) return {
-      message: 'multiple: steps do not match',
-      process: old,
-    }
-
-    return {
-      message: `Process ${name} is already created.`,
-      process: old,
-    }
+  if (version > expectedVersion || version < currentVersion) {
+    throw new VersionError(`Version: ${version} must be: ${expectedVersion}`)
   }
 
   if (dryRun)
@@ -90,11 +72,28 @@ export const createProcess = async (
       program,
     }
 
-  const process: Process.Payload = await createProcessTransaction(polkadot, processId, program, options)
+  if (version === currentVersion) {
+    const process = await getProcess(polkadot, processId, version)
+
+    if (program.length !== process.program.length) return {
+      message: 'existing: programs are different lengths',
+      process,
+    }
+
+    if (!program.every((step, i) => textify(step) === textify(process.program[i]))) return {
+      message: 'existing: program steps did not match',
+      process,
+    }
+
+    return {
+      message: `Process ${name} is already created.`,
+      process,
+    }
+  }
 
   return {
     message: `Transaction for new process ${name} has been successfully submitted`,
-    process,
+    process: await createProcessTransaction(polkadot, processId, program, options),
   }
 }
 

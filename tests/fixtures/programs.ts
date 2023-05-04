@@ -1,6 +1,6 @@
 export const simple: Process.Program = [{ restriction: { None: {} } }]
 
-export const multipleProgram = [
+export const simple2 = [
   {
     restriction: {
       SenderHasInputRole: {
