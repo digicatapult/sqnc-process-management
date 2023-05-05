@@ -60,16 +60,7 @@ export const createProcess = async (
 
   if (version > expectedVersion || version < currentVersion)
     return {
-      message: `Version: ${version} must be: ${expectedVersion}`
-    }
-
-  if (dryRun)
-    return {
-      process: null,
-      message: 'Dry run: transaction has not been created',
-      name,
-      version: expectedVersion,
-      program,
+      message: `Process version ${version} is invalid. If you are trying to create a new version of process ${name} version should be ${expectedVersion}`
     }
 
   if (version === currentVersion) {
@@ -90,6 +81,15 @@ export const createProcess = async (
       process,
     }
   }
+
+  if (dryRun)
+    return {
+      process: null,
+      message: 'Dry run: transaction has not been created',
+      name,
+      version: expectedVersion,
+      program,
+    }
 
   return {
     message: `Transaction for new process ${name} has been successfully submitted`,

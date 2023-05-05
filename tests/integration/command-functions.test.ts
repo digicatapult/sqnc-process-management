@@ -241,13 +241,13 @@ describe('Process creation and deletion, listing', () => {
         // - 2 because -1 would make current = valid
       const res = await createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions)
 
-      expect(res.message).to.equal(`Version: ${validVersionNumber - 2} must be: ${validVersionNumber}`)
+      expect(res.message).to.equal(`Process version ${validVersionNumber - 2} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
     })
 
     it('fails to create for too high version', async () => {
       const res = await createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions)
 
-      expect(res.message).to.equal(`Version: ${validVersionNumber + 1} must be: ${validVersionNumber}`)
+      expect(res.message).to.equal(`Process version ${validVersionNumber + 1} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
     })
 
     it('fails to create with too long process id', async () => {
