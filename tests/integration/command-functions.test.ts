@@ -5,17 +5,14 @@ chai.use(chaiAsPromised)
 import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
 import {
   validAllRestrictions,
-  invalidRestrictionKey,
   invalidPOSIX,
-  invalidRestrictionValue,
   multiple,
   simple2,
   simple,
 } from '../fixtures/programs.js'
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
-import { ZodError } from 'zod'
-import { HexError, ProgramError, DisableError } from '../../src/lib/types/error.js'
+import { DisableError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
@@ -204,37 +201,29 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails for invalid POSTFIX notation', async () => {
-      return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions),
-        ProgramError
-      ) 
+      const { message } = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
+      expect(message).to.equal('invalid program')
     })
 
     it('fails for invalid restriction key', async () => {
-      return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber, invalidRestrictionKey, false, polkadotOptions),
-        ZodError
-      )
+      const { message } = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
+      expect(message).to.equal('invalid program')
     })
 
     it('fails for invalid restriction value', async () => {
-      return assert.isRejected(
-        createProcess(validProcessName, validVersionNumber, invalidRestrictionValue, false, polkadotOptions),
-        ZodError
-      )
+      const { message } = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
+      expect(message).to.equal('invalid program')
     })
 
     it('fails for invalid json', async () => {
-      return assert.isRejected(
-        createProcess(
+      const err = await createProcess(
           validProcessName,
           validVersionNumber,
           'invalidJson' as unknown as Process.Program,
           false,
           polkadotOptions
-        ),
-        TypeError
-      )
+        )
+      expect(err.toString()).to.equal('TypeError: program.reduce is not a function')
     })
 
     it('fails to create for too low version', async () => {
@@ -252,7 +241,8 @@ describe('Process creation and deletion, listing', () => {
 
     it('fails to create with too long process id', async () => {
       const processName = '0'.repeat(Constants.PROCESS_ID_LENGTH + 1)
-      return assert.isRejected(createProcess(processName, 1, validAllRestrictions, false, polkadotOptions), HexError)
+      const { message } = await createProcess(processName, 1, validAllRestrictions, false, polkadotOptions)
+      expect(message).to.equal('000000000000000000000000000000000 is too long. Max length: 32 bytes')
     })
 
     it('fails to disable process that does not exist', async () => {

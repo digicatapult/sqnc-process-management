@@ -3,7 +3,7 @@ import { Constants } from './constants.js'
 import { createProcessTransaction, disableProcessTransaction, getVersion, getProcess } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { stepValidation } from '../types/restrictions.js'
-import { DisableError } from '../types/error.js'
+import { DisableError, ProgramError, VersionError } from '../types/error.js'
 
 export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
@@ -52,48 +52,44 @@ export const createProcess = async (
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions
 ): Promise<Process.Result> => {
-  const program: Process.Program = validate(userProgram)
-  const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
-  const polkadot: Polkadot.Polkadot = await createNodeApi(options)
-  const currentVersion: number = await getVersion(polkadot, processId)
-  const expectedVersion: number = currentVersion + 1
+  try {
 
-  if (version > expectedVersion || version < currentVersion)
+    const program: Process.Program = validate(userProgram)
+    const processId = utf8ToHex(name, Constants.PROCESS_ID_LENGTH)
+    const polkadot: Polkadot.Polkadot = await createNodeApi(options)
+    const currentVersion: number = await getVersion(polkadot, processId)
+    const expectedVersion: number = currentVersion + 1
+
+    if (version > expectedVersion || version < currentVersion)
+      throw new VersionError(version, expectedVersion, name)
+
+    if (version === currentVersion) {
+      const process = await getProcess(polkadot, processId, version)
+
+      if (program.length !== process.program.length) 
+        throw new ProgramError('existing: programs are different lengths', process) 
+
+      if (!program.every((step, i) => textify(step) === textify(process.program[i])))
+        throw new ProgramError('existing: program steps did not match', process) 
+
+      throw new ProgramError(`Process ${name} is already created.`, process)
+    }
+
+    if (dryRun)
+      return {
+        process: null,
+        message: 'Dry run: transaction has not been created',
+        name,
+        version: expectedVersion,
+        program,
+      }
+
     return {
-      message: `Process version ${version} is invalid. If you are trying to create a new version of process ${name} version should be ${expectedVersion}`
+      message: `Transaction for new process ${name} has been successfully submitted`,
+      process: await createProcessTransaction(polkadot, processId, program, options),
     }
-
-  if (version === currentVersion) {
-    const process = await getProcess(polkadot, processId, version)
-
-    if (program.length !== process.program.length) return {
-      message: 'existing: programs are different lengths',
-      process,
-    }
-
-    if (!program.every((step, i) => textify(step) === textify(process.program[i]))) return {
-      message: 'existing: program steps did not match',
-      process,
-    }
-
-    return {
-      message: `Process ${name} is already created.`,
-      process,
-    }
-  }
-
-  if (dryRun)
-    return {
-      process: null,
-      message: 'Dry run: transaction has not been created',
-      name,
-      version: expectedVersion,
-      program,
-    }
-
-  return {
-    message: `Transaction for new process ${name} has been successfully submitted`,
-    process: await createProcessTransaction(polkadot, processId, program, options),
+  } catch (err: any) {
+    return err
   }
 }
 
