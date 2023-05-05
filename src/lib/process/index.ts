@@ -88,7 +88,7 @@ export const createProcess = async (
       message: `Transaction for new process ${name} has been successfully submitted`,
       process: await createProcessTransaction(polkadot, processId, program, options),
     }
-  } catch (err: any) {
+  } catch (err) {
     return err
   }
 }

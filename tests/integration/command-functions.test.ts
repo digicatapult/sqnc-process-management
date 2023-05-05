@@ -9,10 +9,13 @@ import {
   multiple,
   simple2,
   simple,
+  invalidRestrictionKey,
+  invalidRestrictionValue,
 } from '../fixtures/programs.js'
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
-import { DisableError } from '../../src/lib/types/error.js'
+import { ZodError } from 'zod'
+import { DisableError, ProgramError, VersionError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
@@ -201,18 +204,19 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails for invalid POSTFIX notation', async () => {
-      const { message } = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
-      expect(message).to.equal('invalid program')
+      const err = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
+      expect(err).to.be.instanceOf(ProgramError)
+      expect(err.message).to.equal('invalid program')
     })
 
     it('fails for invalid restriction key', async () => {
-      const { message } = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
-      expect(message).to.equal('invalid program')
+      const err = await createProcess(validProcessName, validVersionNumber, invalidRestrictionKey, false, polkadotOptions)
+      expect(err).to.be.instanceOf(ZodError)
     })
 
     it('fails for invalid restriction value', async () => {
-      const { message } = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
-      expect(message).to.equal('invalid program')
+      const err = await createProcess(validProcessName, validVersionNumber, invalidRestrictionValue, false, polkadotOptions)
+      expect(err).to.be.instanceOf(ZodError)
     })
 
     it('fails for invalid json', async () => {
@@ -224,19 +228,22 @@ describe('Process creation and deletion, listing', () => {
           polkadotOptions
         )
       expect(err.toString()).to.equal('TypeError: program.reduce is not a function')
+      expect(err).to.be.instanceOf(TypeError)
     })
 
     it('fails to create for too low version', async () => {
         // - 2 because -1 would make current = valid
-      const res = await createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions)
+      const err = await createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions)
 
-      expect(res.message).to.equal(`Process version ${validVersionNumber - 2} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
+      expect(err.message).to.equal(`Process version ${validVersionNumber - 2} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
+      expect(err).to.be.instanceOf(VersionError)
     })
 
     it('fails to create for too high version', async () => {
-      const res = await createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions)
+      const err = await createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions)
 
-      expect(res.message).to.equal(`Process version ${validVersionNumber + 1} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
+      expect(err.message).to.equal(`Process version ${validVersionNumber + 1} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
+      expect(err).to.be.instanceOf(VersionError)
     })
 
     it('fails to create with too long process id', async () => {
