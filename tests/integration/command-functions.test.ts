@@ -15,7 +15,7 @@ import {
 import { Constants } from '../../src/lib/process/constants.js'
 import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
-import { HexError, ProgramError, DisableError, VersionError } from '../../src/lib/types/error.js'
+import { HexError, ProgramError, DisableError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
@@ -241,13 +241,13 @@ describe('Process creation and deletion, listing', () => {
         // - 2 because -1 would make current = valid
       const res = await createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions)
 
-      expect(res.message).to.equal('Version: 1 must be: 3')
+      expect(res.message).to.equal(`Version: ${validVersionNumber - 2} must be: ${validVersionNumber}`)
     })
 
     it('fails to create for too high version', async () => {
       const res = await createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions)
 
-      expect(res.message).to.equal('Version: 4 must be: 3')
+      expect(res.message).to.equal(`Version: ${validVersionNumber + 1} must be: ${validVersionNumber}`)
     })
 
     it('fails to create with too long process id', async () => {
