@@ -89,6 +89,8 @@ export const createProcess = async (
       process: await createProcessTransaction(polkadot, processId, program, options),
     }
   } catch (err) {
+    // err is basically from rrors.ts or any exception
+    // process errors will comntain specific messages and/or process
     return err
   }
 }
