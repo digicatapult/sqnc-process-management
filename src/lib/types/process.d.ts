@@ -1,13 +1,19 @@
 declare namespace Process {
+  import { VersionError, ProgramError, DisableError } from './error'
+  import { ZodError } from 'zod'
+
   type Core = {
     name: string
     version: number
     program: Program
   }
 
+  export type ProcessError = ZodError | ProgramError | ProgramError | DisableError
+
   // break down per function
   // TODO rename types as this is causing a little confusion
   interface Result {
+    Error?: ProcessError
     process?: Payload
     name?: string
     version?: number

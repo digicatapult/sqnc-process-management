@@ -17,6 +17,7 @@ import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
 import { DisableError, ProgramError, VersionError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
+import errorExamples from '../fixtures/errors.json' assert { type: 'json' }
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
@@ -212,11 +213,23 @@ describe('Process creation and deletion, listing', () => {
     it('fails for invalid restriction key', async () => {
       const err = await createProcess(validProcessName, validVersionNumber, invalidRestrictionKey, false, polkadotOptions)
       expect(err).to.be.instanceOf(ZodError)
+      expect(err).to.deep.contain({
+        issues: [
+        {
+          code: "unrecognized_keys",
+          keys: [
+            "NotARestriction"
+          ],
+          path: [],
+          message: "Unrecognized key(s) in object: 'NotARestriction'"
+        }
+      ]})
     })
 
     it('fails for invalid restriction value', async () => {
       const err = await createProcess(validProcessName, validVersionNumber, invalidRestrictionValue, false, polkadotOptions)
       expect(err).to.be.instanceOf(ZodError)
+      expect(JSON.parse(err.message)).to.deep.include.members(errorExamples.restriction_value)
     })
 
     it('fails for invalid json', async () => {

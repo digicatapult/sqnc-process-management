@@ -91,6 +91,7 @@ export const createProcess = async (
   } catch (err) {
     // err is basically from rrors.ts or any exception
     // process errors will comntain specific messages and/or process
+    // Promise<Process.Result> is in try {} and any exception is in catch {}
     return err
   }
 }
