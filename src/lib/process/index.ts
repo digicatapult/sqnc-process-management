@@ -10,7 +10,12 @@ export const defaultOptions: Polkadot.Options = {
   API_PORT: 9944,
 }
 
-const textify = (obj: Process.ProgramStep): string => JSON.stringify(obj).toLowerCase()
+const textify = (obj: Process.ProgramStep): string => {
+  return JSON.stringify(obj, (_, val) => {
+    if (typeof val === 'number') return val.toString()
+    return val
+  }).toLowerCase()
+}
 
 // TODO merge api.sts and this together since they are both doing almost the same thing
 // and api is already mapped by polkadot e.g. storagemaps
