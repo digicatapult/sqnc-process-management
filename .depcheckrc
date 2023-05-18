@@ -1,4 +1,0 @@
-ignores: [
-    "@types/chai-as-promised",
-    "chai-as-promised"
-]
