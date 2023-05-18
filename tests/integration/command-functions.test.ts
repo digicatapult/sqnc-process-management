@@ -1,3 +1,4 @@
+import processesExample from '../fixtures/processes.json' assert { type: 'json' }
 import { default as chai, expect, assert } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
@@ -18,8 +19,6 @@ import { ZodError } from 'zod'
 import { DisableError, ProgramError, VersionError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
 import errorExamples from '../fixtures/errors.json' assert { type: 'json' }
-import processesExample from '../fixtures/processes.json' assert { type: 'json' }
-
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
@@ -37,7 +36,7 @@ describe('Process creation and deletion, listing', () => {
           data: multiple('existing-process-test', 1, process2Name, process2BumpedV),
         })
         expect(newProcesses['existing-process-test']).to.deep.contain({
-          message: 'Process existing-process-test is already created.',
+          message: 'Skipping: process existing-process-test is already created.',
           process: {
             id: '0x6578697374696e672d70726f636573732d74657374',
             version: 1,
@@ -60,12 +59,6 @@ describe('Process creation and deletion, listing', () => {
           status: 'Enabled',
         })
       })
-
-      it.only('loads matchmaker\'s processes', async () => {
-        const a = await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
-
-        console.log(a)
-      }).timeout(60000)
 
       it('creates multiple processes', async () => {
         const process1Name = 'process-1'
@@ -91,6 +84,14 @@ describe('Process creation and deletion, listing', () => {
           status: 'Enabled',
         })
       })
+
+
+      it.only('loads multiple processes', async () => {
+        const a = await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
+
+        console.log(a)
+      }).timeout(60000)
+
     })
 
     it('creates then disables a process', async () => {
@@ -182,7 +183,7 @@ describe('Process creation and deletion, listing', () => {
             data: multiple('existing-steps', 1, process2Name, process2BumpedV),
           })
 
-          expect(res['existing-steps'].message).to.equal('Process existing-steps-single is already created.')
+          expect(res['existing-steps'].message).to.equal('existing: program steps did not match')
           expect(res[process2Name].message).to.equal('Transaction for new process should-create-2 has been successfully submitted')
         })
       })
@@ -203,7 +204,7 @@ describe('Process creation and deletion, listing', () => {
         await createProcess('existing-steps-single', 1, simple2, false, polkadotOptions)
         const { message, process } = await createProcess('existing-steps-single', 1, [{ restriction: { None: {} }}], false, polkadotOptions)
 
-        expect(message).to.equal('Process existing-steps is already created.')
+        expect(message).to.equal('existing: program steps did not match')
         expect(process).to.deep.contain({
           id: '0x6578697374696e672d73746570732d73696e676c65',
           version: 1,

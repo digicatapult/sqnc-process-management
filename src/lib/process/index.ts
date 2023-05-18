@@ -11,7 +11,9 @@ export const defaultOptions: Polkadot.Options = {
 }
 
 const textify = (obj: Process.ProgramStep): string => {
-  return JSON.stringify(obj, (_, val) => {
+  return JSON.stringify(obj, (key, val) => {
+    if (val === null && key == 'none') return {}
+    if (typeof val === 'string' && val.includes('0x')) return decodeURIComponent(val.slice(2).replace(/\s+/g, '').replace(/[0-9a-f]{2}/g, '%$&'));
     if (typeof val === 'number') return val.toString()
     return val
   }).toLowerCase()
@@ -77,7 +79,10 @@ export const createProcess = async (
       if (!program.every((step, i) => textify(step) === textify(process.program[i])))
         throw new ProgramError('existing: program steps did not match', process) 
 
-      throw new ProgramError(`Process ${name} is already created.`, process)
+      return {
+        message: `Skipping: process ${name} is already created.`,
+        process,
+      }
     }
 
     if (dryRun)
