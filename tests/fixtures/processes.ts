@@ -1,4 +1,4 @@
-[
+export default [
     {
       "name": "test-program-create",
       "version": 1,

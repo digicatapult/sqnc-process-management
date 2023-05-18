@@ -1,4 +1,4 @@
-{
+export default {
     "restriction_value": [
         {
             "code": "invalid_type",

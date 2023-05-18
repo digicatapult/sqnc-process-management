@@ -12,14 +12,15 @@ export const defaultOptions: Polkadot.Options = {
 
 const textify = (obj: Process.ProgramStep): string => {
   return JSON.stringify(obj, (key, val) => {
+    // FYI: checking for none as from getAll/getProcess/etc returns 
+    // { Restriction: "None" } while restriction to be uploaded is ->
+    // { restriction: { None: {} } }
     if (val === 'None' && key === 'Restriction') return { None: {} } 
     if (typeof val === 'number') return val.toString()
     return val
   }).toLowerCase()
 }
 
-// TODO merge api.sts and this together since they are both doing almost the same thing
-// and api is already mapped by polkadot e.g. storagemaps
 const validate = (program: Process.Program = []): Process.Program => {
   return program.reduce((out: Process.Program, step: Process.ProgramStep) => {
     const validated: Process.ProgramStep = stepValidation.parse(step?.restriction || step)
@@ -98,7 +99,7 @@ export const createProcess = async (
       process: await createProcessTransaction(polkadot, processId, program, options),
     }
   } catch (err) {
-    // err is basically from rrors.ts or any exception
+    // err is basically from errors.ts or any exception
     // process errors will comntain specific messages and/or process
     // Promise<Process.Result> is in try {} and any exception is in catch {}
     return err

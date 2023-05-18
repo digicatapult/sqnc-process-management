@@ -1,4 +1,3 @@
-import processesExample from '../fixtures/processes.json' assert { type: 'json' }
 import { default as chai, expect, assert } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
@@ -18,10 +17,11 @@ import { getVersionHelper } from '../helpers/substrateHelper.js'
 import { ZodError } from 'zod'
 import { DisableError, ProgramError, VersionError } from '../../src/lib/types/error.js'
 import { getAll } from '../../src/lib/process/api.js'
-import errorExamples from '../fixtures/errors.json' assert { type: 'json' }
+/* fixtures */
+import processesExample from '../fixtures/processes.js'
+import errorExamples from '../fixtures/errors.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
-
 
 describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
@@ -30,7 +30,6 @@ describe('Process creation and deletion, listing', () => {
         await createProcess('existing-process-test', 1, simple2, false, polkadotOptions)
         const process2Name = 'process-to-be-created'
         const process2BumpedV = (await getVersionHelper(process2Name)) + 1
-        // TODO multiple to take an array?, better assertation
         const newProcesses = await loadProcesses({
           options: polkadotOptions,
           data: multiple('existing-process-test', 1, process2Name, process2BumpedV),
