@@ -42,9 +42,9 @@ describe('Process creation and deletion, listing', () => {
             version: 1,
             status: 'Enabled',
             program: [{
-              restriction: {
-                senderHasInputRole: {
-                  index: 0,
+              Restriction: {
+                SenderHasInputRole: {
+                  index: '0',
                   roleKey: 'Supplier',
                 },
               },
@@ -85,13 +85,14 @@ describe('Process creation and deletion, listing', () => {
         })
       })
 
+      it('loads and skips multiple processes using number values', async () => {
+        await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
+        const res = await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
 
-      it.only('loads multiple processes', async () => {
-        const a = await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
-
-        console.log(a)
+        expect(res['test-program-create'].message).to.equal('Skipping: process test-program-create is already created.')
+        expect(res['test-program-propose'].message).to.equal('Skipping: process test-program-propose is already created.')
+        expect(res['test-program-strings-and-numbers'].message).to.equal('Skipping: process test-program-strings-and-numbers is already created.')
       }).timeout(60000)
-
     })
 
     it('creates then disables a process', async () => {
