@@ -1,5 +1,16 @@
 export const simple: Process.Program = [{ restriction: { None: {} } }]
 
+export const simple2 = [
+  {
+    restriction: {
+      SenderHasInputRole: {
+        index: 0,
+        roleKey: 'Supplier',
+      },
+    },
+  },
+]
+
 export const invalidPOSIX: Process.Program = [
   { restriction: { None: {} } },
   {
@@ -173,6 +184,7 @@ export const invalidRestrictionValue: Process.Program = [
   },
 ]
 
+// WHY not to use simple/etc? why not name1 name2?
 export const multiple = (
   process1Name: string,
   process1BumpedV: number,
