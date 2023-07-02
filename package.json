@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "1.7.25",
+  "version": "1.7.26",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -58,7 +58,7 @@
     "chalk": "^5.2.0",
     "commander": "^10.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.5",
+    "typescript": "^5.1.6",
     "zod": "^3.21.4"
   }
 }
