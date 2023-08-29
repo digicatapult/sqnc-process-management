@@ -119,13 +119,11 @@ jobs:
       is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
     steps:
       - uses: actions/checkout@v3
-      - name: Check Build Version
+      - name: Check version
         id: get_version
         uses: digicatapult/check-version@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Skipping release as current version has already been published"
   publish-gh:
     name: 'Publish Github package'
     needs:
