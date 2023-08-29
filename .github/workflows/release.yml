@@ -109,7 +109,13 @@ jobs:
         run: npm run test:unit
       - name: Run integration tests
         run: npm run test
-
+  check-version:
+    - uses: actions/checkout@v3
+      - name: Check version
+        id: get_version
+        uses: digicatapult/check-version@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Check version
