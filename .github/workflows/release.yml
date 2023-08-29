@@ -52,6 +52,11 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
+      - name: Check Version
+        id: get_version
+        uses: digicatapult/check-version@1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Packages
         run: npm ci
       - name: Lint
