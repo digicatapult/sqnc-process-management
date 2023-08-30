@@ -47,7 +47,7 @@ program
   .option('--raw', 'print processes with hex values and extra keys such as "createdAtHash"')
   .option('--active', 'returns only active process flows')
   .option('--disabled', 'returns only disabled process flows')
-  .option('--print', 'print debugging info')
+  .option('-v', '--verbose', 'Returns all information about the transation')
   .action(async (options: Process.CLIOptions) => {
     if (options.print)
       log(`
@@ -96,7 +96,7 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('--print', 'print debugging info')
+  .option('-v', '--verbose', 'Returns all information defult - false')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<json>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: Process.CLIOptions) => {
@@ -106,7 +106,7 @@ program
       options: ${b(JSON.stringify(options))}
       program: ${b(data)}
     `)
-    const { dryRun } = options
+    const { dryRun, verbose } = options
     try {
       const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
       dir(res, { depth: null })
@@ -123,7 +123,7 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('--print', 'print debugging info')
+  .option('-v', '--verbose', 'Returns all information')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')
