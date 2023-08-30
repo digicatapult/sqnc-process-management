@@ -123,7 +123,7 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('-v', '--verbose', 'Returns all information')
+  .option('-v', '--verbose', 'Returns all information, default false')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')

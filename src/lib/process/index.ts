@@ -94,7 +94,6 @@ export const createProcess = async (
       message: 'Dry run: transaction has not been created',
       name,
       version: expectedVersion,
-      program,
     }
     
 
