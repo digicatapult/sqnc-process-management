@@ -79,6 +79,7 @@ jobs:
         run: npm ci
       - name: Dependency Check
         run: npm run depcheck
+        
   tests:
     name: Run tests
     runs-on: ubuntu-latest
