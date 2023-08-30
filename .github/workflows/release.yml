@@ -111,7 +111,7 @@ jobs:
       - name: Run integration tests
         run: npm run test
    
-    check-version:
+  check-version:
     name: Check version
     - uses: actions/checkout@v3
     - id: get_version
