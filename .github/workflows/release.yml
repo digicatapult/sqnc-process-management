@@ -109,13 +109,15 @@ jobs:
         run: npm run test:unit
       - name: Run integration tests
         run: npm run test
-    steps:
-     - name: check-version
-        uses: actions/checkout@v3
-        id: get_version
-        uses: digicatapult/check-version@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+   
+    check-version:
+    name: Check version
+    - uses: actions/checkout@v3
+    - id: get_version
+    - uses: digicatapult/check-version@v1
+    - with:
+    - token: ${{ secrets.GITHUB_TOKEN }}
+
   publish-gh:
     name: 'Publish Github package'
     needs:
