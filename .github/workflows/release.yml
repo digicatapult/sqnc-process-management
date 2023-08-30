@@ -79,7 +79,6 @@ jobs:
         run: npm ci
       - name: Dependency Check
         run: npm run depcheck
-        
   tests:
     name: Run tests
     runs-on: ubuntu-latest
@@ -110,15 +109,24 @@ jobs:
         run: npm run test:unit
       - name: Run integration tests
         run: npm run test
-   
   check-version:
-    name: Check version
-    uses: actions/checkout@v3
-      - id: get_version
-      - uses: digicatapult/check-version@v1
-      - with:
-        - token: ${{ secrets.GITHUB_TOKEN }}
-
+    name: 'Check version'
+    runs-on: ubuntu-latest
+    outputs:
+      is_new_version: ${{ steps.get_version.outputs.IS_NEW_VERSION }}
+      version: ${{ steps.get_version.outputs.VERSION }}
+      build_date: ${{ steps.get_version.outputs.BUILD_DATE }}
+      is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: git fetch --depth=1 --tags origin
+      - name: Install yq
+        run: sudo snap install yq
+      - Check version
+        id: get_version
+        uses: digicatapult/check-version@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
   publish-gh:
     name: 'Publish Github package'
     needs:
@@ -173,7 +181,7 @@ jobs:
 
   publish:
     name: 'Publish release'
-    needs: [preconditions, lint, dependency-check, tests]
+    needs: [preconditions, lint, dependency-check, tests, check-version]
     runs-on: ubuntu-latest
     if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
 
