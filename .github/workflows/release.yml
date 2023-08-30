@@ -52,11 +52,6 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
-      - name: Check Version
-        id: get_version
-        uses: digicatapult/check-version@1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Packages
         run: npm ci
       - name: Lint
@@ -114,16 +109,9 @@ jobs:
         run: npm run test:unit
       - name: Run integration tests
         run: npm run test
-  check-version:
-    - uses: actions/checkout@v3
-      - name: Check version
-        id: get_version
-        uses: digicatapult/check-version@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Check version
+     - name: check-version
+        uses: actions/checkout@v3
         id: get_version
         uses: digicatapult/check-version@v1
         with:
@@ -182,7 +170,7 @@ jobs:
 
   publish:
     name: 'Publish release'
-    needs: [preconditions, lint, dependency-check, tests, check-version]
+    needs: [preconditions, lint, dependency-check, tests]
     runs-on: ubuntu-latest
     if: ${{ needs.check-version.outputs.is_new_version == 'true' }}
 
