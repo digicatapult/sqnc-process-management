@@ -119,7 +119,7 @@ jobs:
       is_prerelease: ${{ steps.get_version.outputs.IS_PRERELEASE }}
     steps:
       - uses: actions/checkout@v3
-      - Check version
+      - name: Check version
         id: get_version
         uses: digicatapult/check-version@v1
         with:
