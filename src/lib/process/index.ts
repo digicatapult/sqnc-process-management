@@ -88,6 +88,15 @@ export const createProcess = async (
       }
     }
 
+    if(!verbose)
+    return {
+      process: null,
+      message: 'Dry run: transaction has not been created',
+      name,
+      version: expectedVersion,
+      program
+    }
+
     if(verbose)
     return {
       process: null,
