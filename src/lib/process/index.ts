@@ -91,7 +91,7 @@ export const createProcess = async (
     if(!verbose)
     return {
       process: null,
-      message: 'Dry run: transaction has not been created',
+      message: 'Verbose version - Dry run: transaction has not been created',
       name,
       version: expectedVersion,
       program
