@@ -48,7 +48,7 @@ export const loadProcesses = async ({
   // TODO more elegant promise.series way.
   for (let i = 0; i < processes.length; i++) {
     const { name, version, program } = processes[i]
-    res[name] = await createProcess(name, version, program, dryRun, verbose, options)
+    res[name] = await createProcess(name, version, program, dryRun, options)
   }
 
   return res
@@ -59,7 +59,6 @@ export const createProcess = async (
   version: number,
   userProgram: Process.Program,
   dryRun: boolean = false,
-  verbose:boolean = false,
   options: Polkadot.Options = defaultOptions
 ): Promise<Process.Result> => {
   try {
@@ -88,16 +87,10 @@ export const createProcess = async (
       }
     }
 
-    if (verbose) return {
-      message: `Transaction for new process ${name} has been successfully submitted`,
-      process: await createProcessTransaction(polkadot, processId, program, options),
-    }
-
-
-    if (!verbose) return {
-      message: `Transaction for new process ${name} has been successfully submitted`,
-      process: await createProcessTransaction(polkadot, processId, null, options),
-    }
+    // if (verbose) return {
+    //   message: `Transaction for new process ${name} has been successfully submitted`,
+    //   process: await createProcessTransaction(polkadot, processId, program, options),
+    // }
     
 
     if (dryRun)

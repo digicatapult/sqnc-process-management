@@ -42,13 +42,14 @@ program
 program
   .command('list')
   .description('A command for listing all active process flows')
+  .option('--verbose', 'Returns all information about the transation, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('--raw', 'print processes with hex values and extra keys such as "createdAtHash"')
   .option('--active', 'returns only active process flows')
   .option('--disabled', 'returns only disabled process flows')
-  .option('-v', '--verbose', 'Returns all information about the transation, default - false')
   .action(async (options: Process.CLIOptions) => {
+    
     if (options.print)
       log(`
       retrieving all process flows from a chain...
@@ -57,7 +58,6 @@ program
     try {
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
       const { raw, active, disabled } = options
-
       let processes: Process.RawPayload[]
       if (active) {
         processes = res.filter(({ status }) => status === 'Enabled')
@@ -69,14 +69,14 @@ program
 
       if (raw) {
         dir(processes, { depth: null })
-      } else {
+      } else{
         dir(
           processes.map((p) => {
             return {
               id: p.id,
               version: p.version,
               status: p.status,
-              program: p.program,
+              ...options.verbose ? { program: p.program } : { }
             }
           }),
           { depth: null }
@@ -96,7 +96,6 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('-v', '--verbose', 'Returns all information defult - false')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<json>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: Process.CLIOptions) => {
@@ -123,7 +122,6 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('-v', '--verbose', 'Returns all information, default - false')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')

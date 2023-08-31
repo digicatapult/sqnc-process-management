@@ -39,7 +39,7 @@ declare namespace Process {
     port: string
     user: string
     host: string
-    verbose: boolean
+    verbose?: boolean
   }
   export type CLIParsed = Core[]
   export type Program = ProgramStep[]
