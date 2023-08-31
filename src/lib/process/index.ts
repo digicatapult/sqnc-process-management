@@ -88,21 +88,15 @@ export const createProcess = async (
       }
     }
 
-    if(!verbose)
-    return {
-      process: null,
-      message: 'Verbose version - Dry run: transaction has not been created',
-      name,
-      version: expectedVersion,
-      program
+    if (verbose) return {
+      message: `Transaction for new process ${name} has been successfully submitted`,
+      process: await createProcessTransaction(polkadot, processId, program, options),
     }
 
-    if(verbose)
-    return {
-      process: null,
-      message: 'Dry run: transaction has not been created',
-      name,
-      version: expectedVersion,
+
+    if (!verbose) return {
+      message: `Transaction for new process ${name} has been successfully submitted`,
+      process: await createProcessTransaction(polkadot, processId, program, null),
     }
     
 

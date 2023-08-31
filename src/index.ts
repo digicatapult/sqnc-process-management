@@ -106,7 +106,7 @@ program
       options: ${b(JSON.stringify(options))}
       program: ${b(data)}
     `)
-    const { dryRun, verbose } = options
+    const { dryRun } = options
     try {
       const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
       dir(res, { depth: null })
