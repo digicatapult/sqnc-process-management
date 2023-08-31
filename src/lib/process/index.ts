@@ -96,7 +96,7 @@ export const createProcess = async (
 
     if (!verbose) return {
       message: `Transaction for new process ${name} has been successfully submitted`,
-      process: await createProcessTransaction(polkadot, processId, program, null),
+      process: await createProcessTransaction(polkadot, processId, null, options),
     }
     
 
