@@ -86,11 +86,6 @@ export const createProcess = async (
         process,
       }
     }
-
-    // if (verbose) return {
-    //   message: `Transaction for new process ${name} has been successfully submitted`,
-    //   process: await createProcessTransaction(polkadot, processId, program, options),
-    // }
     
 
     if (dryRun)
