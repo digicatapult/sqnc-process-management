@@ -109,6 +109,7 @@ const fixedOutputMetadataValueType = z.object({
   metadataValueType: metadataValueType,
 })
 
+// leaving as it's being used in other file.
 export const stepValidation = z
   .object({
     op: binaryOperator.optional(),
@@ -130,9 +131,25 @@ export const stepValidation = z
   })
   .strict()
 
-const programValidation = z.array(
-  z.object({ op: binaryOperator }).optional(),
-  z.object({ restriction: stepValidation }).optional()
-)
+const programValidationV2 = z.union([
+  z.object({
+    None: none,
+    SenderHasInputRole: senderHasInputRole.optional(),
+    SenderHasOutputRole: senderHasOutputRole.optional(),
+    OutputHasRole: outputHasRole.optional(),
+    OutputHasMetadata: outputHasMetadata.optional(),
+    InputHasRole: inputHasRole.optional(),
+    InputHasMetadata: inputHasMetadata.optional(),
+    MatchInputOutputRole: matchInputOutputRole.optional(),
+    MatchInputOutputMetadataValue: matchInputOutputMetadataValue.optional(),
+    MatchInputIdOutputMetadataValue: matchInputIdOutputMetadataValue.optional(),
+    FixedNumberOfInputs: fixedNumberOfInputs.optional(),
+    FixedNumberOfOutputs: fixedNumberOfOutputs.optional(),
+    FixedInputMetadataValue: fixedInputMetadataValue.optional(),
+    FixedOutputMetadataValue: fixedOutputMetadataValue.optional(),
+    FixedOutputMetadataValueType: fixedOutputMetadataValueType.optional(),
+  }),
+  z.object({ op: binaryOperator }),
+])
 
-export type ChainRestrictions = z.infer<typeof programValidation>
+export type ChainRestrictions = z.infer<typeof programValidationV2>
