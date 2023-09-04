@@ -54,7 +54,7 @@ export const loadProcesses = async ({
   return res
 }
 
-export const listProcess = async (
+export const listTransforming = async (
   res: Process.RawPayload[], 
   processes: Process.RawPayload[], 
   options: Process.CLIOptions) => {
@@ -67,7 +67,7 @@ export const listProcess = async (
   }
 
   if (options.raw) {
-    return [processes, { depth: null }]
+    return processes
   } else{
     return(
       processes.map((p) => {
@@ -77,8 +77,7 @@ export const listProcess = async (
           status: p.status,
           ...options.verbose ? { program: p.program } : { }
         }
-      }),
-      { depth: null }
+      })
     )
   }
 }
