@@ -129,7 +129,7 @@ export const createProcess = async (
 
     return {
       message: `Transaction for new process ${name} has been successfully submitted`,
-      process: await createProcessTransaction(polkadot, processId, program, options),
+      process: await createProcessTransaction(polkadot, processId, program, options, verbose),
     }
   } catch (err) {
     // err is basically from errors.ts or any exception

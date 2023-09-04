@@ -19,7 +19,8 @@ export const createProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
   processId: string,
   program: Process.Program,
-  options: Polkadot.Options
+  options: Polkadot.Options,
+  verbose?: boolean
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
   
@@ -40,7 +41,7 @@ export const createProcessTransaction = async (
             id: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Enabled',
-            program,
+            ...verbose ? program : {},
           }
 
           unsub()
