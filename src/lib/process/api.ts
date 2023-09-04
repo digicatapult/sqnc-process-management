@@ -41,7 +41,12 @@ export const createProcessTransaction = async (
             id: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Enabled',
-            ...verbose ? program : {},
+            program,
+          }
+
+          if(verbose == false)
+          {
+            delete newProcess.program
           }
 
           unsub()
