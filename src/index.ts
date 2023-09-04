@@ -84,9 +84,9 @@ program
       options: ${b(JSON.stringify(options))}
       program: ${b(data)}
     `)
-    const { dryRun } = options
+    const { dryRun, verbose } = options
     try {
-      const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
+      const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options), verbose })
       dir(res, { depth: null })
       process.exit(0)
     } catch (err) {

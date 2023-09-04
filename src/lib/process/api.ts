@@ -125,7 +125,8 @@ export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string)
 export const getProcess = async (
   polkadot: Polkadot.Polkadot,
   processId: string,
-  version: number
+  version: number,
+  verbose: boolean = false
 ): Promise<Process.Payload> => {
   const result = await polkadot.api.query.processValidation.processModel(processId, version)
   const data = Object(result.toHuman())

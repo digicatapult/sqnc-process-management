@@ -48,7 +48,7 @@ export const loadProcesses = async ({
   // TODO more elegant promise.series way.
   for (let i = 0; i < processes.length; i++) {
     const { name, version, program } = processes[i]
-    res[name] = await createProcess(name, version, program, dryRun, options)
+    res[name] = await createProcess(name, version, program, dryRun, options, verbose)
   }
 
   return res
@@ -58,7 +58,6 @@ export const listProcess = async (
   res: Process.RawPayload[], 
   processes: Process.RawPayload[], 
   options: Process.CLIOptions) => {
-  const { dir } = console
   if (options.active) {
     processes = res.filter(({ status }) => status === 'Enabled')
   } else if (options.disabled) {
@@ -68,9 +67,9 @@ export const listProcess = async (
   }
 
   if (options.raw) {
-    dir(processes, { depth: null })
+    return [processes, { depth: null }]
   } else{
-    dir(
+    return(
       processes.map((p) => {
         return {
           id: p.id,
@@ -89,7 +88,8 @@ export const createProcess = async (
   version: number,
   userProgram: Process.Program,
   dryRun: boolean = false,
-  options: Polkadot.Options = defaultOptions
+  options: Polkadot.Options = defaultOptions,
+  verbose: boolean = false,
 ): Promise<Process.Result> => {
   try {
 
