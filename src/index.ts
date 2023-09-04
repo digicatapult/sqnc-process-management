@@ -3,7 +3,7 @@
 import chalk from 'chalk'
 import { Command } from 'commander'
 
-import { loadProcesses, disableProcess, listProcess } from './lib/process/index.js'
+import { loadProcesses, disableProcess, listTransforming } from './lib/process/index.js'
 import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
 
@@ -59,7 +59,7 @@ program
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
       let processes: Process.RawPayload[]
       
-      listProcess(res, processes, options)
+      listTransforming(res, processes, options)
 
       process.exit(0)
     } catch (err) {
