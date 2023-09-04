@@ -6,6 +6,8 @@ import { Command } from 'commander'
 import { loadProcesses, disableProcess } from './lib/process/index.js'
 import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
+import { listHelper } from './lib/utils/cliHelper.js'
+
 
 const { log, dir } = console
 const program = new Command()
@@ -57,31 +59,9 @@ program
     `)
     try {
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
-      const { raw, active, disabled } = options
       let processes: Process.RawPayload[]
-      if (active) {
-        processes = res.filter(({ status }) => status === 'Enabled')
-      } else if (disabled) {
-        processes = res.filter(({ status }) => status === 'Disabled')
-      } else {
-        processes = res
-      }
-
-      if (raw) {
-        dir(processes, { depth: null })
-      } else{
-        dir(
-          processes.map((p) => {
-            return {
-              id: p.id,
-              version: p.version,
-              status: p.status,
-              ...options.verbose ? { program: p.program } : { }
-            }
-          }),
-          { depth: null }
-        )
-      }
+      
+      listHelper(res, processes, options)
 
       process.exit(0)
     } catch (err) {
