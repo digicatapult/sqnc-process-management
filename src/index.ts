@@ -3,11 +3,9 @@
 import chalk from 'chalk'
 import { Command } from 'commander'
 
-import { loadProcesses, disableProcess } from './lib/process/index.js'
+import { loadProcesses, disableProcess, listProcess } from './lib/process/index.js'
 import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
-import { listHelper } from './lib/utils/cliHelper.js'
-
 
 const { log, dir } = console
 const program = new Command()
@@ -61,7 +59,7 @@ program
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
       let processes: Process.RawPayload[]
       
-      listHelper(res, processes, options)
+      listProcess(res, processes, options)
 
       process.exit(0)
     } catch (err) {
@@ -74,6 +72,7 @@ program
   .command('create')
   .description('A command for persisting process flows onto the chain')
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
+  .option('--verbose', 'Returns all information about the transation, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
