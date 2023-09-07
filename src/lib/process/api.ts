@@ -51,7 +51,7 @@ export const createProcessTransaction = async (
           }
 
           unsub()
-          resolve(!verbose ? newProcess : nonVerbose)
+          resolve(verbose ? newProcess : nonVerbose)
         }
       })
       .then((res: Function) => {
