@@ -44,13 +44,14 @@ export const createProcessTransaction = async (
             program,
           }
 
-          if(verbose == false)
-          {
-            delete newProcess.program
+          const nonVerbose: Process.Payload = {
+            id: data[0].toHuman(),
+            version: data[1].toNumber(),
+            status: 'Enabled',
           }
 
           unsub()
-          resolve(newProcess)
+          resolve(!verbose ? newProcess : nonVerbose)
         }
       })
       .then((res: Function) => {
