@@ -98,12 +98,12 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(processName, bumpedVersion, simple, false, polkadotOptions)
+      const newProcess = await createProcess(processName, bumpedVersion, simple, false, polkadotOptions, true)
       expect(newProcess.process).to.deep.equal({
         id: processName,
         version: bumpedVersion,
         status: 'Enabled',
-        program: simple,
+        program: simple,      
       })
 
       const disabledProcess = await disableProcess(processName, bumpedVersion, false, polkadotOptions)
