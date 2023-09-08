@@ -2,11 +2,6 @@ import { default as chai, expect, assert } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
-// TODO subtask of L3-138
-// - [ ] - test for list process including verbose flag
-// - [ ] - test for disable process including verbose flag
-// - [ ] - test for create process including verbose flag e.g. --verbose
-
 import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
 import {
   validAllRestrictions,
@@ -117,30 +112,6 @@ describe('Process creation and deletion, listing', () => {
         version: bumpedVersion,
         status: 'Disabled',
       })
-
-      /*
-      it('creates then disables a process and returns a program when with --verbose flag', () => {
-        const processName = '0'
-        const currentVersion = await getVersionHelper(processName)
-        const bumpedVersion = currentVersion + 1
-        const newProcess = await createProcess(processName, bumpedVersion, simple, false, polkadotOptions, true)
-        expect(newProcess.process).to.deep.equal({
-          id: processName,
-          version: bumpedVersion,
-          status: 'Enabled',
-          program: simple,      
-        })
-
-        const disabledProcess = await disableProcess(processName, bumpedVersion, false, polkadotOptions, true) // last arg is a verbose boolean
-        expect(disabledProcess.message).to.equal('Process has been disabled')
-        expect(disabledProcess.process).to.deep.equal({
-          id: processName,
-          version: bumpedVersion,
-          status: 'Disabled',
-          program: simple,
-        })
-      })
-      */
     })
 
     it('does not create process if dry run', async () => {
@@ -201,7 +172,6 @@ describe('Process creation and deletion, listing', () => {
 
           expect(res['existing-length'].message).to.equal('existing: programs are different lengths')
           expect(res[process2Name].message).to.equal('Transaction for new process should-create-1 has been successfully submitted')
-
         })
 
         it('also fails if number of steps matches but POSTFIX does not', async () => {
