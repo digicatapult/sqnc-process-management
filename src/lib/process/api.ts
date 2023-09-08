@@ -19,7 +19,8 @@ export const createProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
   processId: string,
   program: Process.Program,
-  options: Polkadot.Options
+  options: Polkadot.Options,
+  verbose?: boolean
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
   
@@ -43,8 +44,14 @@ export const createProcessTransaction = async (
             program,
           }
 
+          const nonVerbose: Process.Payload = {
+            id: data[0].toHuman(),
+            version: data[1].toNumber(),
+            status: 'Enabled',
+          }
+
           unsub()
-          resolve(newProcess)
+          resolve(verbose ? newProcess : nonVerbose)
         }
       })
       .then((res: Function) => {
@@ -125,7 +132,8 @@ export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string)
 export const getProcess = async (
   polkadot: Polkadot.Polkadot,
   processId: string,
-  version: number
+  version: number,
+  verbose: boolean = false
 ): Promise<Process.Payload> => {
   const result = await polkadot.api.query.processValidation.processModel(processId, version)
   const data = Object(result.toHuman())

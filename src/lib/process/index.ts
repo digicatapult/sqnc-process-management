@@ -36,20 +36,50 @@ export const loadProcesses = async ({
   data,
   options,
   dryRun,
+  verbose,
 }: {
   data: string
   options?: Polkadot.Options
   dryRun?: boolean
+  verbose?: boolean
 }): Promise<Process.Response> => {
   const res: Process.Response = {}
   const processes: Process.CLIParsed = JSON.parse(data)
   // TODO more elegant promise.series way.
   for (let i = 0; i < processes.length; i++) {
     const { name, version, program } = processes[i]
-    res[name] = await createProcess(name, version, program, dryRun, options)
+    res[name] = await createProcess(name, version, program, dryRun, options, verbose)
   }
 
   return res
+}
+
+export const listTransforming = async (
+  res: Process.RawPayload[], 
+  processes: Process.RawPayload[], 
+  options: Process.CLIOptions) => {
+  if (options.active) {
+    processes = res.filter(({ status }) => status === 'Enabled')
+  } else if (options.disabled) {
+    processes = res.filter(({ status }) => status === 'Disabled')
+  } else {
+    processes = res
+  }
+
+  if (options.raw) {
+    return processes
+  } else{
+    return(
+      processes.map((p) => {
+        return {
+          id: p.id,
+          version: p.version,
+          status: p.status,
+          ...options.verbose ? { program: p.program } : { }
+        }
+      })
+    )
+  }
 }
 
 export const createProcess = async (
@@ -57,7 +87,8 @@ export const createProcess = async (
   version: number,
   userProgram: Process.Program,
   dryRun: boolean = false,
-  options: Polkadot.Options = defaultOptions
+  options: Polkadot.Options = defaultOptions,
+  verbose: boolean = false,
 ): Promise<Process.Result> => {
   try {
 
@@ -84,6 +115,7 @@ export const createProcess = async (
         process,
       }
     }
+    
 
     if (dryRun)
       return {
@@ -96,7 +128,7 @@ export const createProcess = async (
 
     return {
       message: `Transaction for new process ${name} has been successfully submitted`,
-      process: await createProcessTransaction(polkadot, processId, program, options),
+      process: await createProcessTransaction(polkadot, processId, program, options, verbose),
     }
   } catch (err) {
     // err is basically from errors.ts or any exception
@@ -104,6 +136,8 @@ export const createProcess = async (
     // Promise<Process.Result> is in try {} and any exception is in catch {}
     return err
   }
+
+  
 }
 
 export const disableProcess = async (

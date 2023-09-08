@@ -3,7 +3,7 @@
 import chalk from 'chalk'
 import { Command } from 'commander'
 
-import { loadProcesses, disableProcess } from './lib/process/index.js'
+import { loadProcesses, disableProcess, listTransforming } from './lib/process/index.js'
 import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
 
@@ -42,13 +42,14 @@ program
 program
   .command('list')
   .description('A command for listing all active process flows')
+  .option('--verbose', 'Returns all information about the transation, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('--raw', 'print processes with hex values and extra keys such as "createdAtHash"')
   .option('--active', 'returns only active process flows')
   .option('--disabled', 'returns only disabled process flows')
-  .option('--print', 'print debugging info')
   .action(async (options: Process.CLIOptions) => {
+    
     if (options.print)
       log(`
       retrieving all process flows from a chain...
@@ -56,32 +57,9 @@ program
     `)
     try {
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
-      const { raw, active, disabled } = options
-
       let processes: Process.RawPayload[]
-      if (active) {
-        processes = res.filter(({ status }) => status === 'Enabled')
-      } else if (disabled) {
-        processes = res.filter(({ status }) => status === 'Disabled')
-      } else {
-        processes = res
-      }
-
-      if (raw) {
-        dir(processes, { depth: null })
-      } else {
-        dir(
-          processes.map((p) => {
-            return {
-              id: p.id,
-              version: p.version,
-              status: p.status,
-              program: p.program,
-            }
-          }),
-          { depth: null }
-        )
-      }
+      
+      listTransforming(res, processes, options)
 
       process.exit(0)
     } catch (err) {
@@ -94,9 +72,9 @@ program
   .command('create')
   .description('A command for persisting process flows onto the chain')
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
+  .option('--verbose', 'Returns all information about the transation, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('--print', 'print debugging info')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<json>', `takes JSON as string example: '${example}'`)
   .action(async (data: string, options: Process.CLIOptions) => {
@@ -106,9 +84,9 @@ program
       options: ${b(JSON.stringify(options))}
       program: ${b(data)}
     `)
-    const { dryRun } = options
+    const { dryRun, verbose } = options
     try {
-      const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options) })
+      const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options), verbose })
       dir(res, { depth: null })
       process.exit(0)
     } catch (err) {
@@ -123,7 +101,6 @@ program
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
-  .option('--print', 'print debugging info')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
   .argument('<id>', 'a valid process id that you would like to disable')
   .argument('<version>', 'a version number of a process')

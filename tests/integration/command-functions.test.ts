@@ -102,8 +102,7 @@ describe('Process creation and deletion, listing', () => {
       expect(newProcess.process).to.deep.equal({
         id: processName,
         version: bumpedVersion,
-        status: 'Enabled',
-        program: simple,
+        status: 'Enabled',      
       })
 
       const disabledProcess = await disableProcess(processName, bumpedVersion, false, polkadotOptions)
@@ -138,7 +137,8 @@ describe('Process creation and deletion, listing', () => {
       })
     })
 
-    it('returns a list of raw processes', async () => {
+    // it('returns a list of raw processes when with --verbose flag', () => {
+    it('returns a list of processes', async () => {
       const res = await getAll(polkadotOptions)
 
       expect(res).to.be.an('array')
@@ -146,6 +146,7 @@ describe('Process creation and deletion, listing', () => {
         .to.be.an('object')
         .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'version'])
     })
+
   })
 
   describe('Sad path', () => {
@@ -171,7 +172,6 @@ describe('Process creation and deletion, listing', () => {
 
           expect(res['existing-length'].message).to.equal('existing: programs are different lengths')
           expect(res[process2Name].message).to.equal('Transaction for new process should-create-1 has been successfully submitted')
-
         })
 
         it('also fails if number of steps matches but POSTFIX does not', async () => {
