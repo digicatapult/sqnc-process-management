@@ -57,7 +57,6 @@ program
     `)
     try {
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
-      console.log(res)
       let processes: Process.RawPayload[]
       
       listTransforming(res, processes, options)
