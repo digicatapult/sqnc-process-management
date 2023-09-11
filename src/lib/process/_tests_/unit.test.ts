@@ -31,8 +31,6 @@ describe('listTranforming', () => {
     
     const res = await listTransforming([enriched], processes, { ...defaultPolkadot, verbose: false })
 
-    console.log(res)
-
     expect(res[0]).to.deep.contain({
       id: '123',
       status: 'Enabled',
@@ -51,7 +49,7 @@ describe('listTranforming', () => {
     }
     
     const res = await listTransforming([enriched], processes, { ...defaultPolkadot, verbose: true})
-    console.log(res)
+
     expect(res[0]).to.deep.contain({
       id: '123',
       status: 'Disabled',
@@ -70,7 +68,7 @@ describe('listTranforming', () => {
     }
     
     const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: true})
-    console.log(res)
+
     expect(res[0]).to.deep.contain({
       id: '123',
       status: 'Enabled',
@@ -89,7 +87,7 @@ describe('listTranforming', () => {
     }
 
     const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: true})
-    console.log(res)
+
     expect(res[0]).to.equal(undefined)
   })
 
@@ -104,7 +102,7 @@ describe('listTranforming', () => {
     }
     
     const res = await listTransforming([enriched], processes, { ...defaultPolkadot})
-    console.log(res)
+
     expect(res[0]).to.deep.contain({
       id: '123',
       status: 'Disabled',
@@ -123,7 +121,7 @@ describe('listTranforming', () => {
     }
     
     const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: false})
-    console.log(res)
+
     expect(res[0]).to.deep.contain({
       id: '123',
       status: 'Disabled',
