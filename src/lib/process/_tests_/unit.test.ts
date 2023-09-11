@@ -24,17 +24,106 @@ describe('listTranforming', () => {
     const enriched: Process.RawPayload = {
       ...sample[0],
       id: '123',
-      status: 'Disabled',
+      status: 'Enabled',
       createdAtHash: 'abc',
       initialU8aLength: '32',
     }
     
     const res = await listTransforming([enriched], processes, { ...defaultPolkadot, verbose: false })
 
-    expect(res[0])
-      .to.be.an('object')
-      .that.not.contain.keys(['program'])
+    console.log(res)
 
+    expect(res[0]).to.deep.contain({
+      id: '123',
+      status: 'Enabled',
+      version: 1,
+    })
+  })
+
+  it('returns all transformed processes with a program (--verbose=true)', async () => {
+    let processes: Process.RawPayload[]
+    const enriched: Process.RawPayload = {
+      ...sample[0],
+      id: '123',
+      status: 'Disabled',
+      createdAtHash: 'abc',
+      initialU8aLength: '32',
+    }
+    
+    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, verbose: true})
+    console.log(res)
+    expect(res[0]).to.deep.contain({
+      id: '123',
+      status: 'Disabled',
+      version: 1,
+    })
+  })
+
+  it('returns all options active', async () => {
+    let processes: Process.RawPayload[]
+    const enriched: Process.RawPayload = {
+      ...sample[0],
+      id: '123',
+      status: 'Enabled',
+      createdAtHash: 'abc',
+      initialU8aLength: '32',
+    }
+    
+    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: true})
+    console.log(res)
+    expect(res[0]).to.deep.contain({
+      id: '123',
+      status: 'Enabled',
+      version: 1,
+    })
+  })
+
+  it('returns all options disabled but with active true', async () => {
+    let processes: Process.RawPayload[]
+    const enriched: Process.RawPayload = {
+      ...sample[0],
+      id: '123',
+      status: 'Disabled',
+      createdAtHash: 'abc',
+      initialU8aLength: '32',
+    }
+
+    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: true})
+    console.log(res)
+    expect(res[0]).to.equal(undefined)
+  })
+
+  it('returns all options disabled', async () => {
+    let processes: Process.RawPayload[]
+    const enriched: Process.RawPayload = {
+      ...sample[0],
+      id: '123',
+      status: 'Disabled',
+      createdAtHash: 'abc',
+      initialU8aLength: '32',
+    }
+    
+    const res = await listTransforming([enriched], processes, { ...defaultPolkadot})
+    console.log(res)
+    expect(res[0]).to.deep.contain({
+      id: '123',
+      status: 'Disabled',
+      version: 1,
+    })
+  })
+
+  it('returns all options active with status enabled', async () => {
+    let processes: Process.RawPayload[]
+    const enriched: Process.RawPayload = {
+      ...sample[0],
+      id: '123',
+      status: 'Disabled',
+      createdAtHash: 'abc',
+      initialU8aLength: '32',
+    }
+    
+    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: false})
+    console.log(res)
     expect(res[0]).to.deep.contain({
       id: '123',
       status: 'Disabled',
