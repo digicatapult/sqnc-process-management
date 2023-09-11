@@ -56,7 +56,7 @@ export const loadProcesses = async ({
 
 export const listTransforming = async (
   res: Process.RawPayload[], 
-  processes: Process.RawPayload[], 
+  processes: Process.RawPayload[],
   options: Process.CLIOptions) => {
   if (options.active) {
     processes = res.filter(({ status }) => status === 'Enabled')
