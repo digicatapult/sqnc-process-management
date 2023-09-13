@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { Constants } from '../process/constants.js'
 
 const tokenMetadataKey = z.string()
 const tokenId = z.number()
@@ -10,10 +11,20 @@ const metadataValue = z.union([
   z.object({ None: z.null() }),
 ])
 const metadataValueType = z.enum(['File', 'Literal', 'TokenId', 'None'])
-const role = z.enum(['Owner', 'Customer', 'AdditiveManufacturer', 'Laboratory', 'Buyer', 'Supplier', 'Reviewer', 'Optimiser', 'MemberA', 'MemberB'])
+const role = z.enum([
+  'Owner',
+  'Customer',
+  'AdditiveManufacturer',
+  'Laboratory',
+  'Buyer',
+  'Supplier',
+  'Reviewer',
+  'Optimiser',
+  'MemberA',
+  'MemberB',
+])
 
 const binaryOperator = z.enum([
-  null,
   'Identity',
   'TransferL',
   'TransferR',
@@ -32,6 +43,7 @@ const binaryOperator = z.enum([
 ])
 
 const none = z.object({})
+const fail = z.object({})
 
 const senderHasInputRole = z.object({
   index: z.number(),
@@ -109,47 +121,45 @@ const fixedOutputMetadataValueType = z.object({
   metadataValueType: metadataValueType,
 })
 
-// leaving as it's being used in other file.
-export const stepValidation = z
-  .object({
-    op: binaryOperator.optional(),
-    None: none.optional(),
-    SenderHasInputRole: senderHasInputRole.optional(),
-    SenderHasOutputRole: senderHasOutputRole.optional(),
-    OutputHasRole: outputHasRole.optional(),
-    OutputHasMetadata: outputHasMetadata.optional(),
-    InputHasRole: inputHasRole.optional(),
-    InputHasMetadata: inputHasMetadata.optional(),
-    MatchInputOutputRole: matchInputOutputRole.optional(),
-    MatchInputOutputMetadataValue: matchInputOutputMetadataValue.optional(),
-    MatchInputIdOutputMetadataValue: matchInputIdOutputMetadataValue.optional(),
-    FixedNumberOfInputs: fixedNumberOfInputs.optional(),
-    FixedNumberOfOutputs: fixedNumberOfOutputs.optional(),
-    FixedInputMetadataValue: fixedInputMetadataValue.optional(),
-    FixedOutputMetadataValue: fixedOutputMetadataValue.optional(),
-    FixedOutputMetadataValueType: fixedOutputMetadataValueType.optional(),
-  })
-  .strict()
-
-const programValidationV2 = z.union([
-  z.object({
-    None: none,
-    SenderHasInputRole: senderHasInputRole.optional(),
-    SenderHasOutputRole: senderHasOutputRole.optional(),
-    OutputHasRole: outputHasRole.optional(),
-    OutputHasMetadata: outputHasMetadata.optional(),
-    InputHasRole: inputHasRole.optional(),
-    InputHasMetadata: inputHasMetadata.optional(),
-    MatchInputOutputRole: matchInputOutputRole.optional(),
-    MatchInputOutputMetadataValue: matchInputOutputMetadataValue.optional(),
-    MatchInputIdOutputMetadataValue: matchInputIdOutputMetadataValue.optional(),
-    FixedNumberOfInputs: fixedNumberOfInputs.optional(),
-    FixedNumberOfOutputs: fixedNumberOfOutputs.optional(),
-    FixedInputMetadataValue: fixedInputMetadataValue.optional(),
-    FixedOutputMetadataValue: fixedOutputMetadataValue.optional(),
-    FixedOutputMetadataValueType: fixedOutputMetadataValueType.optional(),
-  }),
-  z.object({ op: binaryOperator }),
+export const restrictionValidation = z.union([
+  z.object({ None: none }).strict(),
+  z.object({ Fail: fail }).strict(),
+  z.object({ SenderHasInputRole: senderHasInputRole }).strict(),
+  z.object({ SenderHasOutputRole: senderHasOutputRole }).strict(),
+  z.object({ OutputHasRole: outputHasRole }).strict(),
+  z.object({ OutputHasMetadata: outputHasMetadata }).strict(),
+  z.object({ InputHasRole: inputHasRole }).strict(),
+  z.object({ InputHasMetadata: inputHasMetadata }).strict(),
+  z.object({ MatchInputOutputRole: matchInputOutputRole }).strict(),
+  z.object({ MatchInputOutputMetadataValue: matchInputOutputMetadataValue }).strict(),
+  z.object({ MatchInputIdOutputMetadataValue: matchInputIdOutputMetadataValue }).strict(),
+  z.object({ FixedNumberOfInputs: fixedNumberOfInputs }).strict(),
+  z.object({ FixedNumberOfOutputs: fixedNumberOfOutputs }).strict(),
+  z.object({ FixedInputMetadataValue: fixedInputMetadataValue }).strict(),
+  z.object({ FixedOutputMetadataValue: fixedOutputMetadataValue }).strict(),
+  z.object({ FixedOutputMetadataValueType: fixedOutputMetadataValueType }).strict(),
 ])
 
-export type ChainRestrictions = z.infer<typeof programValidationV2>
+// leaving as it's being used in other file.
+export const stepValidation = z.union([
+  z.object({ op: binaryOperator }),
+  z.object({ restriction: restrictionValidation }),
+])
+
+export const programValidation = z.array(stepValidation)
+
+export const processValidation = z.object({
+  name: z.string().max(Constants.PROCESS_ID_LENGTH),
+  version: z.number(),
+  program: programValidation,
+})
+
+export const simpleProcesssValidation = z.array(z.object({ name: z.string() }).passthrough())
+
+export const processesValidation = z.array(processValidation)
+
+export type ValidationRestriction = z.infer<typeof restrictionValidation>
+export type ValidationProgramStep = z.infer<typeof stepValidation>
+export type ValidationProgram = z.infer<typeof programValidation>
+export type ValidationProcess = z.infer<typeof processValidation>
+export type ValidationProcesses = z.infer<typeof processesValidation>

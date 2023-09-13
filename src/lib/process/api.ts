@@ -1,13 +1,12 @@
 import { ProgramError } from '../types/error.js'
 import * as api from '../utils/polkadot.js'
+import { hexToUtf8 } from './hex.js'
 
 // TODO - refactor to validate payload?
 // for some reason reduce did not work with Process.Program or ProgramStep[] type due to symbol.iterator
 const isProgramValid = (program: Process.Program, out = { ops: 0, restrictions: -1 }): Boolean => {
   program.forEach((step: Process.ProgramStep) => {
-    out = Object.hasOwn(step, 'op')
-      ? { ...out, ops: out.ops + 1 }
-      : { ...out, restrictions: out.restrictions + 1 }
+    out = Object.hasOwn(step, 'op') ? { ...out, ops: out.ops + 1 } : { ...out, restrictions: out.restrictions + 1 }
   })
 
   return out.ops === out.restrictions
@@ -17,13 +16,12 @@ const isProgramValid = (program: Process.Program, out = { ops: 0, restrictions: 
 // since createNodeApi, set's all routes we could use in process.index.ts
 export const createProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
-  processId: string,
+  processId: Process.Hex,
   program: Process.Program,
-  options: Polkadot.Options,
-  verbose?: boolean
+  options: Polkadot.Options
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
-  
+
   if (!isProgramValid(program)) throw new ProgramError('invalid program')
 
   return new Promise((resolve, reject) => {
@@ -38,20 +36,13 @@ export const createProcessTransaction = async (
 
           const data = event.data
           const newProcess: Process.Payload = {
-            id: data[0].toHuman(),
+            name: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Enabled',
             program,
           }
-
-          const nonVerbose: Process.Payload = {
-            id: data[0].toHuman(),
-            version: data[1].toNumber(),
-            status: 'Enabled',
-          }
-
           unsub()
-          resolve(verbose ? newProcess : nonVerbose)
+          resolve(newProcess)
         }
       })
       .then((res: Function) => {
@@ -65,7 +56,7 @@ export const createProcessTransaction = async (
 
 export const disableProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
-  processId: string,
+  processId: Process.Hex,
   version: number,
   options: Polkadot.Options
 ): Promise<Process.Payload> => {
@@ -83,7 +74,7 @@ export const disableProcessTransaction = async (
 
           const data = event.data
           const disabledProcess: Process.Payload = {
-            id: data[0].toHuman(),
+            name: data[0].toHuman(),
             version: data[1].toNumber(),
             status: 'Disabled',
           }
@@ -107,38 +98,34 @@ type GetAllFn = (options: Polkadot.Options) => Promise<Process.RawPayload[]>
 
 export const getAll: GetAllFn = async (options) => {
   const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)
-  const processes = await Promise.all<Process.RawPayload>(
-    (
-      await polkadot.api.query.processValidation.processModel.entries()
-    ).map(([id, data]: any) => {
-      return {
-        id: id.toHuman()[0],
-        version: parseInt(id.toHuman()[1]),
-        status: data.status.toString(),
-        program: data.program.toJSON(),
-        createdAtHash: data.createdAtHash.toHuman(),
-        initialU8aLength: data.initialU8aLength,
-      }
-    })
-  )
-  return processes
+  const processesRaw = await polkadot.api.query.processValidation.processModel.entries()
+  return processesRaw.map(([idRaw, data]: any) => {
+    const id = idRaw.toHuman()
+    return {
+      name: id[0],
+      version: parseInt(id[1]),
+      status: data.status.toString(),
+      program: data.program.toJSON(),
+      createdAtHash: data.createdAtHash.toHuman(),
+      initialU8aLength: data.initialU8aLength,
+    }
+  })
 }
 
-export const getVersion = async (polkadot: Polkadot.Polkadot, processId: string): Promise<number> => {
+export const getVersion = async (polkadot: Polkadot.Polkadot, processId: Process.Hex): Promise<number> => {
   const id = await polkadot.api.query.processValidation.versionModel(processId)
   return Number(id.toString())
 }
 
 export const getProcess = async (
   polkadot: Polkadot.Polkadot,
-  processId: string,
-  version: number,
-  verbose: boolean = false
+  processId: Process.Hex,
+  version: number
 ): Promise<Process.Payload> => {
   const result = await polkadot.api.query.processValidation.processModel(processId, version)
   const data = Object(result.toHuman())
   return {
-    id: processId,
+    name: hexToUtf8(processId),
     version,
     status: data.status,
     program: data.program,

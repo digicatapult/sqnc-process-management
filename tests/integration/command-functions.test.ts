@@ -27,33 +27,46 @@ describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
     describe('Multiple processes', () => {
       it('skips already created processes and creates new ones', async () => {
-        await createProcess('existing-process-test', 1, simple2, false, polkadotOptions)
+        await createProcess(
+          {
+            name: 'existing-process-test',
+            version: 1,
+            program: simple2,
+          },
+          false,
+          polkadotOptions
+        )
         const process2Name = 'process-to-be-created'
         const process2BumpedV = (await getVersionHelper(process2Name)) + 1
         const newProcesses = await loadProcesses({
           options: polkadotOptions,
           data: multiple('existing-process-test', 1, process2Name, process2BumpedV),
         })
-        expect(newProcesses['existing-process-test']).to.deep.contain({
+
+        if (newProcesses.type !== 'ok') {
+          expect.fail('Expected new process creation to succeed')
+        }
+
+        expect(newProcesses.result['existing-process-test'].type).to.equal('ok')
+        expect(newProcesses.result['existing-process-test']).to.deep.contain({
           message: 'Skipping: process existing-process-test is already created.',
-          process: {
-            id: '0x6578697374696e672d70726f636573732d74657374',
+          result: {
+            name: 'existing-process-test',
             version: 1,
             status: 'Enabled',
-            program: [{
-              Restriction: {
-                SenderHasInputRole: {
-                  index: '0',
-                  roleKey: 'Supplier',
-                },
-              },
-            }],
           },
         })
-        expect(newProcesses[process2Name].message).to.deep.equal(
+
+        const process2Result = newProcesses.result[process2Name]
+
+        if (process2Result.type !== 'ok') {
+          expect.fail('Expected process create for process2 to succeed')
+        }
+
+        expect(process2Result.message).to.deep.equal(
           'Transaction for new process process-to-be-created has been successfully submitted'
         )
-        expect(newProcesses[process2Name].process).to.deep.contain({
+        expect(process2Result.result).to.deep.contain({
           version: process2BumpedV,
           status: 'Enabled',
         })
@@ -68,17 +81,29 @@ describe('Process creation and deletion, listing', () => {
           options: polkadotOptions,
           data: multiple(process1Name, process1BumpedV, process2Name, process2BumpedV),
         })
-        expect(newProcesses[process1Name].message).to.deep.equal(
+        if (newProcesses.type !== 'ok') {
+          expect.fail('Expected new process creation to succeed')
+        }
+        expect(newProcesses.result[process1Name].message).to.deep.equal(
           'Transaction for new process process-1 has been successfully submitted'
         )
-        expect(newProcesses[process1Name].process).to.deep.contain({
+        const process1Result = newProcesses.result[process1Name]
+        if (process1Result.type !== 'ok') {
+          expect.fail('Expected process1 creation to succeed')
+        }
+        expect(process1Result.result).to.deep.contain({
           version: process1BumpedV,
           status: 'Enabled',
         })
-        expect(newProcesses[process2Name].message).to.deep.equal(
+
+        const process2Result = newProcesses.result[process2Name]
+        if (process2Result.type !== 'ok') {
+          expect.fail('Expected process2 creation to succeed')
+        }
+        expect(process2Result.message).to.deep.equal(
           'Transaction for new process process-2 has been successfully submitted'
         )
-        expect(newProcesses[process2Name].process).to.deep.contain({
+        expect(process2Result.result).to.deep.contain({
           version: process2BumpedV,
           status: 'Enabled',
         })
@@ -88,9 +113,29 @@ describe('Process creation and deletion, listing', () => {
         await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
         const res = await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
 
-        expect(res['test-program-create'].message).to.equal('Skipping: process test-program-create is already created.')
-        expect(res['test-program-propose'].message).to.equal('Skipping: process test-program-propose is already created.')
-        expect(res['test-program-strings-and-numbers'].message).to.equal('Skipping: process test-program-strings-and-numbers is already created.')
+        if (res.type !== 'ok') {
+          expect.fail('Expected process create to succeed')
+        }
+
+        const process1Result = res.result['test-program-create']
+        const process2Result = res.result['test-program-propose']
+        const process3Result = res.result['test-program-strings-and-numbers']
+
+        if (process1Result.type !== 'ok') {
+          expect.fail('Expected test-program-create to be already created and succeed')
+        }
+        if (process2Result.type !== 'ok') {
+          expect.fail('Expected test-program-propose to be already created and succeed')
+        }
+        if (process2Result.type !== 'ok') {
+          expect.fail('Expected test-program-strings-and-numbers to be already created and succeed')
+        }
+
+        expect(process1Result.message).to.equal('Skipping: process test-program-create is already created.')
+        expect(process2Result.message).to.equal('Skipping: process test-program-propose is already created.')
+        expect(process3Result.message).to.equal(
+          'Skipping: process test-program-strings-and-numbers is already created.'
+        )
       }).timeout(60000)
     })
 
@@ -98,17 +143,29 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(processName, bumpedVersion, simple, false, polkadotOptions)
-      expect(newProcess.process).to.deep.equal({
-        id: processName,
+      const newProcess = await createProcess(
+        { name: processName, version: bumpedVersion, program: simple },
+        false,
+        polkadotOptions
+      )
+
+      if (newProcess.type !== 'ok') {
+        expect.fail('Expected process creation to succeed')
+      }
+      expect(newProcess.result).to.deep.equal({
+        name: processName,
         version: bumpedVersion,
-        status: 'Enabled',      
+        status: 'Enabled',
       })
 
       const disabledProcess = await disableProcess(processName, bumpedVersion, false, polkadotOptions)
+
+      if (disabledProcess.type !== 'ok') {
+        expect.fail('Expected process disable to succeed')
+      }
       expect(disabledProcess.message).to.equal('Process has been disabled')
-      expect(disabledProcess.process).to.deep.equal({
-        id: processName,
+      expect(disabledProcess.result).to.deep.equal({
+        name: processName,
         version: bumpedVersion,
         status: 'Disabled',
       })
@@ -118,22 +175,44 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(processName, bumpedVersion, validAllRestrictions, true, polkadotOptions)
-      expect(newProcess.process).to.equal(null)
+      const newProcess = await createProcess(
+        { name: processName, version: bumpedVersion, program: validAllRestrictions },
+        true,
+        polkadotOptions
+      )
+
+      if (newProcess.type !== 'ok') {
+        expect.fail('Expected process create to succeed')
+      }
+      expect(newProcess.message).to.equal('Dry run: transaction has not been created')
+      expect(newProcess.result).to.deep.equal({
+        name: processName,
+        version: bumpedVersion,
+        status: 'Enabled (dry-run)',
+      })
     })
 
     it('does not disable process if dry run', async () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(processName, bumpedVersion, validAllRestrictions, false, polkadotOptions)
-      expect(newProcess.process).to.exist
+      const newProcess = await createProcess(
+        { name: processName, version: bumpedVersion, program: validAllRestrictions },
+        false,
+        polkadotOptions
+      )
+      expect(newProcess.type).to.equal('ok')
 
       const disabledProcess = await disableProcess(processName, bumpedVersion, true, polkadotOptions)
-      expect(disabledProcess.process).to.equal(undefined)
+      if (disabledProcess.type !== 'ok') {
+        expect.fail('Expected disable process to succeed')
+      }
+      expect(disabledProcess.result).to.deep.contain({
+        name: processName,
+        status: 'Disabled (dry-run)',
+      })
       expect(disabledProcess).to.deep.contain({
         message: `This will DISABLE the following process ${processName}`,
-        name: processName,
       })
     })
 
@@ -144,9 +223,8 @@ describe('Process creation and deletion, listing', () => {
       expect(res).to.be.an('array')
       expect(res[0])
         .to.be.an('object')
-        .that.has.keys(['id', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'version'])
+        .that.has.keys(['name', 'createdAtHash', 'initialU8aLength', 'program', 'status', 'version'])
     })
-
   })
 
   describe('Sad path', () => {
@@ -162,7 +240,11 @@ describe('Process creation and deletion, listing', () => {
       describe('Multiple uploads', () => {
         // TODO could prestage in before if more scenarios
         it('skips and notifies if process programs are different', async () => {
-          await createProcess('existing-length', 1, validAllRestrictions, false, polkadotOptions)
+          await createProcess(
+            { name: 'existing-length', version: 1, program: validAllRestrictions },
+            false,
+            polkadotOptions
+          )
           const process2Name = 'should-create-1'
           const process2BumpedV = (await getVersionHelper(process2Name)) + 1
           const res = await loadProcesses({
@@ -170,12 +252,27 @@ describe('Process creation and deletion, listing', () => {
             data: multiple('existing-length', 1, process2Name, process2BumpedV),
           })
 
-          expect(res['existing-length'].message).to.equal('existing: programs are different lengths')
-          expect(res[process2Name].message).to.equal('Transaction for new process should-create-1 has been successfully submitted')
+          if (res.type !== 'ok') {
+            expect.fail('Expected overall create to succeed')
+          }
+
+          const failResult = res.result['existing-length']
+          if (failResult.type !== 'error') {
+            expect.fail('Expected existing-length creation to fail')
+          }
+          expect(failResult.message).to.equal('existing: programs are different lengths')
+
+          const process2Res = res.result[process2Name]
+          if (process2Res.type !== 'ok') {
+            expect.fail(`Expected ${process2Name} creation to succeed`)
+          }
+          expect(process2Res.message).to.equal(
+            'Transaction for new process should-create-1 has been successfully submitted'
+          )
         })
 
         it('also fails if number of steps matches but POSTFIX does not', async () => {
-          await createProcess('existing-steps', 1, simple, false, polkadotOptions)
+          await createProcess({ name: 'existing-steps', version: 1, program: simple }, false, polkadotOptions)
           const process2Name = 'should-create-2'
           const process2BumpedV = (await getVersionHelper(process2Name)) + 1
           const res = await loadProcesses({
@@ -183,30 +280,55 @@ describe('Process creation and deletion, listing', () => {
             data: multiple('existing-steps', 1, process2Name, process2BumpedV),
           })
 
-          expect(res['existing-steps'].message).to.equal('existing: program steps did not match')
-          expect(res[process2Name].message).to.equal('Transaction for new process should-create-2 has been successfully submitted')
+          // TODO: should this fail
+          if (res.type !== 'ok') {
+            expect.fail('Expected overall process create to succeed')
+          }
+
+          expect(res.result['existing-steps'].message).to.equal('existing: program steps did not match')
+          expect(res.result[process2Name].message).to.equal(
+            'Transaction for new process should-create-2 has been successfully submitted'
+          )
         })
       })
 
       it('does not create new one and notifies if programs are different length', async () => {
-        await createProcess('existing-single', 1, validAllRestrictions, false, polkadotOptions)
-        const { message, process } = await createProcess('existing-single', 1, simple, false, polkadotOptions)
+        await createProcess(
+          { name: 'existing-single', version: 1, program: validAllRestrictions },
+          false,
+          polkadotOptions
+        )
+        const res = await createProcess(
+          { name: 'existing-single', version: 1, program: simple },
+          false,
+          polkadotOptions
+        )
 
-        expect(message).to.equal('existing: programs are different lengths')
-        expect(process).to.deep.contain({
-          id: '0x6578697374696e672d73696e676c65',
-          version: 1,
-          status: 'Enabled',
-        })
+        if (res.type !== 'error') {
+          expect.fail('Expected program create with different lengths to fail')
+        }
+
+        expect(res.message).to.equal('existing: programs are different lengths')
+        expect(res.error).to.instanceOf(ProgramError)
       })
 
       it('does not create new one and notifies if programs same are length but do not match', async () => {
-        await createProcess('existing-steps-single', 1, simple2, false, polkadotOptions)
-        const { message, process } = await createProcess('existing-steps-single', 1, [{ restriction: { None: {} }}], false, polkadotOptions)
+        await createProcess({ name: 'existing-steps-single', version: 1, program: simple2 }, false, polkadotOptions)
+        const res = await createProcess(
+          { name: 'existing-steps-single', version: 1, program: [{ restriction: { None: {} } }] },
+          false,
+          polkadotOptions
+        )
 
-        expect(message).to.equal('existing: program steps did not match')
-        expect(process).to.deep.contain({
-          id: '0x6578697374696e672d73746570732d73696e676c65',
+        if (res.type !== 'error') {
+          expect.fail('Expected program create with different lengths to fail')
+        }
+
+        expect(res.message).to.equal('existing: program steps did not match')
+        expect(res.error).to.instanceOf(ProgramError)
+        const error = res.error as ProgramError
+        expect(error.process).to.deep.contain({
+          name: 'existing-steps-single',
           version: 1,
           status: 'Enabled',
         })
@@ -214,64 +336,123 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails for invalid POSTFIX notation', async () => {
-      const err = await createProcess(validProcessName, validVersionNumber, invalidPOSIX, false, polkadotOptions)
-      expect(err).to.be.instanceOf(ProgramError)
-      expect(err.message).to.equal('invalid program')
+      const res = await createProcess(
+        { name: validProcessName, version: validVersionNumber, program: invalidPOSIX },
+        false,
+        polkadotOptions
+      )
+
+      if (res.type !== 'error') {
+        expect.fail('Expected process create to fail')
+      }
+
+      expect(res.error).to.be.instanceOf(ProgramError)
+      expect(res.message).to.equal('invalid program')
     })
 
     it('fails for invalid restriction key', async () => {
-      const err = await createProcess(validProcessName, validVersionNumber, invalidRestrictionKey, false, polkadotOptions)
-      expect(err).to.be.instanceOf(ZodError)
-      expect(err).to.deep.contain({
-        issues: [
+      const res = await createProcess(
         {
-          code: "unrecognized_keys",
-          keys: [
-            "NotARestriction"
-          ],
-          path: [],
-          message: "Unrecognized key(s) in object: 'NotARestriction'"
-        }
-      ]})
+          name: validProcessName,
+          version: validVersionNumber,
+          program: invalidRestrictionKey,
+        },
+        false,
+        polkadotOptions
+      )
+
+      if (res.type !== 'error') {
+        expect.fail('Expected process create to fail')
+      }
+
+      expect(res.error).to.be.instanceOf(ZodError)
+      const zError = res.error as ZodError
+      expect(zError.issues[0]).to.deep.contain({
+        code: 'invalid_union',
+        message: 'Invalid input',
+      })
     })
 
     it('fails for invalid restriction value', async () => {
-      const err = await createProcess(validProcessName, validVersionNumber, invalidRestrictionValue, false, polkadotOptions)
-      expect(err).to.be.instanceOf(ZodError)
+      const res = await createProcess(
+        { name: validProcessName, version: validVersionNumber, program: invalidRestrictionValue },
+        false,
+        polkadotOptions
+      )
+
+      if (res.type !== 'error') {
+        expect.fail('Expected process create to fail')
+      }
+
+      expect(res.error).to.be.instanceOf(ZodError)
+      const err = res.error as ZodError
       expect(JSON.parse(err.message)).to.deep.include.members(errorExamples.restriction_value)
     })
 
     it('fails for invalid json', async () => {
-      const err = await createProcess(
-          validProcessName,
-          validVersionNumber,
-          'invalidJson' as unknown as Process.Program,
-          false,
-          polkadotOptions
-        )
-      expect(err.toString()).to.equal('TypeError: program.reduce is not a function')
-      expect(err).to.be.instanceOf(TypeError)
+      const res = await createProcess(
+        { name: validProcessName, version: validVersionNumber, program: 'invalidJson' as unknown as Process.Program },
+        false,
+        polkadotOptions
+      )
+
+      if (res.type !== 'error') {
+        expect.fail('Expected process create to fail')
+      }
+
+      expect(res.error).to.be.instanceOf(ZodError)
     })
 
     it('fails to create for too low version', async () => {
-        // - 2 because -1 would make current = valid
-      const err = await createProcess(validProcessName, validVersionNumber - 2, validAllRestrictions, false, polkadotOptions)
+      // - 2 because -1 would make current = valid
+      const res = await createProcess(
+        { name: validProcessName, version: validVersionNumber - 2, program: validAllRestrictions },
+        false,
+        polkadotOptions
+      )
+      if (res.type !== 'error') {
+        expect.fail('Expected process create to fail')
+      }
 
-      expect(err.message).to.equal(`Process version ${validVersionNumber - 2} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
-      expect(err).to.be.instanceOf(VersionError)
+      expect(res.message).to.equal(
+        `Process version ${
+          validVersionNumber - 2
+        } is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`
+      )
+      expect(res.error).to.be.instanceOf(VersionError)
     })
 
     it('fails to create for too high version', async () => {
-      const err = await createProcess(validProcessName, validVersionNumber + 1, validAllRestrictions, false, polkadotOptions)
+      const res = await createProcess(
+        { name: validProcessName, version: validVersionNumber + 1, program: validAllRestrictions },
+        false,
+        polkadotOptions
+      )
 
-      expect(err.message).to.equal(`Process version ${validVersionNumber + 1} is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`)
-      expect(err).to.be.instanceOf(VersionError)
+      if (res.type !== 'error') {
+        expect.fail('Expected process create to fail')
+      }
+
+      expect(res.message).to.equal(
+        `Process version ${
+          validVersionNumber + 1
+        } is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`
+      )
+      expect(res.error).to.be.instanceOf(VersionError)
     })
 
     it('fails to create with too long process id', async () => {
       const processName = '0'.repeat(Constants.PROCESS_ID_LENGTH + 1)
-      const { message } = await createProcess(processName, 1, validAllRestrictions, false, polkadotOptions)
-      expect(message).to.equal('000000000000000000000000000000000 is too long. Max length: 32 bytes')
+      const res = await createProcess(
+        { name: processName, version: 1, program: validAllRestrictions },
+        false,
+        polkadotOptions
+      )
+      if (res.type !== 'error') {
+        expect.fail('Expected process create to fail')
+      }
+
+      expect(res.error).to.be.instanceOf(ZodError)
     })
 
     it('fails to disable process that does not exist', async () => {
@@ -279,12 +460,19 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails to disable process a second time', async () => {
-      const newProcess = await createProcess(validProcessName, validVersionNumber, simple, false, polkadotOptions)
-      expect(newProcess.process).to.exist
+      const newProcess = await createProcess(
+        { name: validProcessName, version: validVersionNumber, program: simple },
+        false,
+        polkadotOptions
+      )
+      expect(newProcess.type).to.equal('ok')
       const firstDisable = await disableProcess(validProcessName, validVersionNumber, false, polkadotOptions)
-      expect(firstDisable.process).to.exist
+      expect(firstDisable.type).to.equal('ok')
 
-      return assert.isRejected(disableProcess(validProcessName, validVersionNumber, false, polkadotOptions), DisableError)
+      return assert.isRejected(
+        disableProcess(validProcessName, validVersionNumber, false, polkadotOptions),
+        DisableError
+      )
     })
   })
 })

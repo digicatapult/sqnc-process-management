@@ -7,6 +7,11 @@ import { loadProcesses, disableProcess, listTransforming } from './lib/process/i
 import { getAll } from './lib/process/api.js'
 import cliVersion from './version.js'
 
+const unwrap = <T, E>(res: Process.Result<T, E>): T => {
+  if (res.type === 'ok') return res.result
+  else throw res.error
+}
+
 const { log, dir } = console
 const program = new Command()
 const { red: r, blue: b } = {
@@ -42,14 +47,13 @@ program
 program
   .command('list')
   .description('A command for listing all active process flows')
-  .option('--verbose', 'Returns all information about the transation, default - false')
+  .option('-v, --verbose', 'Returns all information about the transation, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
   .option('--raw', 'print processes with hex values and extra keys such as "createdAtHash"')
   .option('--active', 'returns only active process flows')
   .option('--disabled', 'returns only disabled process flows')
   .action(async (options: Process.CLIOptions) => {
-    
     if (options.print)
       log(`
       retrieving all process flows from a chain...
@@ -57,9 +61,9 @@ program
     `)
     try {
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
-      let processes: Process.RawPayload[]
-      
-      listTransforming(res, processes, options)
+
+      let transformed = listTransforming(res, options)
+      dir(transformed, { depth: null })
 
       process.exit(0)
     } catch (err) {
@@ -86,8 +90,9 @@ program
     `)
     const { dryRun, verbose } = options
     try {
-      const res: Process.Response = await loadProcesses({ data, dryRun, options: mapOptions(options), verbose })
-      dir(res, { depth: null })
+      const loadResult = await loadProcesses({ data, dryRun, options: mapOptions(options), verbose })
+      dir(loadResult.message, { depth: null })
+      dir(unwrap(loadResult), { depth: null })
       process.exit(0)
     } catch (err) {
       log(err)
@@ -108,7 +113,7 @@ program
     if (options.print) log(`attempting to disable:\nID:${b(id)}\nVersion:${b(version)}`)
     try {
       const { dryRun } = options
-      const res: Process.Result = await disableProcess(id, parseInt(version), dryRun, mapOptions(options))
+      const res = unwrap(await disableProcess(id, parseInt(version), dryRun, mapOptions(options)))
       dir(res, { depth: null })
 
       process.exit(0)
