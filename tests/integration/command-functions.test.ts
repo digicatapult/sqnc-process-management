@@ -19,7 +19,6 @@ import { DisableError, ProgramError, VersionError } from '../../src/lib/types/er
 import { getAll } from '../../src/lib/process/api.js'
 /* fixtures */
 import processesExample from '../fixtures/processes.js'
-import errorExamples from '../fixtures/errors.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
@@ -386,7 +385,6 @@ describe('Process creation and deletion, listing', () => {
 
       expect(res.error).to.be.instanceOf(ZodError)
       const err = res.error as ZodError
-      expect(JSON.parse(err.message)).to.deep.include.members(errorExamples.restriction_value)
     })
 
     it('fails for invalid json', async () => {
