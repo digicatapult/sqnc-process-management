@@ -62,7 +62,7 @@ program
     try {
       const res: Process.RawPayload[] = await getAll(mapOptions(options))
 
-      let transformed = listTransforming(res, options)
+      const transformed = listTransforming(res, options)
       dir(transformed, { depth: null })
 
       process.exit(0)
