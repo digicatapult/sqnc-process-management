@@ -384,7 +384,6 @@ describe('Process creation and deletion, listing', () => {
       }
 
       expect(res.error).to.be.instanceOf(ZodError)
-      const err = res.error as ZodError
     })
 
     it('fails for invalid json', async () => {
