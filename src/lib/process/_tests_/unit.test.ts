@@ -1,8 +1,7 @@
 import { expect } from 'chai'
 
-import { HexError } from '../../types/error.js'
-import { utf8ToHex } from '../hex.js'
-import { listTransforming } from '../index.js'
+import { utf8ToHex, hexToUtf8 } from '../hex.js'
+import { listTransforming, handleVerbose } from '../index.js'
 
 import sample from '../../../../tests/fixtures/processes.js'
 
@@ -10,136 +9,166 @@ const defaultPolkadot: Process.CLIOptions = { port: '9044', user: 'alice', host:
 
 describe('utf8ToHex', () => {
   it('converts a utf8 string to hexadecimal', () => {
-    expect(utf8ToHex('test123', 10)).to.equal('0x74657374313233')
+    expect(utf8ToHex('test123')).to.equal('0x74657374313233')
   })
+})
 
-  it('throws for string over given max length', () => {
-    expect(() => utf8ToHex('test123', 1)).to.throw(HexError)
+describe('hexToUtf8', () => {
+  it('converts a prefixed string to hex', () => {
+    expect(hexToUtf8('0x74657374313233')).to.equal('test123')
   })
 })
 
 describe('listTranforming', () => {
   it('returns all transformed processes without a program (--verbose=false)', async () => {
-    let processes: Process.RawPayload[]
     const enriched: Process.RawPayload = {
       ...sample[0],
-      id: '123',
+      name: '123',
       status: 'Enabled',
       createdAtHash: 'abc',
       initialU8aLength: '32',
     }
-    
-    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, verbose: false })
+
+    const res = listTransforming([enriched], { ...defaultPolkadot, verbose: false })
 
     expect(res[0]).to.deep.contain({
-      id: '123',
+      name: '123',
       status: 'Enabled',
       version: 1,
     })
   })
 
   it('returns all transformed processes with a program (--verbose=true)', async () => {
-    let processes: Process.RawPayload[]
     const enriched: Process.RawPayload = {
       ...sample[0],
-      id: '123',
+      name: '123',
       status: 'Disabled',
       createdAtHash: 'abc',
       initialU8aLength: '32',
     }
-    
-    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, verbose: true})
+
+    const res = listTransforming([enriched], { ...defaultPolkadot, verbose: true })
 
     expect(res[0]).to.deep.contain({
-      id: '123',
+      name: '123',
       status: 'Disabled',
       version: 1,
     })
   })
 
   it('returns all options active', async () => {
-    let processes: Process.RawPayload[]
     const enriched: Process.RawPayload = {
       ...sample[0],
-      id: '123',
+      name: '123',
       status: 'Enabled',
       createdAtHash: 'abc',
       initialU8aLength: '32',
     }
-    
-    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: true})
+
+    const res = listTransforming([enriched], { ...defaultPolkadot, active: true })
 
     expect(res[0]).to.deep.contain({
-      id: '123',
+      name: '123',
       status: 'Enabled',
       version: 1,
     })
   })
 
   it('returns all options disabled but with active true', async () => {
-    let processes: Process.RawPayload[]
     const enriched: Process.RawPayload = {
       ...sample[0],
-      id: '123',
+      name: '123',
       status: 'Disabled',
       createdAtHash: 'abc',
       initialU8aLength: '32',
     }
 
-    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: true})
+    const res = listTransforming([enriched], { ...defaultPolkadot, active: true })
 
     expect(res[0]).to.equal(undefined)
   })
 
   it('returns all options disabled', async () => {
-    let processes: Process.RawPayload[]
     const enriched: Process.RawPayload = {
       ...sample[0],
-      id: '123',
+      name: '123',
       status: 'Disabled',
       createdAtHash: 'abc',
       initialU8aLength: '32',
     }
-    
-    const res = await listTransforming([enriched], processes, { ...defaultPolkadot})
+
+    const res = listTransforming([enriched], { ...defaultPolkadot })
 
     expect(res[0]).to.deep.contain({
-      id: '123',
+      name: '123',
       status: 'Disabled',
       version: 1,
     })
   })
 
   it('returns all options active with status enabled', async () => {
-    let processes: Process.RawPayload[]
     const enriched: Process.RawPayload = {
       ...sample[0],
-      id: '123',
+      name: '123',
       status: 'Disabled',
       createdAtHash: 'abc',
       initialU8aLength: '32',
     }
-    
-    const res = await listTransforming([enriched], processes, { ...defaultPolkadot, active: false})
+
+    const res = listTransforming([enriched], { ...defaultPolkadot, active: false })
 
     expect(res[0]).to.deep.contain({
-      id: '123',
+      name: '123',
       status: 'Disabled',
       version: 1,
     })
   })
-})
 
-/* TODO will update with other due to this being covered in integration test suites
-describe('createProcessTransaction', () => {
-  describe('if POSIX is invalid', () => {
-    it('throws invalid program error', () => {
-    
+  it('returns additional properties with raw', async () => {
+    const enriched: Process.RawPayload = {
+      ...sample[0],
+      name: '123',
+      status: 'Disabled',
+      createdAtHash: 'abc',
+      initialU8aLength: '32',
+    }
+
+    const res = listTransforming([enriched], { ...defaultPolkadot, active: false, raw: true })
+
+    expect(res[0]).to.deep.contain({
+      name: '0x313233',
+      status: 'Disabled',
+      version: 1,
+      createdAtHash: 'abc',
+      initialU8aLength: '32',
     })
   })
+})
 
-  it('successfully creates process transaction', () => {
-    
+describe('handleVerbose', function () {
+  it('should remove program when verbose == false', function () {
+    const result = handleVerbose(
+      {
+        name: 'test',
+        status: 'Enabled',
+        version: 1,
+        program: [],
+      },
+      false
+    )
+    expect(result).to.deep.equal({ name: 'test', status: 'Enabled', version: 1 })
+  })
+
+  it('should include program when verbose == false', function () {
+    const result = handleVerbose(
+      {
+        name: 'test',
+        status: 'Enabled',
+        version: 1,
+        program: [],
+      },
+      true
+    )
+    expect(result).to.deep.equal({ name: 'test', status: 'Enabled', version: 1, program: [] })
   })
 })
-*/

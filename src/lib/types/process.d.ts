@@ -1,34 +1,23 @@
 declare namespace Process {
+  import { ValidationProgram, ValidationProgramStep, ValidationProcess, ValidationProcesses } from './validation'
   import { VersionError, ProgramError, DisableError } from './error'
   import { ZodError } from 'zod'
 
-  type Core = {
-    name: string
-    version: number
-    program: Program
-  }
+  type InputProcess = InputProcess
 
   export type ProcessError = ZodError | ProgramError | ProgramError | DisableError
 
-  // break down per function
-  // TODO rename types as this is causing a little confusion
-  interface Result {
-    Error?: ProcessError
-    process?: Payload
-    name?: string
-    version?: number
-    program?: Program
-    message: string
-  }
-
-  type Restriction = {
-    [key: string]: import('./restrictions').ChainRestrictions | object
-  }
-
-  interface ProgramStep {
-    restriction?: Restriction
-    op?: any
-  }
+  export type Result<R, E> =
+    | {
+        type: 'ok'
+        result: R
+        message?: string
+      }
+    | {
+        type: 'error'
+        error: E
+        message?: string
+      }
 
   export type CLIOptions = {
     print?: boolean
@@ -41,22 +30,32 @@ declare namespace Process {
     host: string
     verbose?: boolean
   }
-  export type CLIParsed = Core[]
-  export type Program = ProgramStep[]
+
+  export type CliProcessInput = ValidationProcess
+  export type CliProcessesInput = ValidationProcesses
+  export type ProgramStep = ValidationProgramStep
+  export type Program = ValidationProgram
 
   export type Payload = {
-    id: string
+    name: string
     version: number
-    status: 'Enabled' | 'Disabled'
+    status: 'Enabled' | 'Disabled' | 'Enabled (dry-run)' | 'Disabled (dry-run)'
     program?: Program
-  } | null
+  }
 
   export interface RawPayload extends Payload {
     createdAtHash: string
     initialU8aLength: string
   }
 
-  export type Response = {
-    [key: string]: Result
-  }
+  export type ProcessResponse = Result<Payload, ProcessError>
+
+  export type Response = Result<
+    {
+      [key: string]: ProcessResponse
+    },
+    CliInputParseError
+  >
+
+  export type Hex = `0x${string}`
 }
