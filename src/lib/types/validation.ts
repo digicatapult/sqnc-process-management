@@ -140,7 +140,6 @@ export const restrictionValidation = z.union([
   z.object({ FixedOutputMetadataValueType: fixedOutputMetadataValueType }).strict(),
 ])
 
-// leaving as it's being used in other file.
 export const stepValidation = z.union([
   z.object({ op: binaryOperator }),
   z.object({ restriction: restrictionValidation }),
