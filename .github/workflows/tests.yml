@@ -12,7 +12,7 @@ jobs:
       org_name: ${{ steps.repo_ids.outputs.ORG_NAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Get repository identifiers
@@ -27,7 +27,7 @@ jobs:
     name: Run lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@master
         with:
           node-version: 18.x
@@ -49,7 +49,7 @@ jobs:
     name: Run dependency check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@master
         with:
           node-version: 18.x
@@ -72,7 +72,7 @@ jobs:
     name: 'Check version'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check version
         id: get_version
         uses: digicatapult/check-version@v1
@@ -83,7 +83,7 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@master
         with:
           node-version: 18.x
