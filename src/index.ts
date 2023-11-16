@@ -20,17 +20,6 @@ const { red: r, blue: b } = {
   red: (txt: string) => chalk.redBright(txt),
   blue: (txt: string) => chalk.blueBright(txt),
 }
-const example: string = JSON.stringify([
-  {
-    name: 'A test',
-    version: 1,
-    program: [
-      { restriction: { FixedNumberOfOutputs: { numOutputs: 1 } } },
-      { restriction: { None: {} } },
-      { op: 'Or' },
-    ],
-  },
-])
 
 const mapOptions = (options: Process.CLIOptions): Polkadot.Options => ({
   API_HOST: options.host,
