@@ -28,6 +28,7 @@ declare namespace Process {
     port: string
     user: string
     host: string
+    file: string
     verbose?: boolean
   }
 

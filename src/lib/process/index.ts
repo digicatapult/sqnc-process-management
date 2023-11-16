@@ -13,14 +13,24 @@ export const defaultOptions: Polkadot.Options = {
 }
 
 const textify = (obj: Process.ProgramStep): string => {
-  return JSON.stringify(obj, (key, val) => {
-    // FYI: checking for none as from getAll/getProcess/etc returns
-    // { Restriction: "None" } while restriction to be uploaded is ->
-    // { restriction: { None: {} } }
-    if (val === 'None' && key === 'Restriction') return { None: {} }
+  return JSON.stringify(obj, (_key, val) => {
+    // convert snake case to camel case
+    if (val && typeof val === 'object') {
+      return Object.fromEntries(
+        Object.entries(val).map(([k, v]) => {
+          return [
+            [...k]
+              .map((c, i) => (k[i - 1] === '_' ? c.toUpperCase() : c))
+              .filter((c) => c != '_')
+              .join(''),
+            v,
+          ]
+        })
+      )
+    }
     if (typeof val === 'number') return val.toString()
     return val
-  }).toLowerCase()
+  })
 }
 
 export const sanitizeInput = (data: string): Process.Result<{ name: string }[], CliInputParseError> => {

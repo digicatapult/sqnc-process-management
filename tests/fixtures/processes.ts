@@ -4,114 +4,112 @@ export default [
       "version": 1,
       "program": [
         {
-          "restriction": {
+          "Restriction": {
             "FixedNumberOfInputs": {
-              "numInputs": 0
+              "num_inputs": 0
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "FixedNumberOfOutputs": {
-              "numOutputs": 1
+              "num_outputs": 1
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 0,
-              "metadataKey": "type",
-              "metadataValue": {
+              "metadata_key": "type",
+              "metadata_value": {
                 "Literal": "DEMAND"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 0,
-              "metadataKey": "version",
-              "metadataValue": {
+              "metadata_key": "version",
+              "metadata_value": {
                 "Literal": "1"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 0,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "created"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValueType": {
               "index": 0,
-              "metadataKey": "parameters",
-              "metadataValueType": "File"
+              "metadata_key": "parameters",
+              "metadata_value_type": "File"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 0,
-              "metadataKey": "subtype",
-              "metadataValue": {
+              "metadata_key": "subtype",
+              "metadata_value": {
                 "Literal": "demand_a"
               }
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 0,
-              "metadataKey": "subtype",
-              "metadataValue": {
+              "metadata_key": "subtype",
+              "metadata_value": {
                 "Literal": "demand_b"
               }
             }
           }
         },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "OutputHasMetadata": {
               "index": 0,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
-        { "op": "And" },
+        { "Op": "NotL" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "SenderHasOutputRole": {
               "index": 0,
-              "roleKey": "Owner"
+              "role_key": "Owner"
             }
           }
         },
-        { "op": "And" }
+        { "Op": "And" }
       ]
     },
     {
@@ -119,452 +117,442 @@ export default [
       "version": 1,
       "program": [
         {
-          "restriction": {
+          "Restriction": {
             "FixedNumberOfInputs": {
-              "numInputs": 2
+              "num_inputs": 2
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "FixedNumberOfOutputs": {
-              "numOutputs": 3
+              "num_outputs": 3
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "type",
-              "metadataValue": {
+              "metadata_key": "type",
+              "metadata_value": {
                 "Literal": "DEMAND"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "version",
-              "metadataValue": {
+              "metadata_key": "version",
+              "metadata_value": {
                 "Literal": "1"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "subtype",
-              "metadataValue": {
+              "metadata_key": "subtype",
+              "metadata_value": {
                 "Literal": "demand_a"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "created"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "type",
-              "outputIndex": 0,
-              "outputMetadataKey": "type"
+              "input_index": 0,
+              "input_metadata_key": "type",
+              "output_index": 0,
+              "output_metadata_key": "type"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "version",
-              "outputIndex": 0,
-              "outputMetadataKey": "version"
+              "input_index": 0,
+              "input_metadata_key": "version",
+              "output_index": 0,
+              "output_metadata_key": "version"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "subtype",
-              "outputIndex": 0,
-              "outputMetadataKey": "subtype"
+              "input_index": 0,
+              "input_metadata_key": "subtype",
+              "output_index": 0,
+              "output_metadata_key": "subtype"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "state",
-              "outputIndex": 0,
-              "outputMetadataKey": "state"
+              "input_index": 0,
+              "input_metadata_key": "state",
+              "output_index": 0,
+              "output_metadata_key": "state"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 0,
-              "inputRoleKey": "Owner",
-              "outputIndex": 0,
-              "outputRoleKey": "Owner"
+              "input_index": 0,
+              "input_role_key": "Owner",
+              "output_index": 0,
+              "output_role_key": "Owner"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 0,
-              "outputMetadataKey": "originalId"
+              "input_index": 0,
+              "input_metadata_key": "originalId",
+              "output_index": 0,
+              "output_metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "InputHasMetadata": {
               "index": 0,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
+        { "Op": "NotL" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputIdOutputMetadataValue": {
-              "inputIndex": 0,
-              "outputIndex": 0,
-              "outputMetadataKey": "originalId"
+              "input_index": 0,
+              "output_index": 0,
+              "output_metadata_key": "originalId"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "type",
-              "metadataValue": {
+              "metadata_key": "type",
+              "metadata_value": {
                 "Literal": "DEMAND"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "version",
-              "metadataValue": {
+              "metadata_key": "version",
+              "metadata_value": {
                 "Literal": "1"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "subtype",
-              "metadataValue": {
+              "metadata_key": "subtype",
+              "metadata_value": {
                 "Literal": "demand_b"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "created"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "type",
-              "outputIndex": 1,
-              "outputMetadataKey": "type"
+              "input_index": 1,
+              "input_metadata_key": "type",
+              "output_index": 1,
+              "output_metadata_key": "type"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "version",
-              "outputIndex": 1,
-              "outputMetadataKey": "version"
+              "input_index": 1,
+              "input_metadata_key": "version",
+              "output_index": 1,
+              "output_metadata_key": "version"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "subtype",
-              "outputIndex": 1,
-              "outputMetadataKey": "subtype"
+              "input_index": 1,
+              "input_metadata_key": "subtype",
+              "output_index": 1,
+              "output_metadata_key": "subtype"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "state",
-              "outputIndex": 1,
-              "outputMetadataKey": "state"
+              "input_index": 1,
+              "input_metadata_key": "state",
+              "output_index": 1,
+              "output_metadata_key": "state"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 1,
-              "inputRoleKey": "Owner",
-              "outputIndex": 1,
-              "outputRoleKey": "Owner"
+              "input_index": 1,
+              "input_role_key": "Owner",
+              "output_index": 1,
+              "output_role_key": "Owner"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 1,
-              "outputMetadataKey": "originalId"
+              "input_index": 1,
+              "input_metadata_key": "originalId",
+              "output_index": 1,
+              "output_metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "InputHasMetadata": {
               "index": 1,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
+        { "Op": "NotL" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputIdOutputMetadataValue": {
-              "inputIndex": 1,
-              "outputIndex": 1,
-              "outputMetadataKey": "originalId"
+              "input_index": 1,
+              "output_index": 1,
+              "output_metadata_key": "originalId"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "SenderHasOutputRole": {
               "index": 2,
-              "roleKey": "Optimiser"
+              "role_key": "Optimiser"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 0,
-              "inputRoleKey": "Owner",
-              "outputIndex": 2,
-              "outputRoleKey": "MemberA"
+              "input_index": 0,
+              "input_role_key": "Owner",
+              "output_index": 2,
+              "output_role_key": "MemberA"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 1,
-              "inputRoleKey": "Owner",
-              "outputIndex": 2,
-              "outputRoleKey": "MemberB"
+              "input_index": 1,
+              "input_role_key": "Owner",
+              "output_index": 2,
+              "output_role_key": "MemberB"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 2,
-              "metadataKey": "type",
-              "metadataValue": {
+              "metadata_key": "type",
+              "metadata_value": {
                 "Literal": "MATCH2"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 2,
-              "metadataKey": "version",
-              "metadataValue": {
+              "metadata_key": "version",
+              "metadata_value": {
                 "Literal": "1"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 2,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "proposed"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 2,
-              "outputMetadataKey": "demandA"
+              "input_index": 0,
+              "input_metadata_key": "originalId",
+              "output_index": 2,
+              "output_metadata_key": "demandA"
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "InputHasMetadata": {
               "index": 0,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
+        { "Op": "NotL" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputIdOutputMetadataValue": {
-              "inputIndex": 0,
-              "outputIndex": 2,
-              "outputMetadataKey": "demandA"
+              "input_index": 0,
+              "output_index": 2,
+              "output_metadata_key": "demandA"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 2,
-              "outputMetadataKey": "demandB"
+              "input_index": 1,
+              "input_metadata_key": "originalId",
+              "output_index": 2,
+              "output_metadata_key": "demandB"
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "InputHasMetadata": {
               "index": 1,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
+        { "Op": "NotL" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputIdOutputMetadataValue": {
-              "inputIndex": 1,
-              "outputIndex": 2,
-              "outputMetadataKey": "demandB"
+              "input_index": 1,
+              "output_index": 2,
+              "output_metadata_key": "demandB"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "OutputHasMetadata": {
               "index": 2,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
-        { "op": "And" }
+        { "Op": "NotL" },
+        { "Op": "And" }
       ]
     },
     {
@@ -572,513 +560,507 @@ export default [
       "version": 1,
       "program": [
         {
-          "restriction": {
+          "Restriction": {
             "FixedNumberOfInputs": {
-              "numInputs": 3
+              "num_inputs": 3
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "FixedNumberOfOutputs": {
-              "numOutputs": 3
+              "num_outputs": 3
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 0,
-              "inputRoleKey": "Owner",
-              "outputIndex": 0,
-              "outputRoleKey": "Owner"
+              "input_index": 0,
+              "input_role_key": "Owner",
+              "output_index": 0,
+              "output_role_key": "Owner"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "type",
-              "metadataValue": {
+              "metadata_key": "type",
+              "metadata_value": {
                 "Literal": "DEMAND"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "type",
-              "outputIndex": 0,
-              "outputMetadataKey": "type"
+              "input_index": 0,
+              "input_metadata_key": "type",
+              "output_index": 0,
+              "output_metadata_key": "type"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "subtype",
-              "metadataValue": {
+              "metadata_key": "subtype",
+              "metadata_value": {
                 "Literal": "demand_a"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "subtype",
-              "outputIndex": 0,
-              "outputMetadataKey": "subtype"
+              "input_index": 0,
+              "input_metadata_key": "subtype",
+              "output_index": 0,
+              "output_metadata_key": "subtype"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "version",
-              "metadataValue": {
+              "metadata_key": "version",
+              "metadata_value": {
                 "Literal": "1"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "version",
-              "outputIndex": 0,
-              "outputMetadataKey": "version"
+              "input_index": 0,
+              "input_metadata_key": "version",
+              "output_index": 0,
+              "output_metadata_key": "version"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 0,
-              "outputMetadataKey": "originalId"
+              "input_index": 0,
+              "input_metadata_key": "originalId",
+              "output_index": 0,
+              "output_metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "InputHasMetadata": {
               "index": 0,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
+        { "Op": "NotL" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputIdOutputMetadataValue": {
-              "inputIndex": 0,
-              "outputIndex": 0,
-              "outputMetadataKey": "originalId"
+              "input_index": 0,
+              "output_index": 0,
+              "output_metadata_key": "originalId"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 0,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "created"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 0,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "allocated"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 1,
-              "inputRoleKey": "Owner",
-              "outputIndex": 1,
-              "outputRoleKey": "Owner"
+              "input_index": 1,
+              "input_role_key": "Owner",
+              "output_index": 1,
+              "output_role_key": "Owner"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "type",
-              "metadataValue": {
+              "metadata_key": "type",
+              "metadata_value": {
                 "Literal": "DEMAND"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "type",
-              "outputIndex": 1,
-              "outputMetadataKey": "type"
+              "input_index": 1,
+              "input_metadata_key": "type",
+              "output_index": 1,
+              "output_metadata_key": "type"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "subtype",
-              "metadataValue": {
+              "metadata_key": "subtype",
+              "metadata_value": {
                 "Literal": "demand_b"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "subtype",
-              "outputIndex": 1,
-              "outputMetadataKey": "subtype"
+              "input_index": 1,
+              "input_metadata_key": "subtype",
+              "output_index": 1,
+              "output_metadata_key": "subtype"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "version",
-              "metadataValue": {
+              "metadata_key": "version",
+              "metadata_value": {
                 "Literal": "1"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "version",
-              "outputIndex": 1,
-              "outputMetadataKey": "version"
+              "input_index": 1,
+              "input_metadata_key": "version",
+              "output_index": 1,
+              "output_metadata_key": "version"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 1,
-              "outputMetadataKey": "originalId"
+              "input_index": 1,
+              "input_metadata_key": "originalId",
+              "output_index": 1,
+              "output_metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "InputHasMetadata": {
               "index": 1,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
+        { "Op": "NotL" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputIdOutputMetadataValue": {
-              "inputIndex": 1,
-              "outputIndex": 1,
-              "outputMetadataKey": "originalId"
+              "input_index": 1,
+              "output_index": 1,
+              "output_metadata_key": "originalId"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 1,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "created"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 1,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "allocated"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 2,
-              "inputRoleKey": "Optimiser",
-              "outputIndex": 2,
-              "outputRoleKey": "Optimiser"
+              "input_index": 2,
+              "input_role_key": "Optimiser",
+              "output_index": 2,
+              "output_role_key": "Optimiser"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 2,
-              "inputRoleKey": "MemberA",
-              "outputIndex": 2,
-              "outputRoleKey": "MemberA"
+              "input_index": 2,
+              "input_role_key": "MemberA",
+              "output_index": 2,
+              "output_role_key": "MemberA"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputRole": {
-              "inputIndex": 2,
-              "inputRoleKey": "MemberB",
-              "outputIndex": 2,
-              "outputRoleKey": "MemberB"
+              "input_index": 2,
+              "input_role_key": "MemberB",
+              "output_index": 2,
+              "output_role_key": "MemberB"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 2,
-              "metadataKey": "type",
-              "metadataValue": {
+              "metadata_key": "type",
+              "metadata_value": {
                 "Literal": "MATCH2"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 2,
-              "inputMetadataKey": "type",
-              "outputIndex": 2,
-              "outputMetadataKey": "type"
+              "input_index": 2,
+              "input_metadata_key": "type",
+              "output_index": 2,
+              "output_metadata_key": "type"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 2,
-              "metadataKey": "version",
-              "metadataValue": {
+              "metadata_key": "version",
+              "metadata_value": {
                 "Literal": "1"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 2,
-              "inputMetadataKey": "version",
-              "outputIndex": 2,
-              "outputMetadataKey": "version"
+              "input_index": 2,
+              "input_metadata_key": "version",
+              "output_index": 2,
+              "output_metadata_key": "version"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 0,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 2,
-              "outputMetadataKey": "demandA"
+              "input_index": 0,
+              "input_metadata_key": "originalId",
+              "output_index": 2,
+              "output_metadata_key": "demandA"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 2,
-              "inputMetadataKey": "demandA",
-              "outputIndex": 2,
-              "outputMetadataKey": "demandA"
+              "input_index": 2,
+              "input_metadata_key": "demandA",
+              "output_index": 2,
+              "output_metadata_key": "demandA"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 1,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 2,
-              "outputMetadataKey": "demandB"
+              "input_index": 1,
+              "input_metadata_key": "originalId",
+              "output_index": 2,
+              "output_metadata_key": "demandB"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 2,
-              "inputMetadataKey": "demandB",
-              "outputIndex": 2,
-              "outputMetadataKey": "demandB"
+              "input_index": 2,
+              "input_metadata_key": "demandB",
+              "output_index": 2,
+              "output_metadata_key": "demandB"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputOutputMetadataValue": {
-              "inputIndex": 2,
-              "inputMetadataKey": "originalId",
-              "outputIndex": 2,
-              "outputMetadataKey": "originalId"
+              "input_index": 2,
+              "input_metadata_key": "originalId",
+              "output_index": 2,
+              "output_metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "InputHasMetadata": {
               "index": 2,
-              "metadataKey": "originalId"
+              "metadata_key": "originalId"
             }
           }
         },
         {
-          "restriction": {
-            "None": {}
-          }
+          "Restriction": "None"
         },
-        { "op": "NotL" },
+        { "Op": "NotL" },
         {
-          "restriction": {
+          "Restriction": {
             "MatchInputIdOutputMetadataValue": {
-              "inputIndex": 2,
-              "outputIndex": 2,
-              "outputMetadataKey": "originalId"
+              "input_index": 2,
+              "output_index": 2,
+              "output_metadata_key": "originalId"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" },
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedOutputMetadataValue": {
               "index": 2,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "acceptedFinal"
               }
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 2,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "acceptedA"
               }
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "SenderHasOutputRole": {
               "index": 2,
-              "roleKey": "MemberB"
+              "role_key": "MemberB"
             }
           }
         },
-        { "op": "And" },
+        { "Op": "And" },
         {
-          "restriction": {
+          "Restriction": {
             "FixedInputMetadataValue": {
               "index": 2,
-              "metadataKey": "state",
-              "metadataValue": {
+              "metadata_key": "state",
+              "metadata_value": {
                 "Literal": "acceptedB"
               }
             }
           }
         },
         {
-          "restriction": {
+          "Restriction": {
             "SenderHasOutputRole": {
               "index": 2,
-              "roleKey": "MemberA"
+              "role_key": "MemberA"
             }
           }
         },
-        { "op": "And" },
-        { "op": "Or" },
-        { "op": "And" }
+        { "Op": "And" },
+        { "Op": "Or" },
+        { "Op": "And" }
       ]
     }
   ]

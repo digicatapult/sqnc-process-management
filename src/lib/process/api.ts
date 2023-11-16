@@ -6,7 +6,7 @@ import { hexToUtf8 } from './hex.js'
 // for some reason reduce did not work with Process.Program or ProgramStep[] type due to symbol.iterator
 const isProgramValid = (program: Process.Program, out = { ops: 0, restrictions: -1 }): Boolean => {
   program.forEach((step: Process.ProgramStep) => {
-    out = Object.hasOwn(step, 'op') ? { ...out, ops: out.ops + 1 } : { ...out, restrictions: out.restrictions + 1 }
+    out = Object.hasOwn(step, 'Op') ? { ...out, ops: out.ops + 1 } : { ...out, restrictions: out.restrictions + 1 }
   })
 
   return out.ops === out.restrictions
