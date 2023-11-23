@@ -5,7 +5,12 @@ import { listTransforming, handleVerbose } from '../index.js'
 
 import sample from '../../../../tests/fixtures/processes.js'
 
-const defaultPolkadot: Process.CLIOptions = { port: '9044', user: 'alice', host: 'localhost' }
+const defaultPolkadot: Process.CLIOptions = {
+  port: '9044',
+  user: 'alice',
+  host: 'localhost',
+  file: './exampleProcess.json',
+}
 
 describe('utf8ToHex', () => {
   it('converts a utf8 string to hexadecimal', () => {

@@ -314,7 +314,7 @@ describe('Process creation and deletion, listing', () => {
       it('does not create new one and notifies if programs same are length but do not match', async () => {
         await createProcess({ name: 'existing-steps-single', version: 1, program: simple2 }, false, polkadotOptions)
         const res = await createProcess(
-          { name: 'existing-steps-single', version: 1, program: [{ restriction: { None: {} } }] },
+          { name: 'existing-steps-single', version: 1, program: [{ Restriction: 'None' }] },
           false,
           polkadotOptions
         )

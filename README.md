@@ -78,14 +78,12 @@ Usage: process management create [options] <json>
 
 A command for persisting process flows onto the chain
 
-Arguments:
-  json               takes JSON as string example: '[{"name":"A test","version":1,"program":[{"restriction":{"FixedNumberOfOutputs":{"numOutputs":1}}},{"restriction":{"None":{}}},{"op":"Or"}]}]'
-
 Options:
   --dryRun           to validate process and response locally before persisting on the chain, default - false
+  --verbose          Returns all information about the transation, default - false
   -h, --host <host>  substrate blockchain host address or FQDM, default - "localhost" (default: "localhost")
   -p, --port <port>  specify host port number if it is not a default, default - 9944 (default: "9944")
-  --print            print debugging info
+  -f, --file <file>  path to file containing process flows to loads
   -u, --user <user>  specify substrate blockchain user URI
   --help             display help for command
 
@@ -143,7 +141,7 @@ Options:
 #
 
 # let's create so we have something to disable
-$ process-management create -u //Alice '[{"name":"B test","version":1,"program":[{"restriction":{"FixedNumberOfOutputs":{"numOutputs":1}}},{"restriction":{"None":{}}},{"op":"Or"}]}]'
+$ process-management create -u //Alice -f ./exampleProcess.json
 
 {
   'B test': {

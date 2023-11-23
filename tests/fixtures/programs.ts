@@ -1,182 +1,182 @@
-export const simple: Process.Program = [{ restriction: { None: {} } }]
+export const simple: Process.Program = [{ Restriction: 'None' }]
 
 export const simple2 = [
   {
-    restriction: {
+    Restriction: {
       SenderHasInputRole: {
         index: 0,
-        roleKey: 'Supplier',
+        role_key: 'Supplier',
       },
     },
   },
 ]
 
 export const invalidPOSIX: Process.Program = [
-  { restriction: { None: {} } },
+  { Restriction: 'None' },
   {
-    restriction: {
+    Restriction: {
       SenderHasInputRole: {
         index: 0,
-        roleKey: 'Supplier',
+        role_key: 'Supplier',
       },
     },
   },
-  { op: 'Or' },
+  { Op: 'Or' },
   {
-    restriction: {
+    Restriction: {
       SenderHasOutputRole: {
         index: 0,
-        roleKey: 'Supplier',
+        role_key: 'Supplier',
       },
     },
   },
 ]
 
 export const validAllRestrictions: Process.Program = [
-  { restriction: { None: {} } },
+  { Restriction: 'None' },
   {
-    restriction: {
+    Restriction: {
       SenderHasInputRole: {
         index: 0,
-        roleKey: 'Supplier',
+        role_key: 'Supplier',
       },
     },
   },
-  { op: 'Or' },
+  { Op: 'Or' },
   {
-    restriction: {
+    Restriction: {
       SenderHasOutputRole: {
         index: 0,
-        roleKey: 'Supplier',
+        role_key: 'Supplier',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       OutputHasRole: {
         index: 0,
-        roleKey: 'Supplier',
+        role_key: 'Supplier',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       OutputHasMetadata: {
         index: 0,
-        metadataKey: 'SomeMetadataKey',
+        metadata_key: 'SomeMetadataKey',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       InputHasRole: {
         index: 0,
-        roleKey: 'Supplier',
+        role_key: 'Supplier',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       InputHasMetadata: {
         index: 0,
-        metadataKey: 'SomeMetadataKey',
+        metadata_key: 'SomeMetadataKey',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       MatchInputOutputRole: {
-        inputIndex: 0,
-        inputRoleKey: 'Supplier',
-        outputIndex: 0,
-        outputRoleKey: 'Supplier',
+        input_index: 0,
+        input_role_key: 'Supplier',
+        output_index: 0,
+        output_role_key: 'Supplier',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       MatchInputOutputMetadataValue: {
-        inputIndex: 0,
-        inputMetadataKey: 'SomeMetadataKey',
-        outputIndex: 0,
-        outputMetadataKey: 'SomeMetadataKey',
+        input_index: 0,
+        input_metadata_key: 'SomeMetadataKey',
+        output_index: 0,
+        output_metadata_key: 'SomeMetadataKey',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       MatchInputIdOutputMetadataValue: {
-        inputIndex: 0,
-        outputIndex: 0,
-        outputMetadataKey: 'SomeMetadataKey',
+        input_index: 0,
+        output_index: 0,
+        output_metadata_key: 'SomeMetadataKey',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       FixedNumberOfInputs: {
-        numInputs: 0,
+        num_inputs: 0,
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       FixedNumberOfOutputs: {
-        numOutputs: 0,
+        num_outputs: 0,
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       FixedInputMetadataValue: {
         index: 0,
-        metadataKey: 'SomeMetadataKey',
-        metadataValue: {
+        metadata_key: 'SomeMetadataKey',
+        metadata_value: {
           Literal: 'a',
         },
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       FixedOutputMetadataValue: {
         index: 0,
-        metadataKey: 'SomeMetadataKey',
-        metadataValue: {
+        metadata_key: 'SomeMetadataKey',
+        metadata_value: {
           Literal: 'a',
         },
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
   {
-    restriction: {
+    Restriction: {
       FixedOutputMetadataValueType: {
         index: 0,
-        metadataKey: 'SomeMetadataKey',
-        metadataValueType: 'Literal',
+        metadata_key: 'SomeMetadataKey',
+        metadata_value_type: 'Literal',
       },
     },
   },
-  { op: 'And' },
+  { Op: 'And' },
 ]
 
-export const invalidRestrictionKey: Process.Program = [{ restriction: { NotARestriction: {} } }]
+export const invalidRestrictionKey: Process.Program = [{ Restriction: { NotARestriction: {} } }]
 
 export const invalidRestrictionValue: Process.Program = [
   {
-    restriction: {
+    Restriction: {
       FixedInputMetadataValue: {
         invalid: 0,
       },
@@ -197,10 +197,10 @@ export const multiple = (
       version: process1BumpedV,
       program: [
         {
-          restriction: {
+          Restriction: {
             SenderHasInputRole: {
               index: 0,
-              roleKey: 'Supplier',
+              role_key: 'Supplier',
             },
           },
         },
@@ -211,10 +211,10 @@ export const multiple = (
       version: process2BumpedV,
       program: [
         {
-          restriction: {
+          Restriction: {
             SenderHasInputRole: {
               index: 0,
-              roleKey: 'Supplier',
+              role_key: 'Supplier',
             },
           },
         },

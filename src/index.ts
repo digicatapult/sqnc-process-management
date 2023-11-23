@@ -1,5 +1,7 @@
 #!/usr/bin/env -S node --no-warnings
 
+import fs from 'fs/promises'
+
 import chalk from 'chalk'
 import { Command } from 'commander'
 
@@ -18,17 +20,6 @@ const { red: r, blue: b } = {
   red: (txt: string) => chalk.redBright(txt),
   blue: (txt: string) => chalk.blueBright(txt),
 }
-const example: string = JSON.stringify([
-  {
-    name: 'A test',
-    version: 1,
-    program: [
-      { restriction: { FixedNumberOfOutputs: { numOutputs: 1 } } },
-      { restriction: { None: {} } },
-      { op: 'Or' },
-    ],
-  },
-])
 
 const mapOptions = (options: Process.CLIOptions): Polkadot.Options => ({
   API_HOST: options.host,
@@ -79,17 +70,17 @@ program
   .option('--verbose', 'Returns all information about the transation, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')
   .option('-p, --port <port>', 'specify host port number if it is not a default, default - 9944', '9944')
+  .requiredOption('-f, --file <file>', 'path to file containing process flows to loads')
   .requiredOption('-u, --user <user>', 'specify substrate blockchain user URI')
-  .argument('<json>', `takes JSON as string example: '${example}'`)
-  .action(async (data: string, options: Process.CLIOptions) => {
+  .action(async (options: Process.CLIOptions) => {
     if (options.print)
       log(`
       attempting to create a process...
       options: ${b(JSON.stringify(options))}
-      program: ${b(data)}
     `)
     const { dryRun, verbose } = options
     try {
+      const data = (await fs.readFile(options.file)).toString('utf8')
       const loadResult = await loadProcesses({ data, dryRun, options: mapOptions(options), verbose })
       dir(loadResult.message, { depth: null })
       dir(unwrap(loadResult), { depth: null })
