@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -50,7 +50,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.2",
-    "prettier": "^3.1.0",
+    "prettier": "^3.1.1",
     "ts-mocha": "^10.0.0"
   },
   "dependencies": {
