@@ -10,7 +10,6 @@ export const defaultOptions: Polkadot.Options = {
   API_HOST: 'localhost',
   API_PORT: 9944,
   USER_URI: '//Alice',
-  MANUAL_SEAL: false,
 }
 
 const textify = (obj: Process.ProgramStep): string => {

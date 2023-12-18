@@ -25,7 +25,6 @@ const mapOptions = (options: Process.CLIOptions): Polkadot.Options => ({
   API_HOST: options.host,
   API_PORT: parseInt(options.port),
   USER_URI: options.user,
-  MANUAL_SEAL: options.manualSeal || false,
 })
 
 // TODO nice to have, a local config file for substrate host details e.g. name, port, address
@@ -67,7 +66,6 @@ program
 program
   .command('create')
   .description('A command for persisting process flows onto the chain')
-  .option('--manualSeal', 'manually seal blocks when using test chain, default - false')
   .option('--dryRun', 'to validate process and response locally before persisting on the chain, default - false')
   .option('--verbose', 'Returns all information about the transation, default - false')
   .option('-h, --host <host>', 'substrate blockchain host address or FQDM, default - "localhost"', 'localhost')

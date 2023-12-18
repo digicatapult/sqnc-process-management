@@ -21,6 +21,7 @@ export const createProcessTransaction = async (
   options: Polkadot.Options
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
+  const supportsManualSeal = !!polkadot.api.rpc.engine.createBlock
 
   if (!isProgramValid(program)) throw new ProgramError('invalid program')
 
@@ -45,7 +46,7 @@ export const createProcessTransaction = async (
             resolve(newProcess)
           }
         })
-      if (options.MANUAL_SEAL) {
+      if (supportsManualSeal) {
         await polkadot.api.rpc.engine.createBlock(true, true)
       }
     } catch (err) {
@@ -61,6 +62,7 @@ export const disableProcessTransaction = async (
   options: Polkadot.Options
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
+  const supportsManualSeal = !!polkadot.api.rpc.engine.createBlock
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -83,7 +85,7 @@ export const disableProcessTransaction = async (
             resolve(disabledProcess)
           }
         })
-      if (options.MANUAL_SEAL) {
+      if (supportsManualSeal) {
         await polkadot.api.rpc.engine.createBlock(true, true)
       }
     } catch (err) {
