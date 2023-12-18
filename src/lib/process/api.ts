@@ -67,7 +67,7 @@ export const disableProcessTransaction = async (
       const unsub = await polkadot.api.tx.sudo
         .sudo(polkadot.api.tx.processValidation.disableProcess(processId, version))
         .signAndSend(sudo, (result: any) => {
-          if (result.status.isInBlock) {
+          if (result.status.isFinalized) {
             const { event } = result.events.find(
               ({ event: { method } }: { event: { method: string } }) => method === 'ProcessDisabled'
             )
