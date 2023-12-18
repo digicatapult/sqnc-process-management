@@ -203,7 +203,7 @@ npm run test:unit
 To run the integration test suite first bring up the test dependency services using docker
 
 ```shell
-docker compose -f ./docker-compose-test.yml up -d
+docker compose -f ./docker-compose-test.yaml up -d
 ```
 
 And then to run the tests
