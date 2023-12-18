@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/dscp-process-management",
-  "version": "2.0.16",
+  "version": "2.1.0",
   "description": "DSCP Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -8,9 +8,9 @@
   },
   "type": "module",
   "scripts": {
-    "start": "ts-node --esm src/index.ts",
+    "start": "node --loader ts-node/esm src/index.ts",
     "local": "npm i -g && process-management",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node --esm src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec node --loader ts-node/esm src/index.ts",
     "lint": "eslint . --ext .ts",
     "build": "tsc --build",
     "depcheck": "depcheck",
@@ -26,8 +26,8 @@
     "/build"
   ],
   "engines": {
-    "node": ">=18.x.x",
-    "npm": ">=9.x.x"
+    "node": ">=20.x.x",
+    "npm": ">=10.x.x"
   },
   "author": "Digital Catapult",
   "license": "Apache-2.0",

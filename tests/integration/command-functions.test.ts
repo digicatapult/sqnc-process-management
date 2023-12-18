@@ -20,7 +20,7 @@ import { getAll } from '../../src/lib/process/api.js'
 /* fixtures */
 import processesExample from '../fixtures/processes.js'
 
-const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
+const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice', MANUAL_SEAL: true }
 
 describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {

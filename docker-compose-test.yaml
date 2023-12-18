@@ -1,0 +1,15 @@
+version: '3'
+services:
+  dscp-node:
+    image: digicatapult/dscp-node:8aecdf00b4e434bca5c83a6f28a96461598cacbc
+    command: --base-path /data/
+      --dev
+      --manual-seal
+      --unsafe-ws-external
+      --unsafe-rpc-external
+      --rpc-cors all
+    ports:
+      - 30333:30333
+      - 9944:9944
+      - 9933:9933
+    restart: on-failure
