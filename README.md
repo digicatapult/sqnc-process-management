@@ -18,26 +18,19 @@ To start the basic application
 npm run local
 ```
 
-To run the tests
-
-```shell
-npm run test
-npm run test:unit
-```
-
 To install npm CLI tool. It will be linked to local binaries so can be executed as `process-management`
 
 ```shell
 npm i -g
 ```
 
-# using CLI
+## using CLI
 
 ```sh
 process-management help
 ```
 
-## Options
+### Options
 
 `dscp-process-management` takes the following arguments to configure the `Polkadot.js` API connection:
 
@@ -197,4 +190,24 @@ $ process-management list --active
     program: [ { restriction: { none: null } } ]
   }
 ]
+```
+
+## Running tests
+
+Unit tests can be run without docker using:
+
+```shell
+npm run test:unit
+```
+
+To run the integration test suite first bring up the test dependency services using docker
+
+```shell
+docker compose -f ./docker-compose-test.yaml up -d
+```
+
+And then to run the tests
+
+```shell
+npm run test
 ```

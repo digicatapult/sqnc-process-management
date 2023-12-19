@@ -21,36 +21,37 @@ export const createProcessTransaction = async (
   options: Polkadot.Options
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
+  const supportsManualSeal = !!polkadot.api.rpc.engine.createBlock
 
   if (!isProgramValid(program)) throw new ProgramError('invalid program')
 
-  return new Promise((resolve, reject) => {
-    let unsub: Function
-    polkadot.api.tx.sudo
-      .sudo(polkadot.api.tx.processValidation.createProcess(processId, program))
-      .signAndSend(sudo, (result: any) => {
-        if (result.status.isInBlock) {
-          const { event } = result.events.find(
-            ({ event: { method } }: { event: { method: string } }) => method === 'ProcessCreated'
-          )
+  return new Promise(async (resolve, reject) => {
+    try {
+      const unsub = await polkadot.api.tx.sudo
+        .sudo(polkadot.api.tx.processValidation.createProcess(processId, program))
+        .signAndSend(sudo, (result: any) => {
+          if (result.status.isFinalized) {
+            const { event } = result.events.find(
+              ({ event: { method } }: { event: { method: string } }) => method === 'ProcessCreated'
+            )
 
-          const data = event.data
-          const newProcess: Process.Payload = {
-            name: data[0].toHuman(),
-            version: data[1].toNumber(),
-            status: 'Enabled',
-            program,
+            const data = event.data
+            const newProcess: Process.Payload = {
+              name: data[0].toHuman(),
+              version: data[1].toNumber(),
+              status: 'Enabled',
+              program,
+            }
+            unsub()
+            resolve(newProcess)
           }
-          unsub()
-          resolve(newProcess)
-        }
-      })
-      .then((res: Function) => {
-        unsub = res
-      })
-      .catch((err: Error) => {
-        reject(err)
-      })
+        })
+      if (supportsManualSeal) {
+        await polkadot.api.rpc.engine.createBlock(true, true)
+      }
+    } catch (err) {
+      reject(err)
+    }
   })
 }
 
@@ -61,34 +62,35 @@ export const disableProcessTransaction = async (
   options: Polkadot.Options
 ): Promise<Process.Payload> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
+  const supportsManualSeal = !!polkadot.api.rpc.engine.createBlock
 
-  return new Promise((resolve, reject) => {
-    let unsub: Function
-    polkadot.api.tx.sudo
-      .sudo(polkadot.api.tx.processValidation.disableProcess(processId, version))
-      .signAndSend(sudo, (result: any) => {
-        if (result.status.isInBlock) {
-          const { event } = result.events.find(
-            ({ event: { method } }: { event: { method: string } }) => method === 'ProcessDisabled'
-          )
+  return new Promise(async (resolve, reject) => {
+    try {
+      const unsub = await polkadot.api.tx.sudo
+        .sudo(polkadot.api.tx.processValidation.disableProcess(processId, version))
+        .signAndSend(sudo, (result: any) => {
+          if (result.status.isFinalized) {
+            const { event } = result.events.find(
+              ({ event: { method } }: { event: { method: string } }) => method === 'ProcessDisabled'
+            )
 
-          const data = event.data
-          const disabledProcess: Process.Payload = {
-            name: data[0].toHuman(),
-            version: data[1].toNumber(),
-            status: 'Disabled',
+            const data = event.data
+            const disabledProcess: Process.Payload = {
+              name: data[0].toHuman(),
+              version: data[1].toNumber(),
+              status: 'Disabled',
+            }
+
+            unsub()
+            resolve(disabledProcess)
           }
-
-          unsub()
-          resolve(disabledProcess)
-        }
-      })
-      .then((res: Function) => {
-        unsub = res
-      })
-      .catch((err: Error) => {
-        reject(err)
-      })
+        })
+      if (supportsManualSeal) {
+        await polkadot.api.rpc.engine.createBlock(true, true)
+      }
+    } catch (err) {
+      reject(err)
+    }
   })
 }
 
