@@ -1,7 +1,7 @@
 {
-  "name": "@digicatapult/dscp-process-management",
+  "name": "@digicatapult/sqnc-process-management",
   "version": "2.1.7",
-  "description": "DSCP Process Management Flow",
+  "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
     "process-management": "./build/src/index.js"
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/digicatapult/dscp-process-management.git"
+    "url": "git+https://github.com/digicatapult/sqnc-process-management.git"
   },
   "files": [
     "/build"
@@ -32,9 +32,9 @@
   "author": "Digital Catapult",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/digicatapult/dscp-process-management/issues"
+    "url": "https://github.com/digicatapult/sqnc-process-management/issues"
   },
-  "homepage": "https://github.com/digicatapult/dscp-process-management#readme",
+  "homepage": "https://github.com/digicatapult/sqnc-process-management#readme",
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",

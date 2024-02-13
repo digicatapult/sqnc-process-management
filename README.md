@@ -1,6 +1,6 @@
-# dscp-process-management
+# sqnc-process-management
 
-A Library for managing restricted process flows in `DSCP`.
+A Library for managing restricted process flows in `Sequence` (SQNC).
 
 ## Getting started
 
@@ -32,15 +32,15 @@ process-management help
 
 ### Options
 
-`dscp-process-management` takes the following arguments to configure the `Polkadot.js` API connection:
+`sqnc-process-management` takes the following arguments to configure the `Polkadot.js` API connection:
 
 | variable | required |   default   | description                                                                                                           |
 | :------- | :------: | :---------: | :-------------------------------------------------------------------------------------------------------------------- |
-| `host`   |    N     | `localhost` | The hostname of the `dscp-node` the API should connect to                                                             |
-| `port`   |    N     |   `9944`    | The port of the `dscp-node` the API should connect to                                                                 |
-| `user`   |    Y     |      -      | The Substrate `URI` representing the private key to use when making `dscp-node` transactions. `//Alice` for dev chain |
+| `host`   |    N     | `localhost` | The hostname of the `sqnc-node` the API should connect to                                                             |
+| `port`   |    N     |   `9944`    | The port of the `sqnc-node` the API should connect to                                                                 |
+| `user`   |    Y     |      -      | The Substrate `URI` representing the private key to use when making `sqnc-node` transactions. `//Alice` for dev chain |
 
-For the full list of available restrictions see [`dscp-node`](https://github.com/digicatapult/dscp-node/blob/main/pallets/process-validation/src/restrictions.rs)
+For the full list of available restrictions see [`sqnc-node`](https://github.com/digicatapult/sqnc-node/blob/main/pallets/process-validation/src/restrictions.rs)
 
 ### Help
 
