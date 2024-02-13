@@ -1,6 +1,6 @@
 # sqnc-process-management
 
-A Library for managing restricted process flows in `Sequence` (SQNC).
+A Library for managing restricted process flows in the `Sequence` (SQNC) ledger-based system.
 
 ## Getting started
 
