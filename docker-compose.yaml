@@ -4,7 +4,6 @@ services:
     image: digicatapult/sqnc-node:latest
     command: --base-path /data/
       --dev
-      --unsafe-ws-external
       --unsafe-rpc-external
       --rpc-cors all
     ports:

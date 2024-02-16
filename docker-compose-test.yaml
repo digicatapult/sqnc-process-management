@@ -5,7 +5,6 @@ services:
     command: --base-path /data/
       --dev
       --manual-seal
-      --unsafe-ws-external
       --unsafe-rpc-external
       --rpc-cors all
     ports:
