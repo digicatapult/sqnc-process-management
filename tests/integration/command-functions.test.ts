@@ -1,6 +1,4 @@
-import { default as chai, expect, assert } from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-chai.use(chaiAsPromised)
+import { expect } from 'chai'
 
 import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
 import {
@@ -453,7 +451,13 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails to disable process that does not exist', async () => {
-      return assert.isRejected(disableProcess('incorrectProcessName', 1, false, polkadotOptions), DisableError)
+      let err = null
+      try {
+        await disableProcess('incorrectProcessName', 1, false, polkadotOptions)
+      } catch (error) {
+        err = error
+      }
+      expect(err).instanceOf(DisableError)
     })
 
     it('fails to disable process a second time', async () => {
@@ -466,10 +470,13 @@ describe('Process creation and deletion, listing', () => {
       const firstDisable = await disableProcess(validProcessName, validVersionNumber, false, polkadotOptions)
       expect(firstDisable.type).to.equal('ok')
 
-      return assert.isRejected(
-        disableProcess(validProcessName, validVersionNumber, false, polkadotOptions),
-        DisableError
-      )
+      let err = null
+      try {
+        await disableProcess(validProcessName, validVersionNumber, false, polkadotOptions)
+      } catch (error) {
+        err = error
+      }
+      expect(err).instanceOf(DisableError)
     })
   })
 })
