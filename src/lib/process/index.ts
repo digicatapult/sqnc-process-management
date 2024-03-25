@@ -68,16 +68,24 @@ export const loadProcesses = async ({
   }
   const processes = parsedRes.result
 
-  const [result, successCount] = await processes.reduce<Promise<[{ [key: string]: Process.ProcessResponse }, number]>>(
-    async (acc, process) => {
-      const [result, oldCount] = await acc
-      const processResult = await createProcess(process, dryRun, options, verbose)
-      const newCount = processResult.type === 'ok' ? oldCount + 1 : oldCount
-      result[process.name] = processResult
-      return [result, newCount]
-    },
-    Promise.resolve([{}, 0])
-  )
+  const processTxs: Map<string, Promise<Process.ProcessResponse>> = new Map()
+  for (const process of processes) {
+    const { waitForFinalised } = await createProcess(process, dryRun, options, verbose)
+    processTxs.set(process.name, waitForFinalised)
+  }
+  await Promise.all(processTxs.values())
+
+  const result: { [key: string]: Process.ProcessResponse } = {}
+  let successCount = 0
+  for (const [key, processTxProm] of processTxs) {
+    let response = await processTxProm
+    result[key] = response
+    if (response.type === 'ok') {
+      successCount = successCount + 1
+    }
+  }
+
+  // calculate the result and successCount
 
   return {
     type: 'ok',
@@ -127,7 +135,35 @@ export const createProcess = async (
   dryRun: boolean = false,
   options: Polkadot.Options = defaultOptions,
   verbose: boolean = false
-): Promise<Process.ProcessResponse> => {
+): Promise<{
+  waitForFinalised: Promise<Process.ProcessResponse>
+}> => {
+  const handleErr = (err: unknown) => {
+    // err is basically from errors.ts or any exception
+    // process errors will contain specific messages and/or process
+    // Promise<Process.Result> is in try {} and any exception is in catch {}
+    if (err instanceof ProgramError || err instanceof VersionError || err instanceof ZodError) {
+      const result: Process.ProcessResponse = {
+        type: 'error' as 'error',
+        error: err,
+        message: err.message,
+      }
+      return {
+        waitForFinalised: Promise.resolve(result),
+      }
+    } else if (err instanceof Error) {
+      const result: Process.ProcessResponse = {
+        type: 'error' as 'error',
+        error: err,
+        message: 'An unknown error occurred',
+      }
+      return {
+        waitForFinalised: Promise.resolve(result),
+      }
+    }
+    throw err
+  }
+
   try {
     const { name, version, program } = processValidation.parse(processRaw)
 
@@ -148,58 +184,54 @@ export const createProcess = async (
         throw new ProgramError('existing: program steps did not match', process)
 
       return {
-        type: 'ok',
-        message: `Skipping: process ${name} is already created.`,
-        result: handleVerbose(
-          {
-            name,
-            version,
-            program,
-            status: process.status,
-          },
-          verbose
-        ),
+        waitForFinalised: Promise.resolve({
+          type: 'ok',
+          message: `Skipping: process ${name} is already created.`,
+          result: handleVerbose(
+            {
+              name,
+              version,
+              program,
+              status: process.status,
+            },
+            verbose
+          ),
+        }),
       }
     }
 
     if (dryRun)
       return {
-        type: 'ok',
-        message: 'Dry run: transaction has not been created',
-        result: handleVerbose(
-          {
-            name,
-            version,
-            program,
-            status: 'Enabled (dry-run)',
-          },
-          verbose
-        ),
+        waitForFinalised: Promise.resolve({
+          type: 'ok',
+          message: 'Dry run: transaction has not been created',
+          result: handleVerbose(
+            {
+              name,
+              version,
+              program,
+              status: 'Enabled (dry-run)',
+            },
+            verbose
+          ),
+        }),
       }
 
+    const createProcessTx = await createProcessTransaction(polkadot, processId, program, options)
     return {
-      type: 'ok',
-      message: `Transaction for new process ${name} has been successfully submitted`,
-      result: handleVerbose(await createProcessTransaction(polkadot, processId, program, options), verbose),
+      waitForFinalised: createProcessTx.waitForFinal
+        .then((process) => {
+          const result: Process.ProcessResponse = {
+            type: 'ok',
+            message: `Transaction for new process ${name} has been successfully submitted`,
+            result: handleVerbose(process, verbose),
+          }
+          return result
+        })
+        .catch((err) => handleErr(err).waitForFinalised),
     }
   } catch (err) {
-    // err is basically from errors.ts or any exception
-    // process errors will comntain specific messages and/or process
-    // Promise<Process.Result> is in try {} and any exception is in catch {}
-    if (err instanceof ProgramError || err instanceof VersionError || err instanceof ZodError) {
-      return {
-        type: 'error',
-        error: err,
-        message: err.message,
-      }
-    } else if (err instanceof Error) {
-      return {
-        type: 'error',
-        error: err,
-        message: 'An unknown error occurred',
-      }
-    }
-    throw err
+    return handleErr(err)
   }
 }
 

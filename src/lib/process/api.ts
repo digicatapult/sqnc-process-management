@@ -19,40 +19,49 @@ export const createProcessTransaction = async (
   processId: Process.Hex,
   program: Process.Program,
   options: Polkadot.Options
-): Promise<Process.Payload> => {
+): Promise<{ waitForFinal: Promise<Process.Payload> }> => {
   const sudo = polkadot.keyring.addFromUri(options.USER_URI)
   const supportsManualSeal = !!polkadot.api.rpc.engine.createBlock
 
   if (!isProgramValid(program)) throw new ProgramError('invalid program')
 
-  return new Promise(async (resolve, reject) => {
-    try {
-      const unsub = await polkadot.api.tx.sudo
-        .sudo(polkadot.api.tx.processValidation.createProcess(processId, program))
-        .signAndSend(sudo, (result: any) => {
-          if (result.status.isFinalized) {
-            const { event } = result.events.find(
-              ({ event: { method } }: { event: { method: string } }) => method === 'ProcessCreated'
-            )
-
-            const data = event.data
-            const newProcess: Process.Payload = {
-              name: data[0].toHuman(),
-              version: data[1].toNumber(),
-              status: 'Enabled',
-              program,
-            }
-            unsub()
-            resolve(newProcess)
-          }
-        })
-      if (supportsManualSeal) {
-        await polkadot.api.rpc.engine.createBlock(true, true)
-      }
-    } catch (err) {
-      reject(err)
-    }
+  let resolve: (value: Process.Payload) => void = () => {}
+  let reject: (reason: any) => void = () => {}
+  const result: Promise<Process.Payload> = new Promise((res, rej) => {
+    resolve = res
+    reject = rej
   })
+
+  try {
+    const unsub = await polkadot.api.tx.sudo
+      .sudo(polkadot.api.tx.processValidation.createProcess(processId, program))
+      .signAndSend(sudo, { nonce: -1 }, (result: any) => {
+        if (result.status.isFinalized) {
+          const { event } = result.events.find(
+            ({ event: { method } }: { event: { method: string } }) => method === 'ProcessCreated'
+          )
+
+          const data = event.data
+          const newProcess: Process.Payload = {
+            name: data[0].toHuman(),
+            version: data[1].toNumber(),
+            status: 'Enabled',
+            program,
+          }
+          unsub()
+          resolve(newProcess)
+        }
+      })
+    if (supportsManualSeal) {
+      await polkadot.api.rpc.engine.createBlock(true, true)
+    }
+  } catch (err) {
+    reject(err)
+  }
+
+  return {
+    waitForFinal: result,
+  }
 }
 
 export const disableProcessTransaction = async (
