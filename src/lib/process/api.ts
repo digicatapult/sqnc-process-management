@@ -35,7 +35,7 @@ export const createProcessTransaction = async (
   try {
     const unsub = await polkadot.api.tx.sudo
       .sudo(polkadot.api.tx.processValidation.createProcess(processId, program))
-      .signAndSend(sudo, (result: any) => {
+      .signAndSend(sudo, { nonce: -1 }, (result: any) => {
         if (result.status.isFinalized) {
           const { event } = result.events.find(
             ({ event: { method } }: { event: { method: string } }) => method === 'ProcessCreated'
