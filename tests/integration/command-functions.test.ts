@@ -20,11 +20,22 @@ import processesExample from '../fixtures/processes.js'
 
 const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice', MANUAL_SEAL: true }
 
+const createProcessAndWait = async (
+  processRaw: Process.CliProcessInput,
+  dryRun?: boolean,
+  options?: Polkadot.Options,
+  verbose?: boolean
+) => {
+  const { waitForFinalised } = await createProcess(processRaw, dryRun, options, verbose)
+  const result = await waitForFinalised
+  return result
+}
+
 describe('Process creation and deletion, listing', () => {
   describe('Happy path', () => {
     describe('Multiple processes', () => {
       it('skips already created processes and creates new ones', async () => {
-        await createProcess(
+        await createProcessAndWait(
           {
             name: 'existing-process-test',
             version: 1,
@@ -140,7 +151,7 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(
+      const newProcess = await createProcessAndWait(
         { name: processName, version: bumpedVersion, program: simple },
         false,
         polkadotOptions
@@ -172,7 +183,7 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(
+      const newProcess = await createProcessAndWait(
         { name: processName, version: bumpedVersion, program: validAllRestrictions },
         true,
         polkadotOptions
@@ -193,7 +204,7 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'
       const currentVersion = await getVersionHelper(processName)
       const bumpedVersion = currentVersion + 1
-      const newProcess = await createProcess(
+      const newProcess = await createProcessAndWait(
         { name: processName, version: bumpedVersion, program: validAllRestrictions },
         false,
         polkadotOptions
@@ -237,7 +248,7 @@ describe('Process creation and deletion, listing', () => {
       describe('Multiple uploads', () => {
         // TODO could prestage in before if more scenarios
         it('skips and notifies if process programs are different', async () => {
-          await createProcess(
+          await createProcessAndWait(
             { name: 'existing-length', version: 1, program: validAllRestrictions },
             false,
             polkadotOptions
@@ -269,7 +280,7 @@ describe('Process creation and deletion, listing', () => {
         })
 
         it('also fails if number of steps matches but POSTFIX does not', async () => {
-          await createProcess({ name: 'existing-steps', version: 1, program: simple }, false, polkadotOptions)
+          await createProcessAndWait({ name: 'existing-steps', version: 1, program: simple }, false, polkadotOptions)
           const process2Name = 'should-create-2'
           const process2BumpedV = (await getVersionHelper(process2Name)) + 1
           const res = await loadProcesses({
@@ -290,12 +301,12 @@ describe('Process creation and deletion, listing', () => {
       })
 
       it('does not create new one and notifies if programs are different length', async () => {
-        await createProcess(
+        await createProcessAndWait(
           { name: 'existing-single', version: 1, program: validAllRestrictions },
           false,
           polkadotOptions
         )
-        const res = await createProcess(
+        const res = await createProcessAndWait(
           { name: 'existing-single', version: 1, program: simple },
           false,
           polkadotOptions
@@ -310,8 +321,12 @@ describe('Process creation and deletion, listing', () => {
       })
 
       it('does not create new one and notifies if programs same are length but do not match', async () => {
-        await createProcess({ name: 'existing-steps-single', version: 1, program: simple2 }, false, polkadotOptions)
-        const res = await createProcess(
+        await createProcessAndWait(
+          { name: 'existing-steps-single', version: 1, program: simple2 },
+          false,
+          polkadotOptions
+        )
+        const res = await createProcessAndWait(
           { name: 'existing-steps-single', version: 1, program: [{ Restriction: 'None' }] },
           false,
           polkadotOptions
@@ -333,7 +348,7 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails for invalid POSTFIX notation', async () => {
-      const res = await createProcess(
+      const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: invalidPOSIX },
         false,
         polkadotOptions
@@ -348,7 +363,7 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails for invalid restriction key', async () => {
-      const res = await createProcess(
+      const res = await createProcessAndWait(
         {
           name: validProcessName,
           version: validVersionNumber,
@@ -371,7 +386,7 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails for invalid restriction value', async () => {
-      const res = await createProcess(
+      const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: invalidRestrictionValue },
         false,
         polkadotOptions
@@ -385,7 +400,7 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails for invalid json', async () => {
-      const res = await createProcess(
+      const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: 'invalidJson' as unknown as Process.Program },
         false,
         polkadotOptions
@@ -400,7 +415,7 @@ describe('Process creation and deletion, listing', () => {
 
     it('fails to create for too low version', async () => {
       // - 2 because -1 would make current = valid
-      const res = await createProcess(
+      const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber - 2, program: validAllRestrictions },
         false,
         polkadotOptions
@@ -418,7 +433,7 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails to create for too high version', async () => {
-      const res = await createProcess(
+      const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber + 1, program: validAllRestrictions },
         false,
         polkadotOptions
@@ -438,7 +453,7 @@ describe('Process creation and deletion, listing', () => {
 
     it('fails to create with too long process id', async () => {
       const processName = '0'.repeat(Constants.PROCESS_ID_LENGTH + 1)
-      const res = await createProcess(
+      const res = await createProcessAndWait(
         { name: processName, version: 1, program: validAllRestrictions },
         false,
         polkadotOptions
@@ -461,7 +476,7 @@ describe('Process creation and deletion, listing', () => {
     })
 
     it('fails to disable process a second time', async () => {
-      const newProcess = await createProcess(
+      const newProcess = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: simple },
         false,
         polkadotOptions
