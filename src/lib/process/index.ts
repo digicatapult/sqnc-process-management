@@ -85,7 +85,7 @@ export const loadProcesses = async ({
     }
   }
 
-  // calculate the result and successCOunt
+  // calculate the result and successCount
 
   return {
     type: 'ok',
@@ -140,7 +140,7 @@ export const createProcess = async (
 }> => {
   const handleErr = (err: unknown) => {
     // err is basically from errors.ts or any exception
-    // process errors will comntain specific messages and/or process
+    // process errors will contain specific messages and/or process
     // Promise<Process.Result> is in try {} and any exception is in catch {}
     if (err instanceof ProgramError || err instanceof VersionError || err instanceof ZodError) {
       const result: Process.ProcessResponse = {
