@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "2.2.61",
+  "version": "2.2.62",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -37,8 +37,8 @@
   "homepage": "https://github.com/digicatapult/sqnc-process-management#readme",
   "devDependencies": {
     "@types/chai": "^4.3.16",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^18.19.38",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "^18.19.39",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "chai": "^5.1.1",
