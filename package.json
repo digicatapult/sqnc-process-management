@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "2.2.70",
+  "version": "2.2.71",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -48,7 +48,7 @@
     "eslint-plugin-prettier": "^5.1.3",
     "mocha": "^10.6.0",
     "nodemon": "^3.1.4",
-    "prettier": "^3.3.2",
+    "prettier": "^3.3.3",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2"
   },
