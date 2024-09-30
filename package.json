@@ -11,7 +11,7 @@
     "start": "node --loader ts-node/esm src/index.ts",
     "local": "npm i -g && process-management",
     "dev": "nodemon --watch 'src/**/*.ts' --exec node --loader ts-node/esm src/index.ts",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "build": "tsc --build",
     "depcheck": "depcheck",
     "test": "ts-mocha --config ./tests/mocharc.json -n  loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit",
@@ -36,6 +36,8 @@
   },
   "homepage": "https://github.com/digicatapult/sqnc-process-management#readme",
   "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.11.1",
     "@types/chai": "^5.0.0",
     "@types/mocha": "^10.0.8",
     "@types/node": "^18.19.53",
