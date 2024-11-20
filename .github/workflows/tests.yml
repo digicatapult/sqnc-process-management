@@ -99,12 +99,6 @@ jobs:
             ${{ runner.OS }}-
       - name: Install Packages
         run: npm ci
-      - name: Setup dependencies
-        run: docker compose -f ./docker-compose-test.yaml up -d
-      - name: Sleep
-        uses: kibertoad/wait-action@1.0.1
-        with:
-          time: '30s'
       - name: Run unit tests
         run: npm run test:unit
       - name: Run integration tests

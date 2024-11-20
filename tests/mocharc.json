@@ -2,5 +2,5 @@
   "extension": ["ts"],
   "spec": ["tests"],
   "loader": "ts-node/esm",
-  "timeout": 30000
+  "timeout": 10000
 }

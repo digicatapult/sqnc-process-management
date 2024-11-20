@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "2.2.128",
+  "version": "2.2.129",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -51,6 +51,7 @@
     "mocha": "^10.8.2",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
+    "testcontainers": "^10.14.0",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.2"
   },
