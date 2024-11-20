@@ -12,6 +12,11 @@ const isProgramValid = (program: Process.Program, out = { ops: 0, restrictions: 
   return out.ops === out.restrictions
 }
 
+let lastSubmittedNonce: number = -1
+export function resetLastSubmittedNonce() {
+  lastSubmittedNonce = -1
+}
+
 // TODO refactor since api.ts other should be a util
 // since createNodeApi, set's all routes we could use in process.index.ts
 export const createProcessTransaction = async (
@@ -33,9 +38,13 @@ export const createProcessTransaction = async (
   })
 
   try {
+    const nextTxPoolNonce = (await polkadot.api.rpc.system.accountNextIndex(sudo.publicKey)).toNumber()
+    const nonce = Math.max(nextTxPoolNonce, lastSubmittedNonce + 1)
+    lastSubmittedNonce = nonce
+
     const unsub = await polkadot.api.tx.sudo
       .sudo(polkadot.api.tx.processValidation.createProcess(processId, program))
-      .signAndSend(sudo, { nonce: -1 }, (result: any) => {
+      .signAndSend(sudo, { nonce }, (result: any) => {
         if (result.status.isFinalized) {
           const { event } = result.events.find(
             ({ event: { method } }: { event: { method: string } }) => method === 'ProcessCreated'
@@ -75,9 +84,13 @@ export const disableProcessTransaction = async (
 
   return new Promise(async (resolve, reject) => {
     try {
+      const nextTxPoolNonce = (await polkadot.api.rpc.system.accountNextIndex(sudo.publicKey)).toNumber()
+      const nonce = Math.max(nextTxPoolNonce, lastSubmittedNonce + 1)
+      lastSubmittedNonce = nonce
+
       const unsub = await polkadot.api.tx.sudo
         .sudo(polkadot.api.tx.processValidation.disableProcess(processId, version))
-        .signAndSend(sudo, (result: any) => {
+        .signAndSend(sudo, { nonce }, (result: any) => {
           if (result.status.isFinalized) {
             const { event } = result.events.find(
               ({ event: { method } }: { event: { method: string } }) => method === 'ProcessDisabled'
@@ -108,7 +121,7 @@ export const disableProcessTransaction = async (
 type GetAllFn = (options: Polkadot.Options) => Promise<Process.RawPayload[]>
 
 export const getAll: GetAllFn = async (options) => {
-  const polkadot: Polkadot.Polkadot = await api.createNodeApi(options)
+  await using polkadot = await api.createNodeApi(options)
   const processesRaw = await polkadot.api.query.processValidation.processModel.entries()
   return processesRaw.map(([idRaw, data]: any) => {
     const id = idRaw.toHuman()

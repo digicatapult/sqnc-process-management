@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider, Keyring } from '@polkadot/api'
 
-export const createNodeApi = async (options: Polkadot.Options): Promise<Polkadot.Polkadot> => {
+export const createNodeApi = async (options: Polkadot.Options) => {
   const provider = new WsProvider(`ws://${options.API_HOST}:${options.API_PORT}`)
   const api = new ApiPromise({ provider })
 
@@ -18,5 +18,8 @@ export const createNodeApi = async (options: Polkadot.Options): Promise<Polkadot
   return {
     api,
     keyring: new Keyring({ type: 'sr25519' }),
+    [Symbol.asyncDispose]: async () => {
+      await api.disconnect()
+    },
   }
 }

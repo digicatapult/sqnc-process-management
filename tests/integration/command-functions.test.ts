@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { type StartedTestContainer } from 'testcontainers'
 
 import { createProcess, disableProcess, loadProcesses } from '../../src/lib/process/index.js'
 import {
@@ -17,21 +18,31 @@ import { DisableError, ProgramError, VersionError } from '../../src/lib/types/er
 import { getAll } from '../../src/lib/process/api.js'
 /* fixtures */
 import processesExample from '../fixtures/processes.js'
-
-const polkadotOptions = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice', MANUAL_SEAL: true }
+import { withSubstrateNode } from '../helpers/containers.js'
+import { createNodeApi } from '../../src/lib/utils/polkadot.js'
 
 const createProcessAndWait = async (
   processRaw: Process.CliProcessInput,
+  options: Polkadot.Options,
   dryRun?: boolean,
-  options?: Polkadot.Options,
   verbose?: boolean
 ) => {
-  const { waitForFinalised } = await createProcess(processRaw, dryRun, options, verbose)
+  await using polkadot = await createNodeApi(options)
+  const { waitForFinalised } = await createProcess(processRaw, dryRun, polkadot, options, verbose)
   const result = await waitForFinalised
   return result
 }
 
 describe('Process creation and deletion, listing', () => {
+  const context = {
+    polkadotOptions: { API_HOST: 'localhost', API_PORT: 0, USER_URI: '//Alice', MANUAL_SEAL: true },
+  } as {
+    nodeContainer?: StartedTestContainer
+    polkadotOptions: Polkadot.Options
+  }
+
+  withSubstrateNode({ manualSeal: true }, context)
+
   describe('Happy path', () => {
     describe('Multiple processes', () => {
       it('skips already created processes and creates new ones', async () => {
@@ -41,13 +52,13 @@ describe('Process creation and deletion, listing', () => {
             version: 1,
             program: simple2,
           },
-          false,
-          polkadotOptions
+          context.polkadotOptions,
+          false
         )
         const process2Name = 'process-to-be-created'
-        const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+        const process2BumpedV = (await getVersionHelper(process2Name, context.polkadotOptions)) + 1
         const newProcesses = await loadProcesses({
-          options: polkadotOptions,
+          options: context.polkadotOptions,
           data: multiple('existing-process-test', 1, process2Name, process2BumpedV),
         })
 
@@ -82,11 +93,11 @@ describe('Process creation and deletion, listing', () => {
 
       it('creates multiple processes', async () => {
         const process1Name = 'process-1'
-        const process1BumpedV = (await getVersionHelper(process1Name)) + 1
+        const process1BumpedV = (await getVersionHelper(process1Name, context.polkadotOptions)) + 1
         const process2Name = 'process-2'
-        const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+        const process2BumpedV = (await getVersionHelper(process2Name, context.polkadotOptions)) + 1
         const newProcesses = await loadProcesses({
-          options: polkadotOptions,
+          options: context.polkadotOptions,
           data: multiple(process1Name, process1BumpedV, process2Name, process2BumpedV),
         })
         if (newProcesses.type !== 'ok') {
@@ -118,8 +129,8 @@ describe('Process creation and deletion, listing', () => {
       })
 
       it('loads and skips multiple processes using number values', async () => {
-        await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
-        const res = await loadProcesses({ options: polkadotOptions, data: JSON.stringify(processesExample) })
+        await loadProcesses({ options: context.polkadotOptions, data: JSON.stringify(processesExample) })
+        const res = await loadProcesses({ options: context.polkadotOptions, data: JSON.stringify(processesExample) })
 
         if (res.type !== 'ok') {
           expect.fail('Expected process create to succeed')
@@ -149,12 +160,12 @@ describe('Process creation and deletion, listing', () => {
 
     it('creates then disables a process', async () => {
       const processName = '0'
-      const currentVersion = await getVersionHelper(processName)
+      const currentVersion = await getVersionHelper(processName, context.polkadotOptions)
       const bumpedVersion = currentVersion + 1
       const newProcess = await createProcessAndWait(
         { name: processName, version: bumpedVersion, program: simple },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
 
       if (newProcess.type !== 'ok') {
@@ -166,7 +177,7 @@ describe('Process creation and deletion, listing', () => {
         status: 'Enabled',
       })
 
-      const disabledProcess = await disableProcess(processName, bumpedVersion, false, polkadotOptions)
+      const disabledProcess = await disableProcess(processName, bumpedVersion, false, context.polkadotOptions)
 
       if (disabledProcess.type !== 'ok') {
         expect.fail('Expected process disable to succeed')
@@ -181,12 +192,12 @@ describe('Process creation and deletion, listing', () => {
 
     it('does not create process if dry run', async () => {
       const processName = '0'
-      const currentVersion = await getVersionHelper(processName)
+      const currentVersion = await getVersionHelper(processName, context.polkadotOptions)
       const bumpedVersion = currentVersion + 1
       const newProcess = await createProcessAndWait(
         { name: processName, version: bumpedVersion, program: validAllRestrictions },
-        true,
-        polkadotOptions
+        context.polkadotOptions,
+        true
       )
 
       if (newProcess.type !== 'ok') {
@@ -202,16 +213,16 @@ describe('Process creation and deletion, listing', () => {
 
     it('does not disable process if dry run', async () => {
       const processName = '0'
-      const currentVersion = await getVersionHelper(processName)
+      const currentVersion = await getVersionHelper(processName, context.polkadotOptions)
       const bumpedVersion = currentVersion + 1
       const newProcess = await createProcessAndWait(
         { name: processName, version: bumpedVersion, program: validAllRestrictions },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
       expect(newProcess.type).to.equal('ok')
 
-      const disabledProcess = await disableProcess(processName, bumpedVersion, true, polkadotOptions)
+      const disabledProcess = await disableProcess(processName, bumpedVersion, true, context.polkadotOptions)
       if (disabledProcess.type !== 'ok') {
         expect.fail('Expected disable process to succeed')
       }
@@ -226,7 +237,7 @@ describe('Process creation and deletion, listing', () => {
 
     // it('returns a list of raw processes when with --verbose flag', () => {
     it('returns a list of processes', async () => {
-      const res = await getAll(polkadotOptions)
+      const res = await getAll(context.polkadotOptions)
 
       expect(res).to.be.an('array')
       expect(res[0])
@@ -240,7 +251,7 @@ describe('Process creation and deletion, listing', () => {
     let validVersionNumber: number
 
     before(async () => {
-      const currentVersion = await getVersionHelper(validProcessName)
+      const currentVersion = await getVersionHelper(validProcessName, context.polkadotOptions)
       validVersionNumber = currentVersion + 1
     })
 
@@ -250,13 +261,13 @@ describe('Process creation and deletion, listing', () => {
         it('skips and notifies if process programs are different', async () => {
           await createProcessAndWait(
             { name: 'existing-length', version: 1, program: validAllRestrictions },
-            false,
-            polkadotOptions
+            context.polkadotOptions,
+            false
           )
           const process2Name = 'should-create-1'
-          const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+          const process2BumpedV = (await getVersionHelper(process2Name, context.polkadotOptions)) + 1
           const res = await loadProcesses({
-            options: polkadotOptions,
+            options: context.polkadotOptions,
             data: multiple('existing-length', 1, process2Name, process2BumpedV),
           })
 
@@ -280,11 +291,15 @@ describe('Process creation and deletion, listing', () => {
         })
 
         it('also fails if number of steps matches but POSTFIX does not', async () => {
-          await createProcessAndWait({ name: 'existing-steps', version: 1, program: simple }, false, polkadotOptions)
+          await createProcessAndWait(
+            { name: 'existing-steps', version: 1, program: simple },
+            context.polkadotOptions,
+            false
+          )
           const process2Name = 'should-create-2'
-          const process2BumpedV = (await getVersionHelper(process2Name)) + 1
+          const process2BumpedV = (await getVersionHelper(process2Name, context.polkadotOptions)) + 1
           const res = await loadProcesses({
-            options: polkadotOptions,
+            options: context.polkadotOptions,
             data: multiple('existing-steps', 1, process2Name, process2BumpedV),
           })
 
@@ -303,13 +318,13 @@ describe('Process creation and deletion, listing', () => {
       it('does not create new one and notifies if programs are different length', async () => {
         await createProcessAndWait(
           { name: 'existing-single', version: 1, program: validAllRestrictions },
-          false,
-          polkadotOptions
+          context.polkadotOptions,
+          false
         )
         const res = await createProcessAndWait(
           { name: 'existing-single', version: 1, program: simple },
-          false,
-          polkadotOptions
+          context.polkadotOptions,
+          false
         )
 
         if (res.type !== 'error') {
@@ -323,13 +338,13 @@ describe('Process creation and deletion, listing', () => {
       it('does not create new one and notifies if programs same are length but do not match', async () => {
         await createProcessAndWait(
           { name: 'existing-steps-single', version: 1, program: simple2 },
-          false,
-          polkadotOptions
+          context.polkadotOptions,
+          false
         )
         const res = await createProcessAndWait(
           { name: 'existing-steps-single', version: 1, program: [{ Restriction: 'None' }] },
-          false,
-          polkadotOptions
+          context.polkadotOptions,
+          false
         )
 
         if (res.type !== 'error') {
@@ -350,8 +365,8 @@ describe('Process creation and deletion, listing', () => {
     it('fails for invalid POSTFIX notation', async () => {
       const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: invalidPOSIX },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
 
       if (res.type !== 'error') {
@@ -369,8 +384,8 @@ describe('Process creation and deletion, listing', () => {
           version: validVersionNumber,
           program: invalidRestrictionKey,
         },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
 
       if (res.type !== 'error') {
@@ -388,8 +403,8 @@ describe('Process creation and deletion, listing', () => {
     it('fails for invalid restriction value', async () => {
       const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: invalidRestrictionValue },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
 
       if (res.type !== 'error') {
@@ -402,8 +417,8 @@ describe('Process creation and deletion, listing', () => {
     it('fails for invalid json', async () => {
       const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: 'invalidJson' as unknown as Process.Program },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
 
       if (res.type !== 'error') {
@@ -417,8 +432,8 @@ describe('Process creation and deletion, listing', () => {
       // - 2 because -1 would make current = valid
       const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber - 2, program: validAllRestrictions },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
       if (res.type !== 'error') {
         expect.fail('Expected process create to fail')
@@ -435,8 +450,8 @@ describe('Process creation and deletion, listing', () => {
     it('fails to create for too high version', async () => {
       const res = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber + 1, program: validAllRestrictions },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
 
       if (res.type !== 'error') {
@@ -455,8 +470,8 @@ describe('Process creation and deletion, listing', () => {
       const processName = '0'.repeat(Constants.PROCESS_ID_LENGTH + 1)
       const res = await createProcessAndWait(
         { name: processName, version: 1, program: validAllRestrictions },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
       if (res.type !== 'error') {
         expect.fail('Expected process create to fail')
@@ -468,7 +483,7 @@ describe('Process creation and deletion, listing', () => {
     it('fails to disable process that does not exist', async () => {
       let err = null
       try {
-        await disableProcess('incorrectProcessName', 1, false, polkadotOptions)
+        await disableProcess('incorrectProcessName', 1, false, context.polkadotOptions)
       } catch (error) {
         err = error
       }
@@ -478,16 +493,16 @@ describe('Process creation and deletion, listing', () => {
     it('fails to disable process a second time', async () => {
       const newProcess = await createProcessAndWait(
         { name: validProcessName, version: validVersionNumber, program: simple },
-        false,
-        polkadotOptions
+        context.polkadotOptions,
+        false
       )
       expect(newProcess.type).to.equal('ok')
-      const firstDisable = await disableProcess(validProcessName, validVersionNumber, false, polkadotOptions)
+      const firstDisable = await disableProcess(validProcessName, validVersionNumber, false, context.polkadotOptions)
       expect(firstDisable.type).to.equal('ok')
 
       let err = null
       try {
-        await disableProcess(validProcessName, validVersionNumber, false, polkadotOptions)
+        await disableProcess(validProcessName, validVersionNumber, false, context.polkadotOptions)
       } catch (error) {
         err = error
       }

@@ -200,14 +200,14 @@ Unit tests can be run without docker using:
 npm run test:unit
 ```
 
-To run the integration test suite first bring up the test dependency services using docker
-
-```shell
-docker compose -f ./docker-compose-test.yaml up -d
-```
-
-And then to run the tests
+Running the integration test suite requires docker to be installed. Tests can then be executed with:
 
 ```shell
 npm run test
+```
+
+If you with to see output from the `sqnc-node` container brought up with `testcontainers` run:
+
+```shell
+ DEBUG=testcontainers* npm run test
 ```

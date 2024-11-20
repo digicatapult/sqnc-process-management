@@ -1,5 +1,4 @@
 import { createNodeApi } from '../utils/polkadot.js'
-import { Constants } from './constants.js'
 import { createProcessTransaction, disableProcessTransaction, getVersion, getProcess } from './api.js'
 import { utf8ToHex } from './hex.js'
 import { processValidation, simpleProcesssValidation } from '../types/validation.js'
@@ -58,7 +57,7 @@ export const loadProcesses = async ({
   verbose,
 }: {
   data: string
-  options?: Polkadot.Options
+  options: Polkadot.Options
   dryRun?: boolean
   verbose?: boolean
 }): Promise<Process.Response> => {
@@ -69,8 +68,9 @@ export const loadProcesses = async ({
   const processes = parsedRes.result
 
   const processTxs: Map<string, Promise<Process.ProcessResponse>> = new Map()
+  await using polkadot = await createNodeApi(options)
   for (const process of processes) {
-    const { waitForFinalised } = await createProcess(process, dryRun, options, verbose)
+    const { waitForFinalised } = await createProcess(process, dryRun, polkadot, options, verbose)
     processTxs.set(process.name, waitForFinalised)
   }
   await Promise.all(processTxs.values())
@@ -133,6 +133,7 @@ export const handleVerbose = (res: Process.Payload, verbose: boolean): Process.P
 export const createProcess = async (
   processRaw: Process.CliProcessInput,
   dryRun: boolean = false,
+  polkadot: Polkadot.Polkadot,
   options: Polkadot.Options = defaultOptions,
   verbose: boolean = false
 ): Promise<{
@@ -168,7 +169,6 @@ export const createProcess = async (
     const { name, version, program } = processValidation.parse(processRaw)
 
     const processId = utf8ToHex(name)
-    const polkadot: Polkadot.Polkadot = await createNodeApi(options)
     const currentVersion: number = await getVersion(polkadot, processId)
     const expectedVersion: number = currentVersion + 1
 
@@ -243,7 +243,7 @@ export const disableProcess = async (
 ): Promise<Process.ProcessResponse> => {
   const processId = utf8ToHex(name)
 
-  const polkadot: Polkadot.Polkadot = await createNodeApi(options)
+  await using polkadot = await createNodeApi(options)
   const currentProcess: Process.Payload = await getProcess(polkadot, processId, processVersion)
 
   if (currentProcess.status === 'Disabled') {
