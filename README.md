@@ -206,7 +206,7 @@ Running the integration test suite requires docker to be installed. Tests can th
 npm run test
 ```
 
-If you with to see output from the `sqnc-node` container brought up with `testcontainers` run:
+If you want to see output from the `sqnc-node` container brought up with `testcontainers` run:
 
 ```shell
  DEBUG=testcontainers* npm run test
