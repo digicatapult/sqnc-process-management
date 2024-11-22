@@ -1,0 +1,9 @@
+{
+  "extension": ["ts"],
+  "spec": ["test"],
+  "file": ["test/init.ts"],
+  "exit": true,
+  "esm": true,
+  "node-option": ["import=@swc-node/register/esm-register"],
+  "timeout": 10000
+}

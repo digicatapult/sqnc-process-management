@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { utf8ToHex, hexToUtf8 } from '../hex.js'
 import { listTransforming, handleVerbose } from '../index.js'
 
-import sample from '../../../../tests/fixtures/processes.js'
+import sample from '../../../../test/fixtures/processes.js'
 
 const defaultPolkadot: Process.CLIOptions = {
   port: '9044',
