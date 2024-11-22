@@ -1,22 +1,29 @@
 {
   "compilerOptions": {
-    "outDir": "build/",
-    "rootDir": "./",
-    "lib": ["ES6", "ES2015", "ESNext"],
-    "types": ["node", "mocha"],
-    "resolveJsonModule": true,
-    "target": "es6",
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "allowJs": false,
     "checkJs": false,
+    "outDir": "build/",
+    "rootDir": "./",
+    
+    "lib": ["ES6", "ES2015", "ESNext"],
+    "types": ["node", "mocha"],
     "declaration": true
   },
-  "ts-node": { "files": true },
-  "include": ["src/**/*", "src/tests/*", "tests/**/*"],
+  "include": ["src/**/*", "src/tests/*", "test/**/*"],
   "exclude": ["node_modules"]
 }

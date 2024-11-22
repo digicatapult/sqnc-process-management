@@ -8,14 +8,14 @@
   },
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm src/index.ts",
+    "start": "SWCRC=true NODE_ENV=production node --import @swc-node/register/esm-register --enable-source-maps src/index.ts",
     "local": "npm i -g && process-management",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec node --loader ts-node/esm src/index.ts",
+    "dev": "NODE_ENV=dev nodemon --watch 'src/**/*.ts' --exec node --import @swc-node/register/esm-register --enable-source-maps src/index.ts",
     "lint": "eslint .",
-    "build": "tsc --build",
+    "build": "swc ./src -d ./build --strip-leading-paths --copy-files",
     "depcheck": "depcheck",
-    "test": "ts-mocha --config ./tests/mocharc.json -n  loader=ts-node/esm -p tsconfig.json tests/**/*.test.ts --exit",
-    "test:unit": "ts-mocha --config ./tests/mocharc.json -n loader=ts-node/esm -p tsconfig.json src/**/*.test.ts --exit",
+    "test": "SWCRC=true NODE_ENV=test node --enable-source-maps ./node_modules/.bin/mocha --config ./test/mocharc.json test/**/*.test.ts",
+    "test:unit": "SWCRC=true NODE_ENV=test node --enable-source-maps ./node_modules/.bin/mocha --config ./test/mocharc.json src/**/*.test.ts --exit",
     "prettier": "npx prettier --write ."
   },
   "repository": {
@@ -38,6 +38,10 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.15.0",
+    "@swc-node/register": "^1.10.9",
+    "@swc/cli": "^0.5.1",
+    "@swc/core": "^1.9.2",
+    "@swc/helpers": "^0.5.15",
     "@types/chai": "^5.0.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "^18.19.64",
@@ -51,9 +55,8 @@
     "mocha": "^10.8.2",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
-    "testcontainers": "^10.14.0",
-    "ts-mocha": "^10.0.0",
-    "ts-node": "^10.9.2"
+    "reflect-metadata": "^0.2.2",
+    "testcontainers": "^10.14.0"
   },
   "dependencies": {
     "@polkadot/api": "^14.3.1",

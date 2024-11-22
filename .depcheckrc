@@ -1,1 +1,5 @@
-ignores: ['ts-node']
+ignores: [
+  "pg",
+  "@swc-node/register",
+  "reflect-metadata"
+]
