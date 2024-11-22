@@ -1,5 +1,6 @@
 ignores: [
   "pg",
+  "@swc/helpers",
   "@swc-node/register",
   "reflect-metadata"
 ]

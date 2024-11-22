@@ -62,7 +62,6 @@
     "@polkadot/api": "^14.3.1",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
-    "typescript": "^5.6.3",
     "zod": "^3.23.8"
   }
 }
