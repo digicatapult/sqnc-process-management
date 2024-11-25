@@ -1,3 +1,3 @@
-import packageJson from '../package.json' assert { type: 'json' }
-const { version } = packageJson
+const packageJson = await import('../package.json', { with: { type: 'json' }})
+const { version } = packageJson.default 
 export default version
