@@ -12,8 +12,3 @@ jobs:
     with:
       tests: '["test", "test:unit"]'
       docker_compose_file: ''
-  build-docker:
-    uses: digicatapult/shared-workflows/.github/workflows/build-docker.yml@main
-    permissions:
-      packages: write
-      contents: write
