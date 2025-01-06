@@ -8,6 +8,7 @@
   },
   "type": "module",
   "scripts": {
+    "check": "tsc --noEmit",
     "start": "SWCRC=true NODE_ENV=production node --import @swc-node/register/esm-register --enable-source-maps src/index.ts",
     "local": "npm i -g && process-management",
     "dev": "NODE_ENV=dev nodemon --watch 'src/**/*.ts' --exec node --import @swc-node/register/esm-register --enable-source-maps src/index.ts",
