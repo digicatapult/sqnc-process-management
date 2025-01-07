@@ -20,7 +20,7 @@ jobs:
     needs: [static-checks-npm, tests-npm]
     uses: digicatapult/shared-workflows/.github/workflows/release-module-npm.yml@main
     with:
-      npm_build: true
+      npm_build_command: npm run build
     permissions:
       contents: write
       packages: write
@@ -30,7 +30,7 @@ jobs:
     needs: [static-checks-npm, tests-npm]
     uses: digicatapult/shared-workflows/.github/workflows/release-module-npm.yml@main
     with:
-      npm_build: true
+      npm_build_command: npm run build
       registry_url: 'https://npm.pkg.github.com'
     permissions:
       contents: write
