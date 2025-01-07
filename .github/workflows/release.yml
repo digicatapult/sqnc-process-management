@@ -23,6 +23,7 @@ jobs:
       npm_build: true
     permissions:
       contents: write
+      packages: write
     secrets:
       REGISTRY_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
   release-gh-packages:
@@ -33,8 +34,7 @@ jobs:
       registry_url: 'https://npm.pkg.github.com'
     permissions:
       contents: write
-    secrets:
-      REGISTRY_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      packages: write
   release-github:
     needs: [release-npm, release-gh-packages]
     uses: digicatapult/shared-workflows/.github/workflows/release-github.yml@main
