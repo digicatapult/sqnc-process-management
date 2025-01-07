@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "2.2.157",
+  "version": "3.0.0",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
