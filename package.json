@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "2.2.156",
+  "version": "2.2.157",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -27,8 +27,8 @@
     "/build"
   ],
   "engines": {
-    "node": ">=22.x.x",
-    "npm": ">=10.x.x"
+    "node": "^22.x.x",
+    "npm": "^10.x.x"
   },
   "author": "Digital Catapult",
   "license": "Apache-2.0",
