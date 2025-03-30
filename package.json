@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "3.0.35",
+  "version": "3.0.36",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -45,7 +45,7 @@
     "@swc/helpers": "^0.5.15",
     "@types/chai": "^5.2.1",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^18.19.83",
+    "@types/node": "^18.19.84",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
     "chai": "^5.2.0",
@@ -60,7 +60,7 @@
     "testcontainers": "^10.23.0"
   },
   "dependencies": {
-    "@polkadot/api": "^15.8.1",
+    "@polkadot/api": "^15.9.1",
     "chalk": "^5.4.1",
     "commander": "^13.1.0",
     "zod": "^3.24.2"
