@@ -31,83 +31,51 @@ const binaryOperator = z.enum([
   'InhibitionR',
 ])
 
-const senderHasInputRole = z.object({
-  index: z.number(),
-  role_key: role,
+const argType = z.union([z.literal('Reference'), z.literal('Input'), z.literal('Output')])
+
+const senderHasArgRole = z.object({ arg_type: argType, index: z.number(), role_key: role })
+
+const argHasRole = z.object({ arg_type: argType, index: z.number(), role_key: role })
+
+const argHasMetadata = z.object({ arg_type: argType, index: z.number(), metadata_key: tokenMetadataKey })
+
+const matchArgsRole = z.object({
+  left_arg_type: argType,
+  left_index: z.number(),
+  left_role_key: role,
+  right_arg_type: argType,
+  right_index: z.number(),
+  right_role_key: role,
 })
 
-const senderHasOutputRole = z.object({
-  index: z.number(),
-  role_key: role,
+const matchArgsMetadataValue = z.object({
+  left_arg_type: argType,
+  left_index: z.number(),
+  left_metadata_key: tokenMetadataKey,
+  right_arg_type: argType,
+  right_index: z.number(),
+  right_metadata_key: tokenMetadataKey,
 })
 
-const outputHasRole = z.object({
-  index: z.number(),
-  role_key: role,
+const matchArgIdToMetadataValue = z.object({
+  left_arg_type: argType,
+  left_index: z.number(),
+  right_arg_type: argType,
+  right_index: z.number(),
+  right_metadata_key: tokenMetadataKey,
 })
 
-const outputHasMetadata = z.object({
-  index: z.number(),
-  metadata_key: tokenMetadataKey,
-})
+const fixedArgCount = z.object({ arg_type: argType, count: z.number() })
 
-const inputHasRole = z.object({
-  index: z.number(),
-  role_key: role,
-})
-
-const inputHasMetadata = z.object({
-  index: z.number(),
-  metadata_key: tokenMetadataKey,
-})
-
-const matchInputOutputRole = z.object({
-  input_index: z.number(),
-  input_role_key: role,
-  output_index: z.number(),
-  output_role_key: role,
-})
-
-const matchInputOutputMetadataValue = z.object({
-  input_index: z.number(),
-  input_metadata_key: tokenMetadataKey,
-  output_index: z.number(),
-  output_metadata_key: tokenMetadataKey,
-})
-
-const matchInputIdOutputMetadataValue = z.object({
-  input_index: z.number(),
-  output_index: z.number(),
-  output_metadata_key: tokenMetadataKey,
-})
-
-const fixedNumberOfInputs = z.object({
-  num_inputs: z.number(),
-})
-
-const fixedNumberOfOutputs = z.object({
-  num_outputs: z.number(),
-})
-
-const fixedInputMetadataValue = z.object({
+const fixedArgMetadataValue = z.object({
+  arg_type: argType,
   index: z.number(),
   metadata_key: tokenMetadataKey,
   metadata_value: metadataValue,
 })
 
-const fixedOutputMetadataValue = z.object({
-  index: z.number(),
-  metadata_key: tokenMetadataKey,
-  metadata_value: metadataValue,
-})
-
-const fixedInputMetadataValueType = z.object({
-  index: z.number(),
-  metadata_key: tokenMetadataKey,
-  metadata_value_type: metadataValueType,
-})
-
-const fixedOutputMetadataValueType = z.object({
+const fixedArgMetadataValueType = z.object({
+  arg_type: argType,
   index: z.number(),
   metadata_key: tokenMetadataKey,
   metadata_value_type: metadataValueType,
@@ -116,21 +84,16 @@ const fixedOutputMetadataValueType = z.object({
 export const restrictionValidation = z.union([
   z.literal('None'),
   z.literal('Fail'),
-  z.object({ SenderHasInputRole: senderHasInputRole }).strict(),
-  z.object({ SenderHasOutputRole: senderHasOutputRole }).strict(),
-  z.object({ OutputHasRole: outputHasRole }).strict(),
-  z.object({ OutputHasMetadata: outputHasMetadata }).strict(),
-  z.object({ InputHasRole: inputHasRole }).strict(),
-  z.object({ InputHasMetadata: inputHasMetadata }).strict(),
-  z.object({ MatchInputOutputRole: matchInputOutputRole }).strict(),
-  z.object({ MatchInputOutputMetadataValue: matchInputOutputMetadataValue }).strict(),
-  z.object({ MatchInputIdOutputMetadataValue: matchInputIdOutputMetadataValue }).strict(),
-  z.object({ FixedNumberOfInputs: fixedNumberOfInputs }).strict(),
-  z.object({ FixedNumberOfOutputs: fixedNumberOfOutputs }).strict(),
-  z.object({ FixedInputMetadataValue: fixedInputMetadataValue }).strict(),
-  z.object({ FixedOutputMetadataValue: fixedOutputMetadataValue }).strict(),
-  z.object({ FixedInputMetadataValueType: fixedInputMetadataValueType }).strict(),
-  z.object({ FixedOutputMetadataValueType: fixedOutputMetadataValueType }).strict(),
+  z.literal('SenderIsRoot'),
+  z.object({ SenderHasArgRole: senderHasArgRole }).strict(),
+  z.object({ ArgHasRole: argHasRole }).strict(),
+  z.object({ ArgHasMetadata: argHasMetadata }).strict(),
+  z.object({ MatchArgsRole: matchArgsRole }).strict(),
+  z.object({ MatchArgsMetadataValue: matchArgsMetadataValue }).strict(),
+  z.object({ MatchArgIdToMetadataValue: matchArgIdToMetadataValue }).strict(),
+  z.object({ FixedArgCount: fixedArgCount }).strict(),
+  z.object({ FixedArgMetadataValue: fixedArgMetadataValue }).strict(),
+  z.object({ FixedArgMetadataValueType: fixedArgMetadataValueType }).strict(),
 ])
 
 export const stepValidation = z.union([

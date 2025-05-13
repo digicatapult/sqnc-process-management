@@ -15,9 +15,7 @@ const compat = new FlatCompat({
 })
 
 export default [
-  {
-    ignores: ['**/node_modules', '**/lib', '**/build'],
-  },
+  { ignores: ['**/node_modules', '**/lib', '**/build'] },
   ...compat.extends(
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
@@ -25,14 +23,9 @@ export default [
     'prettier'
   ),
   {
-    plugins: {
-      '@typescript-eslint': typescriptEslint,
-      prettier,
-    },
+    plugins: { '@typescript-eslint': typescriptEslint, prettier },
 
-    languageOptions: {
-      parser: tsParser,
-    },
+    languageOptions: { parser: tsParser },
 
     files: ['**/*.ts'],
   },

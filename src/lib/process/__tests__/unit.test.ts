@@ -36,11 +36,7 @@ describe('listTranforming', () => {
 
     const res = listTransforming([enriched], { ...defaultPolkadot, verbose: false })
 
-    expect(res[0]).to.deep.contain({
-      name: '123',
-      status: 'Enabled',
-      version: 1,
-    })
+    expect(res[0]).to.deep.contain({ name: '123', status: 'Enabled', version: 1 })
   })
 
   it('returns all transformed processes with a program (--verbose=true)', async () => {
@@ -54,11 +50,7 @@ describe('listTranforming', () => {
 
     const res = listTransforming([enriched], { ...defaultPolkadot, verbose: true })
 
-    expect(res[0]).to.deep.contain({
-      name: '123',
-      status: 'Disabled',
-      version: 1,
-    })
+    expect(res[0]).to.deep.contain({ name: '123', status: 'Disabled', version: 1 })
   })
 
   it('returns all options active', async () => {
@@ -72,11 +64,7 @@ describe('listTranforming', () => {
 
     const res = listTransforming([enriched], { ...defaultPolkadot, active: true })
 
-    expect(res[0]).to.deep.contain({
-      name: '123',
-      status: 'Enabled',
-      version: 1,
-    })
+    expect(res[0]).to.deep.contain({ name: '123', status: 'Enabled', version: 1 })
   })
 
   it('returns all options disabled but with active true', async () => {
@@ -104,11 +92,7 @@ describe('listTranforming', () => {
 
     const res = listTransforming([enriched], { ...defaultPolkadot })
 
-    expect(res[0]).to.deep.contain({
-      name: '123',
-      status: 'Disabled',
-      version: 1,
-    })
+    expect(res[0]).to.deep.contain({ name: '123', status: 'Disabled', version: 1 })
   })
 
   it('returns all options active with status enabled', async () => {
@@ -122,11 +106,7 @@ describe('listTranforming', () => {
 
     const res = listTransforming([enriched], { ...defaultPolkadot, active: false })
 
-    expect(res[0]).to.deep.contain({
-      name: '123',
-      status: 'Disabled',
-      version: 1,
-    })
+    expect(res[0]).to.deep.contain({ name: '123', status: 'Disabled', version: 1 })
   })
 
   it('returns additional properties with raw', async () => {
@@ -152,28 +132,12 @@ describe('listTranforming', () => {
 
 describe('handleVerbose', function () {
   it('should remove program when verbose == false', function () {
-    const result = handleVerbose(
-      {
-        name: 'test',
-        status: 'Enabled',
-        version: 1,
-        program: [],
-      },
-      false
-    )
+    const result = handleVerbose({ name: 'test', status: 'Enabled', version: 1, program: [] }, false)
     expect(result).to.deep.equal({ name: 'test', status: 'Enabled', version: 1 })
   })
 
   it('should include program when verbose == false', function () {
-    const result = handleVerbose(
-      {
-        name: 'test',
-        status: 'Enabled',
-        version: 1,
-        program: [],
-      },
-      true
-    )
+    const result = handleVerbose({ name: 'test', status: 'Enabled', version: 1, program: [] }, true)
     expect(result).to.deep.equal({ name: 'test', status: 'Enabled', version: 1, program: [] })
   })
 })

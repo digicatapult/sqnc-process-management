@@ -36,10 +36,7 @@ const createProcessAndWait = async (
 describe('Process creation and deletion, listing', () => {
   const context = {
     polkadotOptions: { API_HOST: 'localhost', API_PORT: 0, USER_URI: '//Alice', MANUAL_SEAL: true },
-  } as {
-    nodeContainer?: StartedTestContainer
-    polkadotOptions: Polkadot.Options
-  }
+  } as { nodeContainer?: StartedTestContainer; polkadotOptions: Polkadot.Options }
 
   withSubstrateNode({ manualSeal: true }, context)
 
@@ -47,11 +44,7 @@ describe('Process creation and deletion, listing', () => {
     describe('Multiple processes', () => {
       it('skips already created processes and creates new ones', async () => {
         await createProcessAndWait(
-          {
-            name: 'existing-process-test',
-            version: 1,
-            program: simple2,
-          },
+          { name: 'existing-process-test', version: 1, program: simple2 },
           context.polkadotOptions,
           false
         )
@@ -69,11 +62,7 @@ describe('Process creation and deletion, listing', () => {
         expect(newProcesses.result['existing-process-test'].type).to.equal('ok')
         expect(newProcesses.result['existing-process-test']).to.deep.contain({
           message: 'Skipping: process existing-process-test is already created.',
-          result: {
-            name: 'existing-process-test',
-            version: 1,
-            status: 'Enabled',
-          },
+          result: { name: 'existing-process-test', version: 1, status: 'Enabled' },
         })
 
         const process2Result = newProcesses.result[process2Name]
@@ -85,10 +74,7 @@ describe('Process creation and deletion, listing', () => {
         expect(process2Result.message).to.deep.equal(
           'Transaction for new process process-to-be-created has been successfully submitted'
         )
-        expect(process2Result.result).to.deep.contain({
-          version: process2BumpedV,
-          status: 'Enabled',
-        })
+        expect(process2Result.result).to.deep.contain({ version: process2BumpedV, status: 'Enabled' })
       })
 
       it('creates multiple processes', async () => {
@@ -110,10 +96,7 @@ describe('Process creation and deletion, listing', () => {
         if (process1Result.type !== 'ok') {
           expect.fail('Expected process1 creation to succeed')
         }
-        expect(process1Result.result).to.deep.contain({
-          version: process1BumpedV,
-          status: 'Enabled',
-        })
+        expect(process1Result.result).to.deep.contain({ version: process1BumpedV, status: 'Enabled' })
 
         const process2Result = newProcesses.result[process2Name]
         if (process2Result.type !== 'ok') {
@@ -122,10 +105,7 @@ describe('Process creation and deletion, listing', () => {
         expect(process2Result.message).to.deep.equal(
           'Transaction for new process process-2 has been successfully submitted'
         )
-        expect(process2Result.result).to.deep.contain({
-          version: process2BumpedV,
-          status: 'Enabled',
-        })
+        expect(process2Result.result).to.deep.contain({ version: process2BumpedV, status: 'Enabled' })
       })
 
       it('loads and skips multiple processes using number values', async () => {
@@ -171,11 +151,7 @@ describe('Process creation and deletion, listing', () => {
       if (newProcess.type !== 'ok') {
         expect.fail('Expected process creation to succeed')
       }
-      expect(newProcess.result).to.deep.equal({
-        name: processName,
-        version: bumpedVersion,
-        status: 'Enabled',
-      })
+      expect(newProcess.result).to.deep.equal({ name: processName, version: bumpedVersion, status: 'Enabled' })
 
       const disabledProcess = await disableProcess(processName, bumpedVersion, false, context.polkadotOptions)
 
@@ -183,11 +159,7 @@ describe('Process creation and deletion, listing', () => {
         expect.fail('Expected process disable to succeed')
       }
       expect(disabledProcess.message).to.equal('Process has been disabled')
-      expect(disabledProcess.result).to.deep.equal({
-        name: processName,
-        version: bumpedVersion,
-        status: 'Disabled',
-      })
+      expect(disabledProcess.result).to.deep.equal({ name: processName, version: bumpedVersion, status: 'Disabled' })
     })
 
     it('does not create process if dry run', async () => {
@@ -226,13 +198,8 @@ describe('Process creation and deletion, listing', () => {
       if (disabledProcess.type !== 'ok') {
         expect.fail('Expected disable process to succeed')
       }
-      expect(disabledProcess.result).to.deep.contain({
-        name: processName,
-        status: 'Disabled (dry-run)',
-      })
-      expect(disabledProcess).to.deep.contain({
-        message: `This will DISABLE the following process ${processName}`,
-      })
+      expect(disabledProcess.result).to.deep.contain({ name: processName, status: 'Disabled (dry-run)' })
+      expect(disabledProcess).to.deep.contain({ message: `This will DISABLE the following process ${processName}` })
     })
 
     // it('returns a list of raw processes when with --verbose flag', () => {
@@ -354,11 +321,7 @@ describe('Process creation and deletion, listing', () => {
         expect(res.message).to.equal('existing: program steps did not match')
         expect(res.error).to.instanceOf(ProgramError)
         const error = res.error as ProgramError
-        expect(error.process).to.deep.contain({
-          name: 'existing-steps-single',
-          version: 1,
-          status: 'Enabled',
-        })
+        expect(error.process).to.deep.contain({ name: 'existing-steps-single', version: 1, status: 'Enabled' })
       })
     })
 
@@ -379,11 +342,7 @@ describe('Process creation and deletion, listing', () => {
 
     it('fails for invalid restriction key', async () => {
       const res = await createProcessAndWait(
-        {
-          name: validProcessName,
-          version: validVersionNumber,
-          program: invalidRestrictionKey,
-        },
+        { name: validProcessName, version: validVersionNumber, program: invalidRestrictionKey },
         context.polkadotOptions,
         false
       )
@@ -394,10 +353,7 @@ describe('Process creation and deletion, listing', () => {
 
       expect(res.error).to.be.instanceOf(ZodError)
       const zError = res.error as ZodError
-      expect(zError.issues[0]).to.deep.contain({
-        code: 'invalid_union',
-        message: 'Invalid input',
-      })
+      expect(zError.issues[0]).to.deep.contain({ code: 'invalid_union', message: 'Invalid input' })
     })
 
     it('fails for invalid restriction value', async () => {
@@ -442,25 +398,6 @@ describe('Process creation and deletion, listing', () => {
       expect(res.message).to.equal(
         `Process version ${
           validVersionNumber - 2
-        } is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`
-      )
-      expect(res.error).to.be.instanceOf(VersionError)
-    })
-
-    it('fails to create for too high version', async () => {
-      const res = await createProcessAndWait(
-        { name: validProcessName, version: validVersionNumber + 1, program: validAllRestrictions },
-        context.polkadotOptions,
-        false
-      )
-
-      if (res.type !== 'error') {
-        expect.fail('Expected process create to fail')
-      }
-
-      expect(res.message).to.equal(
-        `Process version ${
-          validVersionNumber + 1
         } is invalid. If you are trying to create a new version of process ${validProcessName} version should be ${validVersionNumber}`
       )
       expect(res.error).to.be.instanceOf(VersionError)

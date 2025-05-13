@@ -4,7 +4,7 @@ import { hexToUtf8 } from './hex.js'
 
 // TODO - refactor to validate payload?
 // for some reason reduce did not work with Process.Program or ProgramStep[] type due to symbol.iterator
-const isProgramValid = (program: Process.Program, out = { ops: 0, restrictions: -1 }): Boolean => {
+const isProgramValid = (program: Process.Program, out = { ops: 0, restrictions: -1 }): boolean => {
   program.forEach((step: Process.ProgramStep) => {
     out = Object.hasOwn(step, 'Op') ? { ...out, ops: out.ops + 1 } : { ...out, restrictions: out.restrictions + 1 }
   })
@@ -22,6 +22,7 @@ export function resetLastSubmittedNonce() {
 export const createProcessTransaction = async (
   polkadot: Polkadot.Polkadot,
   processId: Process.Hex,
+  version: number,
   program: Process.Program,
   options: Polkadot.Options
 ): Promise<{ waitForFinal: Promise<Process.Payload> }> => {
@@ -43,7 +44,7 @@ export const createProcessTransaction = async (
     lastSubmittedNonce = nonce
 
     const unsub = await polkadot.api.tx.sudo
-      .sudo(polkadot.api.tx.processValidation.createProcess(processId, program))
+      .sudo(polkadot.api.tx.processValidation.createProcess(processId, version, program))
       .signAndSend(sudo, { nonce }, (result: any) => {
         if (result.status.isFinalized) {
           const { event } = result.events.find(
@@ -68,9 +69,7 @@ export const createProcessTransaction = async (
     reject(err)
   }
 
-  return {
-    waitForFinal: result,
-  }
+  return { waitForFinal: result }
 }
 
 export const disableProcessTransaction = async (
@@ -148,10 +147,5 @@ export const getProcess = async (
 ): Promise<Process.Payload> => {
   const result = await polkadot.api.query.processValidation.processModel(processId, version)
   const data = Object(result.toHuman())
-  return {
-    name: hexToUtf8(processId),
-    version,
-    status: data.status,
-    program: data.program,
-  }
+  return { name: hexToUtf8(processId), version, status: data.status, program: data.program }
 }

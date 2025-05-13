@@ -5,11 +5,7 @@ import { processValidation, simpleProcesssValidation } from '../types/validation
 import { CliInputParseError, DisableError, ProgramError, VersionError } from '../types/error.js'
 import { ZodError } from 'zod'
 
-export const defaultOptions: Polkadot.Options = {
-  API_HOST: 'localhost',
-  API_PORT: 9944,
-  USER_URI: '//Alice',
-}
+export const defaultOptions: Polkadot.Options = { API_HOST: 'localhost', API_PORT: 9944, USER_URI: '//Alice' }
 
 const textify = (obj: Process.ProgramStep): string => {
   return JSON.stringify(obj, (_key, val) => {
@@ -34,17 +30,10 @@ const textify = (obj: Process.ProgramStep): string => {
 
 export const sanitizeInput = (data: string): Process.Result<{ name: string }[], CliInputParseError> => {
   try {
-    return {
-      type: 'ok',
-      result: simpleProcesssValidation.parse(JSON.parse(data)),
-    }
+    return { type: 'ok', result: simpleProcesssValidation.parse(JSON.parse(data)) }
   } catch (err) {
     if (err instanceof Error) {
-      return {
-        type: 'error',
-        error: new CliInputParseError(err),
-        message: err.message,
-      }
+      return { type: 'error', error: new CliInputParseError(err), message: err.message }
     }
     throw err
   }
@@ -78,7 +67,7 @@ export const loadProcesses = async ({
   const result: { [key: string]: Process.ProcessResponse } = {}
   let successCount = 0
   for (const [key, processTxProm] of processTxs) {
-    let response = await processTxProm
+    const response = await processTxProm
     result[key] = response
     if (response.type === 'ok') {
       successCount = successCount + 1
@@ -87,11 +76,7 @@ export const loadProcesses = async ({
 
   // calculate the result and successCount
 
-  return {
-    type: 'ok',
-    result,
-    message: `Successfully loaded ${successCount}/${processes.length} processes`,
-  }
+  return { type: 'ok', result, message: `Successfully loaded ${successCount}/${processes.length} processes` }
 }
 
 export const listTransforming = (res: Process.RawPayload[], options: Process.CLIOptions) => {
@@ -112,12 +97,7 @@ export const listTransforming = (res: Process.RawPayload[], options: Process.CLI
     }))
   } else {
     return processes.map((p) => {
-      return {
-        name: p.name,
-        version: p.version,
-        status: p.status,
-        ...(options.verbose ? { program: p.program } : {}),
-      }
+      return { name: p.name, version: p.version, status: p.status, ...(options.verbose ? { program: p.program } : {}) }
     })
   }
 }
@@ -136,31 +116,21 @@ export const createProcess = async (
   polkadot: Polkadot.Polkadot,
   options: Polkadot.Options = defaultOptions,
   verbose: boolean = false
-): Promise<{
-  waitForFinalised: Promise<Process.ProcessResponse>
-}> => {
+): Promise<{ waitForFinalised: Promise<Process.ProcessResponse> }> => {
   const handleErr = (err: unknown) => {
     // err is basically from errors.ts or any exception
     // process errors will contain specific messages and/or process
     // Promise<Process.Result> is in try {} and any exception is in catch {}
     if (err instanceof ProgramError || err instanceof VersionError || err instanceof ZodError) {
-      const result: Process.ProcessResponse = {
-        type: 'error' as 'error',
-        error: err,
-        message: err.message,
-      }
-      return {
-        waitForFinalised: Promise.resolve(result),
-      }
+      const result: Process.ProcessResponse = { type: 'error' as const, error: err, message: err.message }
+      return { waitForFinalised: Promise.resolve(result) }
     } else if (err instanceof Error) {
       const result: Process.ProcessResponse = {
-        type: 'error' as 'error',
+        type: 'error' as const,
         error: err,
         message: 'An unknown error occurred',
       }
-      return {
-        waitForFinalised: Promise.resolve(result),
-      }
+      return { waitForFinalised: Promise.resolve(result) }
     }
     throw err
   }
@@ -172,7 +142,7 @@ export const createProcess = async (
     const currentVersion: number = await getVersion(polkadot, processId)
     const expectedVersion: number = currentVersion + 1
 
-    if (version > expectedVersion || version < currentVersion) throw new VersionError(version, expectedVersion, name)
+    if (version < currentVersion) throw new VersionError(version, expectedVersion, name)
 
     if (version === currentVersion) {
       const process = await getProcess(polkadot, processId, version)
@@ -187,15 +157,7 @@ export const createProcess = async (
         waitForFinalised: Promise.resolve({
           type: 'ok',
           message: `Skipping: process ${name} is already created.`,
-          result: handleVerbose(
-            {
-              name,
-              version,
-              program,
-              status: process.status,
-            },
-            verbose
-          ),
+          result: handleVerbose({ name, version, program, status: process.status }, verbose),
         }),
       }
     }
@@ -205,19 +167,11 @@ export const createProcess = async (
         waitForFinalised: Promise.resolve({
           type: 'ok',
           message: 'Dry run: transaction has not been created',
-          result: handleVerbose(
-            {
-              name,
-              version,
-              program,
-              status: 'Enabled (dry-run)',
-            },
-            verbose
-          ),
+          result: handleVerbose({ name, version, program, status: 'Enabled (dry-run)' }, verbose),
         }),
       }
 
-    const createProcessTx = await createProcessTransaction(polkadot, processId, program, options)
+    const createProcessTx = await createProcessTransaction(polkadot, processId, version, program, options)
     return {
       waitForFinalised: createProcessTx.waitForFinal
         .then((process) => {
@@ -254,11 +208,7 @@ export const disableProcess = async (
     return {
       type: 'ok',
       message: `This will DISABLE the following process ${name}`,
-      result: {
-        name,
-        version: processVersion,
-        status: 'Disabled (dry-run)',
-      },
+      result: { name, version: processVersion, status: 'Disabled (dry-run)' },
     }
   }
 

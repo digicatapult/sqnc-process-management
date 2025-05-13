@@ -7,17 +7,7 @@ declare namespace Process {
 
   export type ProcessError = ZodError | ProgramError | ProgramError | DisableError
 
-  export type Result<R, E> =
-    | {
-        type: 'ok'
-        result: R
-        message?: string
-      }
-    | {
-        type: 'error'
-        error: E
-        message?: string
-      }
+  export type Result<R, E> = { type: 'ok'; result: R; message?: string } | { type: 'error'; error: E; message?: string }
 
   export type CLIOptions = {
     print?: boolean
@@ -52,12 +42,7 @@ declare namespace Process {
 
   export type ProcessResponse = Result<Payload, ProcessError>
 
-  export type Response = Result<
-    {
-      [key: string]: ProcessResponse
-    },
-    CliInputParseError
-  >
+  export type Response = Result<{ [key: string]: ProcessResponse }, CliInputParseError>
 
   export type Hex = `0x${string}`
 }
