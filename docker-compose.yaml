@@ -1,7 +1,7 @@
 version: '3'
 services:
   sqnc-node:
-    image: digicatapult/sqnc-node:latest
+    image: digicatapult/sqnc-node:v12.5.1
     command: --base-path /data/
       --dev
       --unsafe-rpc-external
