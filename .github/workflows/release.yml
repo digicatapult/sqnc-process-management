@@ -24,6 +24,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      id-token: write
     secrets:
       REGISTRY_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
   release-gh-packages:
