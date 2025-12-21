@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "3.0.62",
+  "version": "3.0.63",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -41,7 +41,7 @@
     "@eslint/js": "^9.39.2",
     "@swc-node/register": "^1.11.1",
     "@swc/cli": "^0.7.9",
-    "@swc/core": "^1.15.5",
+    "@swc/core": "^1.15.7",
     "@swc/helpers": "^0.5.17",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
