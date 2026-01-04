@@ -1,6 +1,6 @@
 {
   "name": "@digicatapult/sqnc-process-management",
-  "version": "3.0.67",
+  "version": "3.0.68",
   "description": "SQNC Process Management Flow",
   "main": "./lib/index.js",
   "bin": {
@@ -63,6 +63,6 @@
     "@polkadot/api": "^16.5.4",
     "chalk": "^5.6.2",
     "commander": "^14.0.2",
-    "zod": "^4.3.2"
+    "zod": "^4.3.4"
   }
 }
